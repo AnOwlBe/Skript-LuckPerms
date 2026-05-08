@@ -1,0 +1,18 @@
+name: Skript-LuckPerms
+description: $description
+prefix: Skript-LuckPerms
+version: '$version'
+load: POSTWORLD
+main: owlbe.skriptLuckPerms.SkriptLuckPerms
+api-version: '1.21.11'
+
+authors: [ OwlBe ]
+
+dependencies:
+  server:
+    LuckPerms:
+      load: BEFORE
+      required: true
+    Skript:
+      load: BEFORE
+      required: true

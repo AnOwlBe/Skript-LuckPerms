@@ -1,0 +1,77 @@
+package owlbe.skriptLuckPerms.modules.users.elements.effects;
+
+import ch.njol.skript.classes.Changer;
+import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Example;
+import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.Since;
+import ch.njol.skript.lang.Expression;
+import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.SyntaxStringBuilder;
+import ch.njol.skript.util.AsyncEffect;
+import ch.njol.util.Kleenean;
+import net.luckperms.api.LuckPermsProvider;
+import net.luckperms.api.node.Node;
+import net.luckperms.api.node.matcher.NodeMatcher;
+import org.bukkit.event.Event;
+import org.jetbrains.annotations.Nullable;
+import org.skriptlang.skript.registration.SyntaxInfo;
+import org.skriptlang.skript.registration.SyntaxRegistry;
+
+@SuppressWarnings("unchecked")
+@Name("Group Members")
+@Description(""" 
+             Returns a list of UUIDS of users who have the specified permission.
+             Should be relatively fast depending on how many users have said permission.
+             """)
+@Example("""
+        function search():
+            get the users with perm "example" and store it in {_lp::*}
+            send "%size of {_lp::*}% have 'example' permission!" to all ops
+        """)
+@Since("1.0")
+
+public class EffPermissionMembers extends AsyncEffect {
+    public static void register(SyntaxRegistry registry) {
+        registry.register(
+                SyntaxRegistry.EFFECT,
+                SyntaxInfo.builder(EffPermissionMembers.class)
+                        .addPatterns("(fetch|get) [the] [luckperm[s]] (users|players) with perm[ission] %string% and store (it|the result) in %-~objects%")
+                        .build()
+        );
+    }
+
+    private Expression<String> permExpr;
+    private Expression<?> varExpr;
+
+    @Override
+    public boolean init(Expression<?>[] expressions, int i, Kleenean kleenean, SkriptParser.ParseResult parseResult) {
+        getParser().setHasDelayBefore(Kleenean.TRUE);
+        permExpr = (Expression<String>) expressions[0];
+        varExpr = expressions[1];
+        return true;
+    }
+
+    @Override
+    protected void execute(Event event) {
+        String perm = permExpr.getSingle(event);
+        if (perm == null) return;
+        var results = LuckPermsProvider.get().getUserManager()
+                .searchAll(NodeMatcher.key(Node.builder(perm).build()))
+                .join();
+        varExpr.change(event, results.keySet().toArray(), Changer.ChangeMode.SET);
+
+    }
+
+    @Override
+    public String toString(@Nullable Event event, boolean b) {
+        return new SyntaxStringBuilder(event, b)
+                .append("get users with permission")
+                .append(permExpr)
+                .append("and store in")
+                .append(varExpr)
+                .toString();
+    }
+}
+
+
