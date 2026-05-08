@@ -41,4 +41,4 @@ Warning: Skript-LuckPerms is still in beta. Expect bugs and other issues to aris
 - [Discord](https://discord.gg/QK8dsfrArZ)
 - [GitHub](https://github.com/AnOwlBe/Skript-LuckPerms)
 - [bStats](https://bstats.org/plugin/bukkit/Skript-LuckPerms/31087)
-- <docs soon>
+- docs soon
