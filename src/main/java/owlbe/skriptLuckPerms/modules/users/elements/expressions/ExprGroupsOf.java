@@ -18,15 +18,16 @@ import org.skriptlang.skript.registration.SyntaxInfo;
 import org.skriptlang.skript.registration.SyntaxRegistry;
 
 @SuppressWarnings("unchecked")
-@Name("Permissions Of")
+@Name("Groups Of")
 @Description("""
-        Represents the permissions of a user.
+        Represents the groups of a user.
+        This expression will require `luckperms` in it until Skript deprecates their `groups of`.
         """)
 @Example("""
         function example(p: offlineplayer):
             get luckperms user {_p} and store it in {_lp}
-            broadcast "%{_p}% has %size of luckperms permissions of {_lp}% permissions!%
-            broadcast "their groups: %luckperm permissions of {_lp}%"
+            broadcast "%{_p}% has %size of luckperms groups of {_lp}% groups!%
+            broadcast "their groups: %luckperm groups of {_lp}%"
         """)
 @Since("1.0")
 
@@ -38,7 +39,7 @@ public class ExprGroupsOf extends SimpleExpression<String> {
                 SyntaxInfo.Expression.builder(ExprGroupsOf.class, String.class)
                         .addPatterns(
                                 "luckperm[s] groups of %luckpermsusers%",
-                                "%luckpermsusers% luckperm[s] groups")
+                                "%luckpermsusers%'s luckperm[s] groups")
                         .build()
         );
     }

@@ -22,6 +22,10 @@ public class EvtUserPromote extends SkriptEvent {
                 .addDescription("""
                 Called when a group of a player is updated via a promotion on a track (/lp user notch promote staff)")
                 Do note that %past event-group% will be unset if player didn't previously have a group on that track.
+                
+                `event-group` = The group the user was promoted to.
+                `past event-group` = The group the user previously had on the track.
+                
                 """)
                 .addExample("""
                         on user promoted:

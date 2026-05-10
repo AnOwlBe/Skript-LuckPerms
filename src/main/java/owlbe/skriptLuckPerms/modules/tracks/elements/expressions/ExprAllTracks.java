@@ -33,7 +33,7 @@ public class ExprAllTracks extends SimpleExpression<String> {
                 SyntaxRegistry.EXPRESSION,
                 SyntaxInfo.Expression.builder(ExprAllTracks.class, String.class)
                         .addPatterns(
-                                "all [of] [the] [luckperm[s]] tracks")
+                                "all [of the] luckperm[s] tracks")
                         .build()
         );
     }

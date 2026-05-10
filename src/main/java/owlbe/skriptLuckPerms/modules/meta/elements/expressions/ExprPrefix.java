@@ -70,8 +70,8 @@ public class ExprPrefix extends SimpleExpression<ChatMetaNode> {
                 SyntaxRegistry.EXPRESSION,
                 SyntaxInfo.Expression.builder(ExprPrefix.class, ChatMetaNode.class)
                         .addPatterns(
-                                "[the] [luckperm[s]] prefix[es] of group %luckpermsgroup%",
-                                        "[the] [luckperm[s]] prefix[es] of user %luckpermsuser%")
+                                "[the] [luckperm[s]] prefix[:es] of group %luckpermsgroup%",
+                                        "[the] [luckperm[s]] prefix[:es] of user %luckpermsuser%")
                         .build()
         );
     }
@@ -87,7 +87,7 @@ public class ExprPrefix extends SimpleExpression<ChatMetaNode> {
         } else {
             userExpr = (Expression<User>) expressions[0];
         }
-        isSingle = !parseResult.expr.contains("prefixes");
+        isSingle = !parseResult.hasTag("es");
         return true;
     }
     @Override

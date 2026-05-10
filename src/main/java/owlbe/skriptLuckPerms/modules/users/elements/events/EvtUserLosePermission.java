@@ -20,6 +20,9 @@ public class EvtUserLosePermission extends SkriptEvent {
                 .addPatterns("[luckperm[s]] user lose perm[ission]")
                 .addDescription("""
                 Called when a user loses a permission.
+                
+                `event-permission` = The permission the user lost.
+                
                 """)
                 .addExample("""
                         on user lose permission:

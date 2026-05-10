@@ -34,7 +34,7 @@ public class ExprAllGroups extends SimpleExpression<String> {
                 SyntaxRegistry.EXPRESSION,
                 SyntaxInfo.Expression.builder(ExprAllGroups.class, String.class)
                         .addPatterns(
-                                "all [of] [the] luckperm[s] groups")
+                                "all [of the] luckperm[s] groups")
                         .build()
         );
     }

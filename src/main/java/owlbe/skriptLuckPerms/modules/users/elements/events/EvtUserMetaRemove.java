@@ -22,8 +22,8 @@ public class EvtUserMetaRemove extends SkriptEvent {
                 Called when the meta of a user is removed.
                 Note: This event may be called multiple times if you clear a meta.
                 
-                event-key = the key eg "prefix" or "suffix"
-                event-value = the result that key was set to.
+                `event-key` = The key e.g. "prefix" or "suffix"
+                `event-value` = The result that key was set to.
                 
                 """)
                 .addExample("""

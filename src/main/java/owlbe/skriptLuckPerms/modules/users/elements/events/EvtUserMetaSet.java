@@ -22,8 +22,8 @@ public class EvtUserMetaSet extends SkriptEvent {
                 Called when the meta of a user is set.
                 Only called when meta is SET not unset etc for that case use `user meta remove`
                 
-                event-key = the key eg "prefix" or "suffix"
-                event-value = the result that key was set to.
+                `event-key` = The key e.g. "prefix" or "suffix"
+                `event-value` = The result that key was set to.
                 
                 """)
                 .addExample("""

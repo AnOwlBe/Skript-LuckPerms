@@ -42,7 +42,7 @@ public class EffGroupMembers extends AsyncEffect {
         registry.register(
                 SyntaxRegistry.EFFECT,
                 SyntaxInfo.builder(EffGroupMembers.class)
-                        .addPatterns("(fetch|get) [the] [luckperm[s]] (members|players) (of|in) [group] %luckpermsgroup% and store (it|the result) in %-~objects%")
+                        .addPatterns("(fetch|get) [the] [luckperm[s]] (members|players) (of|in) group %luckpermsgroup% and store (it|the result) in %-~objects%")
                         .build()
         );
     }

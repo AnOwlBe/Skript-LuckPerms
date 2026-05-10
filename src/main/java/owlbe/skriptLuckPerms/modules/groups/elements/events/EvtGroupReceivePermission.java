@@ -23,10 +23,14 @@ public class EvtGroupReceivePermission extends SkriptEvent {
                 .addDescription("""
                 Called when a group receives a permission.
                 If the permission duration is infinite %event-timespan% will return 0 seconds.
+                
+                `event-permission` = The permission the group received.
+                `event-group` = The group that received the permission.
+                `event-timespan` = The duration the group will have the permission for.
                 """)
                 .addExample("""
                         on group receive permission:
-                        	broadcast "Wow! %event-group% just got  permission %event-permission%!" to player
+                        	broadcast "Wow! %event-group% just got permission %event-permission%!" to player
                         """)
                 .addSince("1.0")
                 .build());

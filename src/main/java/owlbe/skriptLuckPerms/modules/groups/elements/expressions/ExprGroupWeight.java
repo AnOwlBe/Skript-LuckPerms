@@ -42,7 +42,7 @@ public class ExprGroupWeight extends SimpleExpression<Integer> {
                 SyntaxRegistry.EXPRESSION,
                 SyntaxInfo.Expression.builder(ExprGroupWeight.class, Integer.class)
                         .addPatterns(
-                                "[luckperm[s]] group weight [of] [group] [%-luckpermsgroup%]")
+                                "[luckperm[s]] group weight of [group] [%-luckpermsgroup%]")
                         .build()
         );
     }

@@ -20,7 +20,12 @@ public class EvtUserDemote extends SkriptEvent {
                 .addEvent(OnUserDemote.class)
                 .addPatterns("[luckperm[s]] user demote[d]")
                 .addDescription("""
-                Called when a group of a player is updated via a demotion on a track (/lp user notch demote staff)")
+                Called when a group of a player is updated via a demotion on a.
+                
+                `event-group` = The group the user was demoted to.
+                `past event-group` = The group the user had on the track.
+                `event-track` = The track that the demotion happened on.
+                
                 """)
                 .addExample("""
                         on user demote:

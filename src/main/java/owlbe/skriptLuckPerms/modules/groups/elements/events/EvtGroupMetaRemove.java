@@ -21,10 +21,11 @@ public class EvtGroupMetaRemove extends SkriptEvent {
                 .addPatterns("[luckperm[s]] group meta remove")
                 .addDescription("""
                 Called when the meta of a group is removed.
-                Only called when meta is REMOVED not set etc for that case use `group meta set`
+                Only called when meta is REMOVED not set/added to for that case use `group meta set`
                 
-                event-key = the key eg "prefix" or "suffix"
-                event-value = the result that key was set to.
+                `event-key` = The key e.g. "prefix" or "suffix"
+                `event-value` = The result that key was set to.
+                `event-group` = The group that lost said meta.
                 
                 """)
                 .addExample("""

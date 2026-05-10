@@ -22,6 +22,10 @@ public class EvtUserReceivePermission extends SkriptEvent {
                 .addDescription("""
                 Called when a user receives a permission.
                 If the permission duration is infinite %event-timespan% will return 0 seconds.
+                
+                `event-permission` = The permission that the user received.
+                `event-timespan` = The duration the user will have the permission for.
+                
                 """)
                 .addExample("""
                         on user receive permission:

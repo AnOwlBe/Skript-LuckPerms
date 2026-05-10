@@ -38,7 +38,7 @@ public class ExprChatMetaSource extends SimpleExpression<String> {
                 SyntaxRegistry.EXPRESSION,
                 SyntaxInfo.Expression.builder(ExprChatMetaSource.class, String.class)
                         .addPatterns(
-                                "[the] [luckperm[s]] (prefix|suffix) source of %luckpermschatmeta%")
+                                "[the] [luckperm[s]] (:prefix|suffix) source of %luckpermschatmeta%")
                         .build()
         );
     }
@@ -49,7 +49,7 @@ public class ExprChatMetaSource extends SimpleExpression<String> {
     @Override
     public boolean init(Expression<?>[] expressions, int i, Kleenean kleenean, SkriptParser.ParseResult parseResult) {
         chatMetaExpr = (Expression<ChatMetaNode>) expressions[0];
-        isPrefix = parseResult.expr.contains("prefix");
+        isPrefix = parseResult.hasTag("prefix");
         return true;
     }
 

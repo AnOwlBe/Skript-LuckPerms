@@ -19,7 +19,7 @@ import org.skriptlang.skript.registration.SyntaxInfo;
 import org.skriptlang.skript.registration.SyntaxRegistry;
 
 @SuppressWarnings("unchecked")
-@Name("Group Members")
+@Name("Permission Members")
 @Description(""" 
              Returns a list of UUIDS of users who have the specified permission.
              Should be relatively fast depending on how many users have said permission.

@@ -23,6 +23,10 @@ public class EvtUserReceiveGroup extends SkriptEvent {
                 .addDescription("""
                 Called when a user receives a group.
                 If the group duration is infinite %event-timespan% will return 0 seconds.
+                
+                `event-group` = The group the user received.
+                `event-timespan` = The duration the user will have the group for.
+                
                 """)
                 .addExample("""
                         on user receive group:

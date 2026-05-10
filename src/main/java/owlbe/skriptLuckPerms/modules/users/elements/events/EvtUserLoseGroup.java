@@ -21,10 +21,13 @@ public class EvtUserLoseGroup extends SkriptEvent {
                 .addPatterns("[luckperm[s]] user lose group")
                 .addDescription("""
                 Called when a user loses a group.
+                
+                `event-group` = The group the user lost.
+                
                 """)
                 .addExample("""
-                        on user receive group:
-                        	send "You just got %event-group% ;o" to player
+                        on user lose group:
+                        	send "You just lost %event-group% ;o" to player
                         """)
                 .addSince("1.0")
                 .build());

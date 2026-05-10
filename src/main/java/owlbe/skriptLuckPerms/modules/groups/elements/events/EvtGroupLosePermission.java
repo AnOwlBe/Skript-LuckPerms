@@ -21,6 +21,9 @@ public class EvtGroupLosePermission extends SkriptEvent {
                 .addPatterns("[luckperm[s]] group lose perm[ission]")
                 .addDescription("""
                 Called when a group loses a permission.
+                
+                `event-permission` = The permission that was removed.
+                `event-group` = The group that lost the permission.
                 """)
                 .addExample("""
                         on group lose permission:
