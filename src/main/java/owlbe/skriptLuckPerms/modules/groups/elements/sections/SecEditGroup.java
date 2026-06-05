@@ -30,8 +30,8 @@ import static owlbe.skriptLuckPerms.SkriptLuckPerms.instance;
         After the code in the section has finished the group will be saved asynchronously.
         """)
 @Example("""
-        edit group "example":
-            add 5 to group weight
+    edit group "example":
+        add 5 to group weight
     """)
 
 @Since("1.0")
@@ -93,11 +93,12 @@ public class SecEditGroup extends Section {
             Bukkit.getScheduler().runTaskAsynchronously(instance, () -> {
                 Variables.setLocalVariables(groupevent,variables);
                 TriggerItem.walk(trigger, groupevent);
-                Variables.removeLocals(groupevent);
                 Group lpGroup = LuckPermsProvider.get().getGroupManager().getGroup(group);
                 if (lpGroup == null) return;
                 LuckPermsProvider.get().getGroupManager().saveGroup(lpGroup);
                 Bukkit.getScheduler().runTask(instance, () -> {
+                    Variables.setLocalVariables(event, Variables.copyLocalVariables(groupevent));
+                    Variables.removeLocals(groupevent);
                     TriggerItem.walk(getNext(), event);
                     Variables.removeLocals(event);
                 });

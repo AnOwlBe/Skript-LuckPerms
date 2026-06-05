@@ -37,7 +37,6 @@ function example(p: offlineplayer,perm: string,duration: timespan=0 seconds):
             send "You just got %{_perm}% permission!" to {_p}
         """)
 @Since("1.0")
-
 public class EffGrantPermission extends Effect {
     public static void register(SyntaxRegistry registry) {
         registry.register(
@@ -72,7 +71,7 @@ public class EffGrantPermission extends Effect {
         Timespan duration = durationExpr != null ? durationExpr.getSingle(event) : null;
         if (duration != null) {
             user.data().add(PermissionNode.builder(permission)
-                    .expiry(Duration.ofSeconds(duration.getAs(Timespan.TimePeriod.SECOND)))
+                    .expiry(duration.getDuration())
                     .build());
         } else {
             user.data().add(PermissionNode.builder(permission).build());

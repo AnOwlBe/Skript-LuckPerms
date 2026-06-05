@@ -27,7 +27,7 @@ import java.time.Duration;
 import java.util.List;
 
 @SuppressWarnings("unchecked")
-@Name("Chat Meta Builder")
+@Name("Chat Node Builder")
 @Description("""
         Creates a builder for a prefix/suffix.
         You can add said prefix/suffix to a user or a group via the prefix or suffix expression.

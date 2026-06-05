@@ -27,17 +27,16 @@ import org.skriptlang.skript.registration.SyntaxRegistry;
         """)
 @Example("""
         function example(p: offlineplayer):
-            get luckperms user {_p} and store it in {_lp}
+            set {_lp} to luckperms user {_p}
             broadcast "%{_p}% has %size of groups of {_lp}% groups!"
         """)
-@Since("1.0")
-
+@Since("1.0, 1.1.3 (pattern change)")
 public class EffLoadPlayer extends AsyncEffect {
     public static void register(SyntaxRegistry registry) {
         registry.register(
                 SyntaxRegistry.EFFECT,
                 SyntaxInfo.builder(EffLoadPlayer.class)
-                        .addPatterns("(fetch|get) luckperm[s] user [from] %offlineplayer% and store (it|the result) in %-~objects%")
+                        .addPatterns("set %-~objects% to luckperm[s] user [from] %offlineplayer%")
                         .build()
 
         );
@@ -49,8 +48,8 @@ public class EffLoadPlayer extends AsyncEffect {
     @Override
     public boolean init(Expression<?>[] expressions, int i, Kleenean kleenean, SkriptParser.ParseResult parseResult) {
         getParser().setHasDelayBefore(Kleenean.TRUE);
-        playerExpr = (Expression<OfflinePlayer>) expressions[0];
-        varExpr = expressions[1];
+        playerExpr = (Expression<OfflinePlayer>) expressions[1];
+        varExpr = expressions[0];
         if (!Changer.ChangerUtils.acceptsChange(varExpr, Changer.ChangeMode.SET, User.class)) {
             Skript.error(varExpr.toString(null, Skript.debug()) + " cannot be set to a LuckPerms user.");
             return false;
@@ -71,10 +70,10 @@ public class EffLoadPlayer extends AsyncEffect {
     @Override
     public String toString(@Nullable Event event, boolean b) {
         return new SyntaxStringBuilder(event, b)
-                .append("get luckperms user from")
-                .append(playerExpr)
-                .append("and store in")
+                .append("set")
                 .append(varExpr)
+                .append("to luckperms user from")
+                .append(playerExpr)
                 .toString();
     }
 }

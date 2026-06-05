@@ -41,6 +41,7 @@ public class CondHasGroup extends Condition {
                         .build()
         );
     }
+
     private Expression<User> userExpr;
     private Expression<Group> groupExpr;
 
@@ -72,4 +73,3 @@ public class CondHasGroup extends Condition {
                 .toString();
     }
 }
-

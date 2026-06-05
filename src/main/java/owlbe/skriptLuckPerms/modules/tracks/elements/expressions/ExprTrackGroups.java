@@ -1,4 +1,4 @@
-package owlbe.skriptLuckPerms.modules.groups.elements.expressions;
+package owlbe.skriptLuckPerms.modules.tracks.elements.expressions;
 
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Example;
@@ -8,46 +8,50 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import net.luckperms.api.LuckPermsProvider;
-import net.luckperms.api.model.group.Group;
+import net.luckperms.api.track.Track;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.registration.SyntaxInfo;
 import org.skriptlang.skript.registration.SyntaxRegistry;
 
-@Name("All Groups")
+@Name("All Groups In Track")
 @Description("""
-        returns a list of all groups.
-        This expression will require `luckperms` in it until Skript deprecates their `groups of`.
+        Returns a list of groups in the specified track.
         """)
 @Example("""
-        command /getallgroups:
+        command /getgroupsintrack:
             trigger:
-                 send all of the luckperms groups to player
+                 send "Showing list of groups in track  'example'" to player
+                 loop all of the groups in track "example":
+                     send name of loop-value to player
         """)
-@Since("1.0")
-public class ExprAllGroups extends SimpleExpression<String> {
+@Since("1.0.2")
+
+public class ExprTrackGroups extends SimpleExpression<String> {
 
     public static void register(SyntaxRegistry syntaxRegistry) {
         syntaxRegistry.register(
                 SyntaxRegistry.EXPRESSION,
-                SyntaxInfo.Expression.builder(ExprAllGroups.class, String.class)
+                SyntaxInfo.Expression.builder(ExprTrackGroups.class, String.class)
                         .addPatterns(
-                                "all [of the] luckperm[s] groups")
+                                "[all of the] [luckperm[s]] groups (of|in) track %luckpermstrack%")
                         .build()
         );
     }
+    private Expression<Track> trackExpr;
 
     @Override
     public boolean init(Expression<?>[] expressions, int i, Kleenean kleenean, SkriptParser.ParseResult parseResult) {
+        trackExpr = (Expression<Track>) expressions[0];
         return true;
     }
 
     @Override
     protected String[] get(Event event) {
-        return LuckPermsProvider.get().getGroupManager().getLoadedGroups().stream()
-                .map(Group::getName)
-                .toArray(String[]::new);
+        Track track = trackExpr.getSingle(event);
+        if (track == null) return new String[0];
+        return track.getGroups().toArray(String[]::new);
+
     }
     @Override
     public boolean isSingle() {
@@ -61,7 +65,6 @@ public class ExprAllGroups extends SimpleExpression<String> {
 
     @Override
     public String toString(@Nullable Event event, boolean b) {
-        return "all groups";
+        return "all users in track";
     }
 }
-

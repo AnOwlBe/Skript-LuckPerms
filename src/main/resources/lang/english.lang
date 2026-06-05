@@ -1,0 +1,7 @@
+version: 1.0.3
+
+types:
+    luckpermsuser: luckperms user¦s
+    luckpermstrack: luckperms track¦s
+    luckpermsgroup: luckperms group¦s
+    luckpermschatmeta: luckperms chatmeta

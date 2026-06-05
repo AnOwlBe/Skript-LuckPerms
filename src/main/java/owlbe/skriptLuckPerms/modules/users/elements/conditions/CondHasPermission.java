@@ -39,6 +39,7 @@ public class CondHasPermission extends Condition {
                         .build()
         );
     }
+
     private Expression<User> userExpr;
     private Expression<String> permExpr;
 

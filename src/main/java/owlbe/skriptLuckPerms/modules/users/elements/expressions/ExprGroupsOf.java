@@ -30,7 +30,6 @@ import org.skriptlang.skript.registration.SyntaxRegistry;
             broadcast "their groups: %luckperm groups of {_lp}%"
         """)
 @Since("1.0")
-
 public class ExprGroupsOf extends SimpleExpression<String> {
 
     public static void register(SyntaxRegistry syntaxRegistry) {

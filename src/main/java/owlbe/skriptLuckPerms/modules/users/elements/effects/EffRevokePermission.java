@@ -29,7 +29,6 @@ function example(p: offlineplayer,perm: string):
     send "You just lost permission %{_perm}% ;c" to {_p}
         """)
 @Since("1.0")
-
 public class EffRevokePermission extends Effect {
     public static void register(SyntaxRegistry registry) {
         registry.register(

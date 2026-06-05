@@ -1,5 +1,6 @@
 package owlbe.skriptLuckPerms.modules.users.elements.effects;
 
+import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Example;
@@ -11,12 +12,15 @@ import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.skript.util.AsyncEffect;
 import ch.njol.util.Kleenean;
 import net.luckperms.api.LuckPermsProvider;
+import net.luckperms.api.model.user.User;
 import net.luckperms.api.node.Node;
 import net.luckperms.api.node.matcher.NodeMatcher;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.registration.SyntaxInfo;
 import org.skriptlang.skript.registration.SyntaxRegistry;
+
+import java.util.UUID;
 
 @SuppressWarnings("unchecked")
 @Name("Permission Members")
@@ -30,7 +34,6 @@ import org.skriptlang.skript.registration.SyntaxRegistry;
             send "%size of {_lp::*}% have 'example' permission!" to all ops
         """)
 @Since("1.0")
-
 public class EffPermissionMembers extends AsyncEffect {
     public static void register(SyntaxRegistry registry) {
         registry.register(
@@ -49,6 +52,10 @@ public class EffPermissionMembers extends AsyncEffect {
         getParser().setHasDelayBefore(Kleenean.TRUE);
         permExpr = (Expression<String>) expressions[0];
         varExpr = expressions[1];
+        if (!Changer.ChangerUtils.acceptsChange(varExpr, Changer.ChangeMode.SET, UUID.class)) {
+            Skript.error(varExpr.toString(null, Skript.debug()) + " cannot be set to UUIDS.");
+            return false;
+        }
         return true;
     }
 

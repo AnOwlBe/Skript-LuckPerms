@@ -29,6 +29,7 @@ import owlbe.skriptLuckPerms.modules.users.elements.sections.SecEditUser;
 
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -76,8 +77,8 @@ public class ExprPrefix extends SimpleExpression<ChatMetaNode> {
         );
     }
 
-    private Expression<Group> groupExpr;
-    private Expression<User> userExpr;
+    private Expression<Group> groupExpr = null;
+    private Expression<User> userExpr = null;
     private boolean isSingle;
 
     @Override
@@ -137,11 +138,7 @@ public class ExprPrefix extends SimpleExpression<ChatMetaNode> {
     @Override
     public void change(Event event, Object @Nullable [] delta, Changer.ChangeMode mode) {
         Group group = groupExpr != null ? groupExpr.getSingle(event) : null;
-        if (group == null && event instanceof SecEditGroup.GroupEvent e) {
-            group = LuckPermsProvider.get().getGroupManager().getGroup(e.getGroup());
-        }
         User user = userExpr != null ? userExpr.getSingle(event) : null;
-        if (user == null && event instanceof SecEditUser.UserEvent e) user = e.getUser();
         NodeMap data = group != null ? group.data() : user != null ? user.data() : null;
         if (data == null) return;
         switch (mode) {
@@ -163,7 +160,7 @@ public class ExprPrefix extends SimpleExpression<ChatMetaNode> {
                 } else {
                     Collection<PrefixNode> nodes = group != null
                             ? group.getNodes(NodeType.PREFIX)
-                            : user.getNodes(NodeType.PREFIX);
+                            : user != null ? user.getNodes(NodeType.PREFIX) : List.of();
                     nodes.stream()
                             .max(Comparator.comparingInt(ChatMetaNode::getPriority))
                             .ifPresent(data::remove);

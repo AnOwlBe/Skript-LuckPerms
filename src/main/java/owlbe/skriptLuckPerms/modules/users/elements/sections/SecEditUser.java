@@ -93,9 +93,10 @@ public class SecEditUser extends Section {
             Bukkit.getScheduler().runTaskAsynchronously(instance, () -> {
                 Variables.setLocalVariables(userevent,variables);
                 TriggerItem.walk(trigger, userevent);
-                Variables.removeLocals(userevent);
                 LuckPermsProvider.get().getUserManager().saveUser(user);
                 Bukkit.getScheduler().runTask(instance, () -> {
+                    Variables.setLocalVariables(event, Variables.copyLocalVariables(userevent));
+                    Variables.removeLocals(userevent);
                     TriggerItem.walk(getNext(), event);
                     Variables.removeLocals(event);
                 });

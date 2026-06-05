@@ -1,0 +1,3 @@
+
+check-for-updates: true # Should the plugin check for newer updates on Modrinth?
+check-async-for-updates: true # Set to false to do update checker on main thread.

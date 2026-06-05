@@ -41,9 +41,10 @@ public class MetaModule extends HierarchicalAddonModule {
                 SecChatMetaBuilder::register
 
         );
+
         Classes.registerClass(new ClassInfo<>(ChatMetaNode.class, "luckpermschatmeta")
                 .user("luckperms ?chatmetas?")
-                .name("LuckPerms ChatMeta")
+                .name("LuckPerms ChatMeta Node")
                 .description("A LuckPerms prefix or suffix node.")
                 .parser(new Parser<>() {
                     @Override

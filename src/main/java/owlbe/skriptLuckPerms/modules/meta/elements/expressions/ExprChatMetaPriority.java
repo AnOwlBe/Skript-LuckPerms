@@ -29,7 +29,6 @@ import org.skriptlang.skript.registration.SyntaxRegistry;
                  send "Your group's priority is %{_priority}%!" to player
         """)
 @Since("1.0")
-
 public class ExprChatMetaPriority extends SimpleExpression<Integer> {
 
     public static void register(SyntaxRegistry syntaxRegistry) {

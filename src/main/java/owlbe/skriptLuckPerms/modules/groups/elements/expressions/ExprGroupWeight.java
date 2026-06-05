@@ -23,18 +23,16 @@ import org.skriptlang.skript.registration.SyntaxRegistry;
 import owlbe.skriptLuckPerms.modules.groups.elements.sections.SecEditGroup;
 
 @SuppressWarnings("unchecked")
-@Name("Permissions Of")
+@Name("Group Weight")
 @Description("""
-        Represents the permissions of a user.
+        Represents the weight of a group.
         """)
 @Example("""
-        function example(p: offlineplayer):
-            get luckperms user {_p} and store it in {_lp}
-            broadcast "%{_p}% has %size of luckperms permissions of {_lp}% permissions!%
-            broadcast "their groups: %luckperm permissions of {_lp}%"
+        function example(group: string) -> integer:
+             set {_weight} to group weight of group {_group}
+             return {_weight}
         """)
 @Since("1.0")
-
 public class ExprGroupWeight extends SimpleExpression<Integer> {
 
     public static void register(SyntaxRegistry syntaxRegistry) {
@@ -42,7 +40,7 @@ public class ExprGroupWeight extends SimpleExpression<Integer> {
                 SyntaxRegistry.EXPRESSION,
                 SyntaxInfo.Expression.builder(ExprGroupWeight.class, Integer.class)
                         .addPatterns(
-                                "[luckperm[s]] group weight of [group] [%-luckpermsgroup%]")
+                                "[luckperm[s]] group weight [of [group] %-luckpermsgroup%]")
                         .build()
         );
     }

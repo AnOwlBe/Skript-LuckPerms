@@ -9,8 +9,15 @@ import net.luckperms.api.track.Track;
 import org.skriptlang.skript.addon.AddonModule;
 import org.skriptlang.skript.addon.HierarchicalAddonModule;
 import org.skriptlang.skript.addon.SkriptAddon;
+import org.skriptlang.skript.bukkit.lang.eventvalue.EventValueRegistry;
 import org.skriptlang.skript.lang.converter.Converters;
+import owlbe.skriptLuckPerms.modules.tracks.elements.effects.EffCreateTrack;
+import owlbe.skriptLuckPerms.modules.tracks.elements.effects.EffDeleteTrack;
+import owlbe.skriptLuckPerms.modules.tracks.elements.events.EvtTrackAddGroup;
+import owlbe.skriptLuckPerms.modules.tracks.elements.events.EvtTrackRemoveGroup;
 import owlbe.skriptLuckPerms.modules.tracks.elements.expressions.ExprAllTracks;
+import owlbe.skriptLuckPerms.modules.tracks.elements.expressions.ExprTrackGroups;
+import owlbe.skriptLuckPerms.modules.users.elements.sections.SecEditUser;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -28,8 +35,14 @@ public class TrackModule extends HierarchicalAddonModule {
 
     @Override
     public void loadSelf(SkriptAddon addon) {
+        EventValueRegistry registry = addon.registry(EventValueRegistry.class);
         register(addon,
-                ExprAllTracks::register
+                ExprAllTracks::register,
+                ExprTrackGroups::register,
+                EffCreateTrack::register,
+                EffDeleteTrack::register,
+                a -> EvtTrackAddGroup.register(a, registry),
+                a -> EvtTrackRemoveGroup.register(a, registry)
                 );
         Classes.registerClass(new ClassInfo<>(Track.class, "luckpermstrack")
                 .user("luckperms ?tracks?")

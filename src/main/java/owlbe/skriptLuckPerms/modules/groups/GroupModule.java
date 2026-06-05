@@ -11,6 +11,8 @@ import org.skriptlang.skript.addon.HierarchicalAddonModule;
 import org.skriptlang.skript.addon.SkriptAddon;
 import org.skriptlang.skript.bukkit.lang.eventvalue.EventValueRegistry;
 import org.skriptlang.skript.lang.converter.Converters;
+import owlbe.skriptLuckPerms.modules.groups.elements.effects.EffCreateGroup;
+import owlbe.skriptLuckPerms.modules.groups.elements.effects.EffDeleteGroup;
 import owlbe.skriptLuckPerms.modules.groups.elements.events.EvtGroupLosePermission;
 import owlbe.skriptLuckPerms.modules.groups.elements.events.EvtGroupMetaRemove;
 import owlbe.skriptLuckPerms.modules.groups.elements.events.EvtGroupMetaSet;
@@ -39,11 +41,13 @@ public class GroupModule extends HierarchicalAddonModule {
         register(addon,
                 ExprAllGroups::register,
                 ExprGroupWeight::register,
-                a -> SecEditGroup.register(a,registry),
-                a -> EvtGroupLosePermission.register(a,registry),
-                a -> EvtGroupReceivePermission.register(a,registry),
-                a -> EvtGroupMetaSet.register(a,registry),
-                a -> EvtGroupMetaRemove.register(a,registry)
+                EffCreateGroup::register,
+                EffDeleteGroup::register,
+                a -> SecEditGroup.register(a, registry),
+                a -> EvtGroupLosePermission.register(a, registry),
+                a -> EvtGroupReceivePermission.register(a, registry),
+                a -> EvtGroupMetaSet.register(a, registry),
+                a -> EvtGroupMetaRemove.register(a, registry)
 
 
         );

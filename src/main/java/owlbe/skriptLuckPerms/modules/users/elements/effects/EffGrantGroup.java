@@ -38,7 +38,6 @@ function example(p: offlineplayer,group: string,duration: timespan=0 seconds):
             send "You just got %{_group}% permission!" to {_p}
         """)
 @Since("1.0")
-
 public class EffGrantGroup extends Effect {
     public static void register(SyntaxRegistry registry) {
         registry.register(
@@ -73,7 +72,7 @@ public class EffGrantGroup extends Effect {
         Timespan duration = durationExpr != null ? durationExpr.getSingle(event) : null;
         if (duration != null) {
             user.data().add(InheritanceNode.builder(group)
-                    .expiry(Duration.ofSeconds(duration.getAs(Timespan.TimePeriod.SECOND)))
+                    .expiry(duration.getDuration())
                     .build());
         } else {
             user.data().add(InheritanceNode.builder(group).build());

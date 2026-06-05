@@ -1,5 +1,6 @@
 package owlbe.skriptLuckPerms.modules.users.elements.effects;
 
+import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Example;
@@ -12,6 +13,7 @@ import ch.njol.skript.util.AsyncEffect;
 import ch.njol.util.Kleenean;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.group.Group;
+import net.luckperms.api.model.user.User;
 import net.luckperms.api.node.Node;
 import net.luckperms.api.node.matcher.NodeMatcher;
 import net.luckperms.api.node.types.InheritanceNode;
@@ -36,7 +38,6 @@ import java.util.UUID;
             send "%size of {_lp::*}% have 'example' group!" to all ops
         """)
 @Since("1.0")
-
 public class EffGroupMembers extends AsyncEffect {
     public static void register(SyntaxRegistry registry) {
         registry.register(
@@ -55,6 +56,10 @@ public class EffGroupMembers extends AsyncEffect {
         getParser().setHasDelayBefore(Kleenean.TRUE);
         groupExpr = (Expression<Group>) expressions[0];
         varExpr = expressions[1];
+        if (!Changer.ChangerUtils.acceptsChange(varExpr, Changer.ChangeMode.SET, UUID.class)) {
+            Skript.error(varExpr.toString(null, Skript.debug()) + " cannot be set to multiple UUIDS.");
+            return false;
+        }
         return true;
     }
 

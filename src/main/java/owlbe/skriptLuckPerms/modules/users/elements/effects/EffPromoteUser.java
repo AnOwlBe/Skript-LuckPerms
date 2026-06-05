@@ -34,13 +34,12 @@ function example(p: offlineplayer,track: string):
         send "You were promoted on track %{_track}%!" to {_p}
         """)
 @Since("1.0")
-
 public class EffPromoteUser extends Effect {
     public static void register(SyntaxRegistry registry) {
         registry.register(
                 SyntaxRegistry.EFFECT,
                 SyntaxInfo.builder(EffPromoteUser.class)
-                        .addPatterns("promote [user] [%-luckpermsuser%] (along|on) track %luckpermstrack%")
+                        .addPatterns("promote user [%-luckpermsuser%] (along|on) track %luckpermstrack%")
                         .build()
         );
     }

@@ -31,7 +31,6 @@ function example(p: offlineplayer,group: string):
     send "You just lost group %{_group}% ;c" to {_p}
         """)
 @Since("1.0")
-
 public class EffRevokeGroup extends Effect {
     public static void register(SyntaxRegistry registry) {
         registry.register(

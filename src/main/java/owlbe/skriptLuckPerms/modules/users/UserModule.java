@@ -15,6 +15,7 @@ import owlbe.skriptLuckPerms.modules.users.elements.effects.*;
 import owlbe.skriptLuckPerms.modules.users.elements.events.*;
 import owlbe.skriptLuckPerms.modules.users.elements.expressions.ExprGroupsOf;
 import owlbe.skriptLuckPerms.modules.users.elements.expressions.ExprPermissionsOf;
+import owlbe.skriptLuckPerms.modules.users.elements.expressions.ExprPlayerFromUser;
 import owlbe.skriptLuckPerms.modules.users.elements.sections.SecEditUser;
 
 import javax.annotation.Nullable;
@@ -37,6 +38,7 @@ public class UserModule extends HierarchicalAddonModule {
         register(addon,
                 ExprGroupsOf::register,
                 ExprPermissionsOf::register,
+                ExprPlayerFromUser::register,
                 CondHasGroup::register,
                 CondHasPermission::register,
                 EffGrantGroup::register,
@@ -45,18 +47,19 @@ public class UserModule extends HierarchicalAddonModule {
                 EffGrantPermission::register,
                 EffGroupMembers::register,
                 EffLoadPlayer::register,
+                EffQuickLoadPlayer::register,
                 EffPermissionMembers::register,
                 EffPromoteUser::register,
                 EffRevokeGroup::register,
-                a -> SecEditUser.register(a,registry),
-                a -> EvtUserReceivePermission.register(a,registry),
-                a -> EvtUserReceiveGroup.register(a,registry),
-                a -> EvtUserPromote.register(a,registry),
-                a -> EvtUserDemote.register(a,registry),
-                a -> EvtUserMetaSet.register(a,registry),
-                a -> EvtUserMetaRemove.register(a,registry),
-                a -> EvtUserLosePermission.register(a,registry),
-                a -> EvtUserLoseGroup.register(a,registry)
+                a -> SecEditUser.register(a, registry),
+                a -> EvtUserReceivePermission.register(a, registry),
+                a -> EvtUserReceiveGroup.register(a, registry),
+                a -> EvtUserPromote.register(a, registry),
+                a -> EvtUserDemote.register(a, registry),
+                a -> EvtUserMetaSet.register(a, registry),
+                a -> EvtUserMetaRemove.register(a, registry),
+                a -> EvtUserLosePermission.register(a, registry),
+                a -> EvtUserLoseGroup.register(a, registry)
 
 
 

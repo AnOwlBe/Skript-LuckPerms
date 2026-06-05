@@ -30,7 +30,6 @@ import org.skriptlang.skript.registration.SyntaxRegistry;
                  send "The source of your main prefix is %{_source}%!" to player
         """)
 @Since("1.0")
-
 public class ExprChatMetaSource extends SimpleExpression<String> {
 
     public static void register(SyntaxRegistry syntaxRegistry) {
