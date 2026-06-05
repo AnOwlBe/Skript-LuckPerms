@@ -30,7 +30,7 @@ import org.skriptlang.skript.registration.SyntaxRegistry;
             set {_lp} to luckperms user {_p}
             broadcast "%{_p}% has %size of groups of {_lp}% groups!"
         """)
-@Since("1.0, 1.1.3 (pattern change)")
+@Since("1.0, 1.0.2 (pattern change)")
 public class EffLoadPlayer extends AsyncEffect {
     public static void register(SyntaxRegistry registry) {
         registry.register(

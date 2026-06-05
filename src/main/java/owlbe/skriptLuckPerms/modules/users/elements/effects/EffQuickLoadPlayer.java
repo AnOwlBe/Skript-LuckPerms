@@ -32,7 +32,7 @@ import org.skriptlang.skript.registration.SyntaxRegistry;
             set {_m} to quick luckperms user {_p}
             broadcast "%{_p}% has %size of groups of {_lp}% groups!"
         """)
-@Since("1.1.3")
+@Since("1.0.2")
 public class EffQuickLoadPlayer extends Effect {
 	public static void register(SyntaxRegistry registry) {
 		registry.register(

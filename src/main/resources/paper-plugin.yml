@@ -1,7 +1,7 @@
 name: Skript-LuckPerms
 description: $description
 prefix: Skript-LuckPerms
-version: '1.0.3'
+version: '1.0.2'
 load: POSTWORLD
 main: owlbe.skriptLuckPerms.SkriptLuckPerms
 api-version: '1.21.11'
