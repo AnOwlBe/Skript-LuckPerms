@@ -1,3 +1,5 @@
+If you are just here for the download: https://modrinth.com/plugin/skript-luckperms/versions
+
 Warning: Skript-LuckPerms is still in beta. Expect bugs and other issues to arise.
 
 # Skript-LuckPerms
