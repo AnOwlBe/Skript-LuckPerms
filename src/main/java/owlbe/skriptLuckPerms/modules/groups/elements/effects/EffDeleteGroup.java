@@ -19,7 +19,7 @@ import org.skriptlang.skript.registration.SyntaxRegistry;
 @SuppressWarnings("unchecked")
 @Name("Delete Group")
 @Description("""
-        Deletes a group.
+        Deletes a luckperms group.
         """)
 @Example("""
         function example(name: string):
@@ -33,9 +33,9 @@ public class EffDeleteGroup extends AsyncEffect {
                 SyntaxInfo.builder(EffDeleteGroup.class)
                         .addPatterns("delete luckperm[s] group %luckpermsgroup%")
                         .build()
-
         );
     }
+
     private Expression<Group> groupExpr;
 
     @Override
@@ -59,4 +59,5 @@ public class EffDeleteGroup extends AsyncEffect {
                 .append(groupExpr)
                 .toString();
     }
+
 }

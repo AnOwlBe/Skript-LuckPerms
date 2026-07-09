@@ -39,6 +39,7 @@ import java.util.UUID;
         """)
 @Since("1.0")
 public class EffGroupMembers extends AsyncEffect {
+
     public static void register(SyntaxRegistry registry) {
         registry.register(
                 SyntaxRegistry.EFFECT,
@@ -71,7 +72,6 @@ public class EffGroupMembers extends AsyncEffect {
                 .searchAll(NodeMatcher.key((Node) InheritanceNode.builder(group).build()))
                 .join();
         varExpr.change(event, results.keySet().toArray(), Changer.ChangeMode.SET);
-
     }
 
     @Override
@@ -83,6 +83,5 @@ public class EffGroupMembers extends AsyncEffect {
                 .append(varExpr)
                 .toString();
     }
+
 }
-
-

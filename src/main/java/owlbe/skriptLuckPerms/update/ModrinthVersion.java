@@ -39,4 +39,5 @@ public class ModrinthVersion {
     public boolean isServerSupported(Version serverVersion) {
         return this.supportedVersions.contains(serverVersion);
     }
+
 }

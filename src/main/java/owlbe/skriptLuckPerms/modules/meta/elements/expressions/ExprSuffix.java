@@ -38,11 +38,11 @@ import java.util.stream.Stream;
 @Description("""
         Returns the primary suffix of a user/group.
         If `suffixes` is used it will return a sorted list of all suffixes of the user/group.
-        Use `ExprChatMetaPriority` to get priority of a suffix.
+        Use `priority of..` to get priority of a suffix.
         """)
 @Example("""
         function get(p: offlineplayer):
-            get luckperms user {_p} and store it in {_lp}
+            set {_lp} to luckperms user from {_p}
             set {_suffix} to formatted luckperms suffix of {_lp}
             set {_suffixes::*} to luckperms suffixes of {_lp}
             if {_p} is online:
@@ -50,7 +50,7 @@ import java.util.stream.Stream;
                  send "You have %size of {_suffixes::*}% suffixes!" to {_p}
                  loop {_suffixes::*}:
                       set {_suffix} to formatted loop-value
-                      send "Priority: %suffix priority of loop-value% Suffix: %{_suffix}%" to {_p}
+                      send "Priority: %priority of loop-value% Suffix: %{_suffix}%" to {_p}
         """)
 @Example("""
         function get(group: string):
@@ -59,9 +59,9 @@ import java.util.stream.Stream;
             broadcast "%{_group}%'s primary prefix: %{_prefix}%"
             broadcast "Amount of all prefixes: %size of {_prefixes::*}%x"
             broadcast "All:"
-                 loop {_prefixes::*}:
-                      set {_prefix} to formatted loop-value
-                      broadcast "Priority: %prefix priority of loop-value% Prefix: %{_prefix}%"
+            loop {_prefixes::*}:
+                set {_prefix} to formatted loop-value
+                broadcast "Priority: %priority of loop-value% Prefix: %{_prefix}%"
         """)
 @Since("1.0")
 public class ExprSuffix extends SimpleExpression<ChatMetaNode> {
@@ -91,6 +91,7 @@ public class ExprSuffix extends SimpleExpression<ChatMetaNode> {
         isSingle = !parseResult.hasTag("es");
         return true;
     }
+
     @Override
     protected ChatMetaNode<?,?>[] get(Event event) {
         Collection<SuffixNode> nodes = null;
@@ -119,6 +120,7 @@ public class ExprSuffix extends SimpleExpression<ChatMetaNode> {
             return stream.toArray(ChatMetaNode[]::new);
         }
     }
+
     @Override
     public Class<?> @Nullable [] acceptChange(Changer.ChangeMode mode) {
         if (groupExpr != null && !getParser().isCurrentEvent(SecEditGroup.GroupEvent.class)) {
@@ -135,6 +137,7 @@ public class ExprSuffix extends SimpleExpression<ChatMetaNode> {
             default -> null;
         };
     }
+
     @Override
     public void change(Event event, Object @Nullable [] delta, Changer.ChangeMode mode) {
         Group group = groupExpr != null ? groupExpr.getSingle(event) : null;
@@ -180,7 +183,6 @@ public class ExprSuffix extends SimpleExpression<ChatMetaNode> {
         }
     }
 
-
     @Override
     public boolean isSingle() {
         return isSingle;
@@ -199,4 +201,5 @@ public class ExprSuffix extends SimpleExpression<ChatMetaNode> {
                 .append(groupExpr != null ? groupExpr : userExpr)
                 .toString();
     }
+
 }

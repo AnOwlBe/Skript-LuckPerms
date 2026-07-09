@@ -25,13 +25,14 @@ import owlbe.skriptLuckPerms.modules.users.elements.sections.SecEditUser;
 @Description("Removes a group from a user.")
 @Example("""
 function example(p: offlineplayer,group: string):
-    get luckperms user {_p} and store it in {_lp}
+    set {_lp} to luckperms user from {_p}
     edit user {_lp}:
         revoke luckperms group {_group}
     send "You just lost group %{_group}% ;c" to {_p}
         """)
 @Since("1.0")
 public class EffRevokeGroup extends Effect {
+
     public static void register(SyntaxRegistry registry) {
         registry.register(
                 SyntaxRegistry.EFFECT,
@@ -75,7 +76,5 @@ public class EffRevokeGroup extends Effect {
                 .append(userExpr)
                 .toString();
     }
+
 }
-
-
-

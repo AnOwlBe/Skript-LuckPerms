@@ -10,7 +10,7 @@ import org.skriptlang.skript.bukkit.lang.eventvalue.EventValue;
 import org.skriptlang.skript.bukkit.lang.eventvalue.EventValueRegistry;
 import org.skriptlang.skript.bukkit.registration.BukkitSyntaxInfos;
 import org.skriptlang.skript.registration.SyntaxRegistry;
-import owlbe.skriptLuckPerms.luckpermsstuff.luckpermsevents.OnUserReceivePermission;
+import owlbe.skriptLuckPerms.luckperms.bukkitevents.OnUserReceivePermission;
 
 public class EvtUserReceivePermission extends SkriptEvent {
 
@@ -29,14 +29,16 @@ public class EvtUserReceivePermission extends SkriptEvent {
                 """)
                 .addExample("""
                         on user receive permission:
-                        	send "You just got the permission %event-permission% for %event-duration%" to player
+                        	send "You just got the permission %event-permission% for %event-timespan%" to player
                         """)
                 .addSince("1.0")
                 .build());
+
         registry.register(EventValue.builder(OnUserReceivePermission.class, String.class)
                 .getter(OnUserReceivePermission::getPermission)
                 .patterns("permission")
                 .build());
+
         registry.register(EventValue.builder(OnUserReceivePermission.class, Timespan.class)
                 .getter(OnUserReceivePermission::getDuration)
                 .patterns("timespan")
@@ -57,5 +59,5 @@ public class EvtUserReceivePermission extends SkriptEvent {
     public String toString(@Nullable Event event, boolean b) {
         return "user receive permission";
     }
-}
 
+}

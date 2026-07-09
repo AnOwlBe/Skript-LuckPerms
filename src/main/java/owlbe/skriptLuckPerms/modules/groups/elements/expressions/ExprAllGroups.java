@@ -18,7 +18,6 @@ import org.skriptlang.skript.registration.SyntaxRegistry;
 @Name("All Groups")
 @Description("""
         returns a list of all groups.
-        This expression will require `luckperms` in it until Skript deprecates their `groups of`.
         """)
 @Example("""
         command /getallgroups:
@@ -49,6 +48,7 @@ public class ExprAllGroups extends SimpleExpression<String> {
                 .map(Group::getName)
                 .toArray(String[]::new);
     }
+
     @Override
     public boolean isSingle() {
         return false;
@@ -63,5 +63,5 @@ public class ExprAllGroups extends SimpleExpression<String> {
     public String toString(@Nullable Event event, boolean b) {
         return "all groups";
     }
-}
 
+}

@@ -10,7 +10,7 @@ import org.skriptlang.skript.bukkit.lang.eventvalue.EventValue;
 import org.skriptlang.skript.bukkit.lang.eventvalue.EventValueRegistry;
 import org.skriptlang.skript.bukkit.registration.BukkitSyntaxInfos;
 import org.skriptlang.skript.registration.SyntaxRegistry;
-import owlbe.skriptLuckPerms.luckpermsstuff.luckpermsevents.OnGroupMetaSet;
+import owlbe.skriptLuckPerms.luckperms.bukkitevents.OnGroupMetaSet;
 
 public class EvtGroupMetaSet extends SkriptEvent {
 
@@ -36,14 +36,17 @@ public class EvtGroupMetaSet extends SkriptEvent {
                         """)
                 .addSince("1.0")
                 .build());
+
         registry.register(EventValue.builder(OnGroupMetaSet.class, String.class)
                 .getter(OnGroupMetaSet::getValue)
                 .patterns("value")
                 .build());
+
         registry.register(EventValue.builder(OnGroupMetaSet.class, String.class)
                 .getter(OnGroupMetaSet::getKey)
                 .patterns("key")
                 .build());
+
         registry.register(EventValue.builder(OnGroupMetaSet.class, Group.class)
                 .getter(OnGroupMetaSet::getGroup)
                 .patterns("group")
@@ -64,6 +67,5 @@ public class EvtGroupMetaSet extends SkriptEvent {
     public String toString(@Nullable Event event, boolean b) {
         return "group meta set";
     }
+
 }
-
-

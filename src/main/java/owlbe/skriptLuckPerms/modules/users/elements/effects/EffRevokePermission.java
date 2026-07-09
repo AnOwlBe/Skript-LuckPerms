@@ -23,13 +23,14 @@ import owlbe.skriptLuckPerms.modules.users.elements.sections.SecEditUser;
 @Description("Removes a permission from a user.")
 @Example("""
 function example(p: offlineplayer,perm: string):
-    get luckperms user {_p} and store it in {_lp}
+    set {_lp} to luckperms user from {_p}
     edit user {_lp}:
         revoke permission {_perm}
     send "You just lost permission %{_perm}% ;c" to {_p}
         """)
 @Since("1.0")
 public class EffRevokePermission extends Effect {
+
     public static void register(SyntaxRegistry registry) {
         registry.register(
                 SyntaxRegistry.EFFECT,
@@ -70,8 +71,5 @@ public class EffRevokePermission extends Effect {
                 .append(userExpr)
                 .toString();
     }
+
 }
-
-
-
-

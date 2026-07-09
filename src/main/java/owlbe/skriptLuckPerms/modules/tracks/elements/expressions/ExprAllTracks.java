@@ -25,7 +25,6 @@ import org.skriptlang.skript.registration.SyntaxRegistry;
                  send all of the luckperms tracks to player
         """)
 @Since("1.0")
-
 public class ExprAllTracks extends SimpleExpression<String> {
 
     public static void register(SyntaxRegistry syntaxRegistry) {
@@ -49,6 +48,7 @@ public class ExprAllTracks extends SimpleExpression<String> {
                 .map(Track::getName)
                 .toArray(String[]::new);
     }
+
     @Override
     public boolean isSingle() {
         return false;
@@ -63,6 +63,5 @@ public class ExprAllTracks extends SimpleExpression<String> {
     public String toString(@Nullable Event event, boolean b) {
         return "all tracks";
     }
+
 }
-
-

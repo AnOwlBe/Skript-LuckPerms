@@ -27,7 +27,7 @@ import owlbe.skriptLuckPerms.modules.users.elements.sections.SecEditUser;
      """)
 @Example("""
 function example(p: offlineplayer,track: string):
-    get luckperms user {_p} and store it in {_lp}
+    set {_lp} to luckperms user from {_p}
     edit user {_lp}:
         promote user {_lp} along track {_track}
     if {_p} is online:
@@ -35,6 +35,7 @@ function example(p: offlineplayer,track: string):
         """)
 @Since("1.0")
 public class EffPromoteUser extends Effect {
+
     public static void register(SyntaxRegistry registry) {
         registry.register(
                 SyntaxRegistry.EFFECT,
@@ -75,4 +76,5 @@ public class EffPromoteUser extends Effect {
                 .append(trackExpr)
                 .toString();
     }
+
 }

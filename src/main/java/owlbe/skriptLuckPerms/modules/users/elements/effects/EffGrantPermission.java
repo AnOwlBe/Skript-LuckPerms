@@ -26,7 +26,7 @@ import java.time.Duration;
 @Description("Adds a permission to a user.")
 @Example("""
 function example(p: offlineplayer,perm: string,duration: timespan=0 seconds):
-    get luckperms user {_p} and store it in {_lp}
+    set {_lp} to luckperms user from {_p}
     if {_duration} is not 0 seconds:
         edit user {_lp}:
             grant permission {_perm} for {_duration}
@@ -38,6 +38,7 @@ function example(p: offlineplayer,perm: string,duration: timespan=0 seconds):
         """)
 @Since("1.0")
 public class EffGrantPermission extends Effect {
+
     public static void register(SyntaxRegistry registry) {
         registry.register(
                 SyntaxRegistry.EFFECT,
@@ -88,7 +89,5 @@ public class EffGrantPermission extends Effect {
                 .appendIf(durationExpr != null, "for", durationExpr)
                 .toString();
     }
+
 }
-
-
-

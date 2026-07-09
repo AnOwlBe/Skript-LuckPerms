@@ -60,10 +60,8 @@ public class UserModule extends HierarchicalAddonModule {
                 a -> EvtUserMetaRemove.register(a, registry),
                 a -> EvtUserLosePermission.register(a, registry),
                 a -> EvtUserLoseGroup.register(a, registry)
-
-
-
                 );
+
         Classes.registerClass(new ClassInfo<>(User.class, "luckpermsuser")
                 .user("luckperms ?users?")
                 .name("LuckPerms User")

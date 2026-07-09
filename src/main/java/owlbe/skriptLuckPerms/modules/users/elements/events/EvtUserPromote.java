@@ -10,7 +10,7 @@ import org.skriptlang.skript.bukkit.lang.eventvalue.EventValue;
 import org.skriptlang.skript.bukkit.lang.eventvalue.EventValueRegistry;
 import org.skriptlang.skript.bukkit.registration.BukkitSyntaxInfos;
 import org.skriptlang.skript.registration.SyntaxRegistry;
-import owlbe.skriptLuckPerms.luckpermsstuff.luckpermsevents.OnUserPromote;
+import owlbe.skriptLuckPerms.luckperms.bukkitevents.OnUserPromote;
 
 public class EvtUserPromote extends SkriptEvent {
 
@@ -33,15 +33,18 @@ public class EvtUserPromote extends SkriptEvent {
                         """)
                 .addSince("1.0")
                 .build());
+
         registry.register(EventValue.builder(OnUserPromote.class, Group.class)
                 .getter(OnUserPromote::getGroup)
                 .patterns("group")
                 .build());
+
         registry.register(EventValue.builder(OnUserPromote.class, Group.class)
                 .getter(OnUserPromote::getPreviousGroup)
                 .patterns("group")
                 .time(EventValue.Time.PAST)
                 .build());
+
         registry.register(EventValue.builder(OnUserPromote.class, String.class)
                 .getter(OnUserPromote::getTrack)
                 .patterns("track")
@@ -62,4 +65,5 @@ public class EvtUserPromote extends SkriptEvent {
     public String toString(@Nullable Event event, boolean b) {
         return "user promoted";
     }
+
 }

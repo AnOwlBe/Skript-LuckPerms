@@ -11,7 +11,7 @@ import org.skriptlang.skript.bukkit.lang.eventvalue.EventValue;
 import org.skriptlang.skript.bukkit.lang.eventvalue.EventValueRegistry;
 import org.skriptlang.skript.bukkit.registration.BukkitSyntaxInfos;
 import org.skriptlang.skript.registration.SyntaxRegistry;
-import owlbe.skriptLuckPerms.luckpermsstuff.luckpermsevents.OnTrackRemoveGroup;
+import owlbe.skriptLuckPerms.luckperms.bukkitevents.OnTrackRemoveGroup;
 
 public class EvtTrackRemoveGroup extends SkriptEvent {
 
@@ -34,10 +34,12 @@ public class EvtTrackRemoveGroup extends SkriptEvent {
                         """)
                 .addSince("1.0.2")
                 .build());
+
         registry.register(EventValue.builder(OnTrackRemoveGroup.class, Group.class)
                 .getter(OnTrackRemoveGroup::getGroup)
                 .patterns("group")
                 .build());
+
         registry.register(EventValue.builder(OnTrackRemoveGroup.class, Track.class)
                 .getter(OnTrackRemoveGroup::getTrack)
                 .patterns("track")
@@ -58,4 +60,5 @@ public class EvtTrackRemoveGroup extends SkriptEvent {
     public String toString(@Nullable Event event, boolean b) {
         return "track remove group";
     }
+
 }

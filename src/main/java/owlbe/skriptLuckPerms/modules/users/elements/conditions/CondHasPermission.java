@@ -22,7 +22,7 @@ import org.skriptlang.skript.registration.SyntaxRegistry;
              """)
 @Example("""
         function hasPerm(p: player,perm: string) :: boolean:
-            get luckperms user {_p} and store it in {_lp}
+            set {_lp} to luckperms user from {_p}
             if {_lp} has luckperms permission {_perm}:
                 return true
             else:
@@ -30,6 +30,7 @@ import org.skriptlang.skript.registration.SyntaxRegistry;
         """)
 @Since("1.0")
 public class CondHasPermission extends Condition {
+
     public static void register(SyntaxRegistry registry) {
         registry.register(
                 SyntaxRegistry.CONDITION,
@@ -68,4 +69,5 @@ public class CondHasPermission extends Condition {
                 .append(permExpr)
                 .toString();
     }
+
 }

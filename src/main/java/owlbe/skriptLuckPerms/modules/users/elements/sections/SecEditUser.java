@@ -30,12 +30,12 @@ import static owlbe.skriptLuckPerms.SkriptLuckPerms.instance;
         After the code in the section has finished the user will be saved asynchronously.
         """)
 @Example("""
-        edit group user {_lp}:
+        edit user {_lp}:
             grant permission "mypermission"
     """)
-
 @Since("1.0")
 public class SecEditUser extends Section {
+
     public static class UserEvent extends Event {
 
         private final User user;
@@ -54,6 +54,7 @@ public class SecEditUser extends Section {
             throw new IllegalStateException();
         }
     }
+
     public static void register(SyntaxRegistry syntaxRegistry,EventValueRegistry registry) {
         syntaxRegistry.register(
                 SyntaxRegistry.SECTION,
@@ -61,6 +62,7 @@ public class SecEditUser extends Section {
                         .addPattern("edit [the] user %luckpermsuser%")
                         .build()
         );
+
         registry.register(EventValue.builder(UserEvent.class, User.class)
                 .getter(UserEvent::getUser)
                 .patterns("user")
@@ -90,14 +92,13 @@ public class SecEditUser extends Section {
             if (user == null) return null;
             SecEditUser.UserEvent userevent = new SecEditUser.UserEvent(user);
             Object variables = Variables.copyLocalVariables(event);
+            Variables.setLocalVariables(userevent,variables);
+            TriggerItem.walk(trigger, userevent);
             Bukkit.getScheduler().runTaskAsynchronously(instance, () -> {
-                Variables.setLocalVariables(userevent,variables);
-                TriggerItem.walk(trigger, userevent);
                 LuckPermsProvider.get().getUserManager().saveUser(user);
                 Bukkit.getScheduler().runTask(instance, () -> {
                     Variables.setLocalVariables(event, Variables.copyLocalVariables(userevent));
                     Variables.removeLocals(userevent);
-                    TriggerItem.walk(getNext(), event);
                     Variables.removeLocals(event);
                 });
 
@@ -113,10 +114,5 @@ public class SecEditUser extends Section {
                 .append(userExpr)
                 .toString();
     }
+
 }
-
-
-
-
-
-

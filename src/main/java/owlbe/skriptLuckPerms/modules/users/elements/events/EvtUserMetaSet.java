@@ -9,7 +9,7 @@ import org.skriptlang.skript.bukkit.lang.eventvalue.EventValue;
 import org.skriptlang.skript.bukkit.lang.eventvalue.EventValueRegistry;
 import org.skriptlang.skript.bukkit.registration.BukkitSyntaxInfos;
 import org.skriptlang.skript.registration.SyntaxRegistry;
-import owlbe.skriptLuckPerms.luckpermsstuff.luckpermsevents.OnUserMetaSet;
+import owlbe.skriptLuckPerms.luckperms.bukkitevents.OnUserMetaSet;
 
 public class EvtUserMetaSet extends SkriptEvent {
 
@@ -34,10 +34,12 @@ public class EvtUserMetaSet extends SkriptEvent {
                         """)
                 .addSince("1.0")
                 .build());
+
         registry.register(EventValue.builder(OnUserMetaSet.class, String.class)
                 .getter(OnUserMetaSet::getValue)
                 .patterns("value")
                 .build());
+
         registry.register(EventValue.builder(OnUserMetaSet.class, String.class)
                 .getter(OnUserMetaSet::getKey)
                 .patterns("key")
@@ -58,5 +60,5 @@ public class EvtUserMetaSet extends SkriptEvent {
     public String toString(@Nullable Event event, boolean b) {
         return "user meta set";
     }
-}
 
+}

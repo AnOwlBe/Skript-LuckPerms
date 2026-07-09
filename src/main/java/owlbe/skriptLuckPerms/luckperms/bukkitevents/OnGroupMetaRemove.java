@@ -1,4 +1,4 @@
-package owlbe.skriptLuckPerms.luckpermsstuff.luckpermsevents;
+package owlbe.skriptLuckPerms.luckperms.bukkitevents;
 
 import net.luckperms.api.model.group.Group;
 import net.luckperms.api.node.Node;

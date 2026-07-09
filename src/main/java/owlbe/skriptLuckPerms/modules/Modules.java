@@ -30,12 +30,12 @@ public class Modules extends HierarchicalAddonModule {
 
     @Override
     protected void initSelf(SkriptAddon addon) {
-
+      // null
     }
 
     @Override
     protected void loadSelf(SkriptAddon addon) {
-        // shrug
+        // null
     }
 
     @Override

@@ -10,7 +10,7 @@ import org.skriptlang.skript.bukkit.lang.eventvalue.EventValue;
 import org.skriptlang.skript.bukkit.lang.eventvalue.EventValueRegistry;
 import org.skriptlang.skript.bukkit.registration.BukkitSyntaxInfos;
 import org.skriptlang.skript.registration.SyntaxRegistry;
-import owlbe.skriptLuckPerms.luckpermsstuff.luckpermsevents.OnUserLoseGroup;
+import owlbe.skriptLuckPerms.luckperms.bukkitevents.OnUserLoseGroup;
 
 public class EvtUserLoseGroup extends SkriptEvent {
 
@@ -31,6 +31,7 @@ public class EvtUserLoseGroup extends SkriptEvent {
                         """)
                 .addSince("1.0")
                 .build());
+
         registry.register(EventValue.builder(OnUserLoseGroup.class, Group.class)
                 .getter(OnUserLoseGroup::getGroup)
                 .patterns("group")
@@ -51,7 +52,5 @@ public class EvtUserLoseGroup extends SkriptEvent {
     public String toString(@Nullable Event event, boolean b) {
         return "user lose group";
     }
+
 }
-
-
-

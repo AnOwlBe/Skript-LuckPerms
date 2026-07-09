@@ -1,17 +1,16 @@
-package owlbe.skriptLuckPerms.luckpermsstuff.luckpermsevents;
+package owlbe.skriptLuckPerms.luckperms.bukkitevents;
 
-import ch.njol.skript.util.Timespan;
-import net.luckperms.api.event.node.NodeAddEvent;
+import net.luckperms.api.event.node.NodeRemoveEvent;
 import net.luckperms.api.model.group.Group;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jspecify.annotations.NonNull;
 
-public class OnGroupReceivePermission extends Event {
+public class OnGroupLosePermission extends Event {
     private static final HandlerList HANDLER_LIST = new HandlerList();
-    private final NodeAddEvent event;
+    private final NodeRemoveEvent event;
 
-    public OnGroupReceivePermission(NodeAddEvent event) {
+    public OnGroupLosePermission(NodeRemoveEvent event) {
         this.event = event;
 
     }
@@ -20,9 +19,6 @@ public class OnGroupReceivePermission extends Event {
     }
     public String getPermission() {
         return event.getNode().getKey();
-    }
-    public Timespan getDuration() {
-        return new Timespan(event.getNode().getExpiry() != null ? event.getNode().getExpiry().toEpochMilli() - System.currentTimeMillis() : 0);
     }
     public static HandlerList getHandlerList() {
         return HANDLER_LIST;

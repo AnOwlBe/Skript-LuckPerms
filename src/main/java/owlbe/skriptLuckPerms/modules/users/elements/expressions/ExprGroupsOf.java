@@ -25,8 +25,8 @@ import org.skriptlang.skript.registration.SyntaxRegistry;
         """)
 @Example("""
         function example(p: offlineplayer):
-            get luckperms user {_p} and store it in {_lp}
-            broadcast "%{_p}% has %size of luckperms groups of {_lp}% groups!%
+            set {_lp} to luckperms user from {_p}
+            broadcast "%{_p}% has %size of luckperms groups of {_lp}% groups!"
             broadcast "their groups: %luckperm groups of {_lp}%"
         """)
 @Since("1.0")
@@ -60,6 +60,7 @@ public class ExprGroupsOf extends SimpleExpression<String> {
                 .map(Group::getName)
                 .toArray(String[]::new);
     }
+
     @Override
     public boolean isSingle() {
         return false;
@@ -77,4 +78,5 @@ public class ExprGroupsOf extends SimpleExpression<String> {
                 .append(userExpr)
                 .toString();
     }
+
 }

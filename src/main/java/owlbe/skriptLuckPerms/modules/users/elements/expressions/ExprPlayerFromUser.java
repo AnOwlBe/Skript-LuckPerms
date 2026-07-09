@@ -55,6 +55,7 @@ public class ExprPlayerFromUser extends SimpleExpression<OfflinePlayer> {
        return new OfflinePlayer[]{player};
 
     }
+
     @Override
     public boolean isSingle() {
         return true;
@@ -72,4 +73,5 @@ public class ExprPlayerFromUser extends SimpleExpression<OfflinePlayer> {
                 .append(userExpr)
                 .toString();
     }
+
 }

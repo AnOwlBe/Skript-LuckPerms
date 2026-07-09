@@ -27,18 +27,18 @@ import org.skriptlang.skript.registration.SyntaxRegistry;
         """)
 @Example("""
         function example(p: offlineplayer):
-            set {_lp} to luckperms user {_p}
+            set {_lp} to luckperms user from {_p}
             broadcast "%{_p}% has %size of groups of {_lp}% groups!"
         """)
 @Since("1.0, 1.0.2 (pattern change)")
 public class EffLoadPlayer extends AsyncEffect {
+
     public static void register(SyntaxRegistry registry) {
         registry.register(
                 SyntaxRegistry.EFFECT,
                 SyntaxInfo.builder(EffLoadPlayer.class)
                         .addPatterns("set %-~objects% to luckperm[s] user [from] %offlineplayer%")
                         .build()
-
         );
     }
 
@@ -76,5 +76,5 @@ public class EffLoadPlayer extends AsyncEffect {
                 .append(playerExpr)
                 .toString();
     }
-}
 
+}

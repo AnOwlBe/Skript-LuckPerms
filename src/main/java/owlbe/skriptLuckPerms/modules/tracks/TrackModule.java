@@ -17,7 +17,6 @@ import owlbe.skriptLuckPerms.modules.tracks.elements.events.EvtTrackAddGroup;
 import owlbe.skriptLuckPerms.modules.tracks.elements.events.EvtTrackRemoveGroup;
 import owlbe.skriptLuckPerms.modules.tracks.elements.expressions.ExprAllTracks;
 import owlbe.skriptLuckPerms.modules.tracks.elements.expressions.ExprTrackGroups;
-import owlbe.skriptLuckPerms.modules.users.elements.sections.SecEditUser;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -44,6 +43,7 @@ public class TrackModule extends HierarchicalAddonModule {
                 a -> EvtTrackAddGroup.register(a, registry),
                 a -> EvtTrackRemoveGroup.register(a, registry)
                 );
+
         Classes.registerClass(new ClassInfo<>(Track.class, "luckpermstrack")
                 .user("luckperms ?tracks?")
                 .name("LuckPerms Track")
@@ -71,6 +71,7 @@ public class TrackModule extends HierarchicalAddonModule {
                     }
                 })
                 .since("1.0"));
+
         Converters.registerConverter(Track.class, String.class, Track::getName);
         Converters.registerConverter(String.class, Track.class, name -> LuckPermsProvider.get().getTrackManager().getTrack(name));
     }

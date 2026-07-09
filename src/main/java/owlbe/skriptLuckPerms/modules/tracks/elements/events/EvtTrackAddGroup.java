@@ -11,7 +11,7 @@ import org.skriptlang.skript.bukkit.lang.eventvalue.EventValue;
 import org.skriptlang.skript.bukkit.lang.eventvalue.EventValueRegistry;
 import org.skriptlang.skript.bukkit.registration.BukkitSyntaxInfos;
 import org.skriptlang.skript.registration.SyntaxRegistry;
-import owlbe.skriptLuckPerms.luckpermsstuff.luckpermsevents.OnTrackAddGroup;
+import owlbe.skriptLuckPerms.luckperms.bukkitevents.OnTrackAddGroup;
 
 public class EvtTrackAddGroup extends SkriptEvent {
 
@@ -34,10 +34,12 @@ public class EvtTrackAddGroup extends SkriptEvent {
                         """)
                 .addSince("1.0.2")
                 .build());
+
         registry.register(EventValue.builder(OnTrackAddGroup.class, Group.class)
                 .getter(OnTrackAddGroup::getGroup)
                 .patterns("group")
                 .build());
+
         registry.register(EventValue.builder(OnTrackAddGroup.class, Track.class)
                 .getter(OnTrackAddGroup::getTrack)
                 .patterns("track")
@@ -58,4 +60,5 @@ public class EvtTrackAddGroup extends SkriptEvent {
     public String toString(@Nullable Event event, boolean b) {
         return "track add group";
     }
+
 }

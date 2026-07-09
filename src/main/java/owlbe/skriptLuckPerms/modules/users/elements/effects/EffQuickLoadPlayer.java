@@ -29,11 +29,12 @@ import org.skriptlang.skript.registration.SyntaxRegistry;
         """)
 @Example("""
         function example(p: offlineplayer):
-            set {_m} to quick luckperms user {_p}
+            set {_m} to quick luckperms user from {_p}
             broadcast "%{_p}% has %size of groups of {_lp}% groups!"
         """)
 @Since("1.0.2")
 public class EffQuickLoadPlayer extends Effect {
+
 	public static void register(SyntaxRegistry registry) {
 		registry.register(
 				SyntaxRegistry.EFFECT,
@@ -75,4 +76,5 @@ public class EffQuickLoadPlayer extends Effect {
 				.append(playerExpr)
 				.toString();
 	}
+
 }

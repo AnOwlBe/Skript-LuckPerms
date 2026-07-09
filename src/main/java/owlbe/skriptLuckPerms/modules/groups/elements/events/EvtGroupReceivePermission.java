@@ -11,7 +11,7 @@ import org.skriptlang.skript.bukkit.lang.eventvalue.EventValue;
 import org.skriptlang.skript.bukkit.lang.eventvalue.EventValueRegistry;
 import org.skriptlang.skript.bukkit.registration.BukkitSyntaxInfos;
 import org.skriptlang.skript.registration.SyntaxRegistry;
-import owlbe.skriptLuckPerms.luckpermsstuff.luckpermsevents.OnGroupReceivePermission;
+import owlbe.skriptLuckPerms.luckperms.bukkitevents.OnGroupReceivePermission;
 
 public class EvtGroupReceivePermission extends SkriptEvent {
 
@@ -38,10 +38,12 @@ public class EvtGroupReceivePermission extends SkriptEvent {
                 .getter(OnGroupReceivePermission::getPermission)
                 .patterns("permission")
                 .build());
+
         registry.register(EventValue.builder(OnGroupReceivePermission.class, Group.class)
                 .getter(OnGroupReceivePermission::getGroup)
                 .patterns("group")
                 .build());
+
         registry.register(EventValue.builder(OnGroupReceivePermission.class, Timespan.class)
                 .getter(OnGroupReceivePermission::getDuration)
                 .patterns("timespan")
@@ -62,6 +64,5 @@ public class EvtGroupReceivePermission extends SkriptEvent {
     public String toString(@Nullable Event event, boolean b) {
         return "group receive permission";
     }
+
 }
-
-

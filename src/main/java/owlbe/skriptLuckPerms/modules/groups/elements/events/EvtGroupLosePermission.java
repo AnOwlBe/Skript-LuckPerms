@@ -10,7 +10,7 @@ import org.skriptlang.skript.bukkit.lang.eventvalue.EventValue;
 import org.skriptlang.skript.bukkit.lang.eventvalue.EventValueRegistry;
 import org.skriptlang.skript.bukkit.registration.BukkitSyntaxInfos;
 import org.skriptlang.skript.registration.SyntaxRegistry;
-import owlbe.skriptLuckPerms.luckpermsstuff.luckpermsevents.OnGroupLosePermission;
+import owlbe.skriptLuckPerms.luckperms.bukkitevents.OnGroupLosePermission;
 
 public class EvtGroupLosePermission extends SkriptEvent {
 
@@ -31,10 +31,12 @@ public class EvtGroupLosePermission extends SkriptEvent {
                         """)
                 .addSince("1.0")
                 .build());
+
         registry.register(EventValue.builder(OnGroupLosePermission.class, String.class)
                 .getter(OnGroupLosePermission::getPermission)
                 .patterns("permission")
                 .build());
+
         registry.register(EventValue.builder(OnGroupLosePermission.class, Group.class)
                 .getter(OnGroupLosePermission::getGroup)
                 .patterns("group")
@@ -55,7 +57,5 @@ public class EvtGroupLosePermission extends SkriptEvent {
     public String toString(@Nullable Event event, boolean b) {
         return "user lose permission";
     }
+
 }
-
-
-

@@ -7,7 +7,7 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SectionExpression;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.util.Timespan;
@@ -26,7 +26,7 @@ import org.skriptlang.skript.registration.SyntaxRegistry;
 import java.time.Duration;
 import java.util.List;
 
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked", "rawtypes"})
 @Name("Chat Node Builder")
 @Description("""
         Creates a builder for a prefix/suffix.
@@ -35,7 +35,7 @@ import java.util.List;
 @Example("""
 command /test:
     trigger:
-        fetch luckperms user player and store it in {_lp}
+        set {_lp} to luckperms user from player
         set {_m} to a new suffix builder:
             value: "NERD"
             priority: 5
@@ -45,14 +45,13 @@ command /test:
 @Example("""
 command /test:
     trigger:
-        fetch luckperms user player and store it in {_lp}
+        set {_lp} to luckperms user from player
         set {_m} to a new prefix builder:
             value: "<red>ADMIN"
             priority: 255
             duration: 1 hour
         add {_m} to prefixes of {_lp}
     """)
-
 @Since("1.0")
 public class SecChatMetaBuilder extends SectionExpression<ChatMetaNode> {
     private static EntryValidator VALIDATOR;
@@ -71,29 +70,29 @@ public class SecChatMetaBuilder extends SectionExpression<ChatMetaNode> {
                         .build()
         );
     }
-    private Expression<String> value;
-    private Expression<Integer> priority;
-    private Expression<Timespan> duration;
+
+    private Expression<String> valueExpr = null;
+    private Expression<Integer> priorityExpr = null;
+    private Expression<Timespan> durationExpr = null;
     private String type;
 
     @Override
-    public boolean init(Expression<?>[] expressions, int i, Kleenean kleenean, SkriptParser.ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> list) {
+    public boolean init(Expression<?>[] expressions, int i, Kleenean kleenean, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> list) {
         type = parseResult.expr.contains("prefix") ? "prefix" : "suffix";
         EntryContainer container = VALIDATOR.validate(sectionNode);
         if (container == null) return false;
-        this.value = (Expression<String>) container.getOptional("value", false);
-        this.priority = (Expression<Integer>) container.getOptional("priority", false);
-        this.duration = (Expression<Timespan>) container.getOptional("duration", false);
+        valueExpr = (Expression<String>) container.getOptional("value", false);
+        priorityExpr = (Expression<Integer>) container.getOptional("priority", false);
+        durationExpr = (Expression<Timespan>) container.getOptional("duration", false);
         return true;
     }
 
-
-
     @Override
     protected ChatMetaNode @Nullable [] get(Event event) {
-        String value = this.value != null ? this.value.getSingle(event) : "";
-        int priority = this.priority != null ? this.priority.getSingle(event) : 0;
-        Timespan duration = this.duration != null ? this.duration.getSingle(event) : null;
+        String value = valueExpr != null ? valueExpr.getSingle(event) : "";
+        if (value == null) return new ChatMetaNode[0];
+        int priority = priorityExpr != null ? priorityExpr.getSingle(event) : 0;
+        Timespan duration = durationExpr != null ? durationExpr.getSingle(event) : null;
         if (type.equals("prefix")) {
             PrefixNode.Builder builder = PrefixNode.builder(value, priority);
             if (duration != null) builder.expiry(Duration.ofMillis(duration.getAs(Timespan.TimePeriod.MILLISECOND)));
@@ -114,6 +113,7 @@ public class SecChatMetaBuilder extends SectionExpression<ChatMetaNode> {
     public Class<? extends ChatMetaNode> getReturnType() {
         return ChatMetaNode.class;
     }
+
     @Override
     public String toString(@Nullable Event event, boolean b) {
         return new SyntaxStringBuilder(event, b)
@@ -122,4 +122,5 @@ public class SecChatMetaBuilder extends SectionExpression<ChatMetaNode> {
                 .append("builder")
                 .toString();
     }
+
 }

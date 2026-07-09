@@ -27,7 +27,7 @@ import java.time.Duration;
 @Description("Adds a group to a user.")
 @Example("""
 function example(p: offlineplayer,group: string,duration: timespan=0 seconds):
-    get luckperms user {_p} and store it in {_lp}
+    set {_lp} to luckperms user from {_p}
     if {_duration} is not 0 seconds:
         edit user {_lp}:
             grant luckperms group {_group} for {_duration}
@@ -39,6 +39,7 @@ function example(p: offlineplayer,group: string,duration: timespan=0 seconds):
         """)
 @Since("1.0")
 public class EffGrantGroup extends Effect {
+
     public static void register(SyntaxRegistry registry) {
         registry.register(
                 SyntaxRegistry.EFFECT,
@@ -89,6 +90,5 @@ public class EffGrantGroup extends Effect {
                 .appendIf(durationExpr != null, "for", durationExpr)
                 .toString();
     }
+
 }
-
-

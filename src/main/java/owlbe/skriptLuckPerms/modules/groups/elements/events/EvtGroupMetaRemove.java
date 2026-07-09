@@ -10,7 +10,7 @@ import org.skriptlang.skript.bukkit.lang.eventvalue.EventValue;
 import org.skriptlang.skript.bukkit.lang.eventvalue.EventValueRegistry;
 import org.skriptlang.skript.bukkit.registration.BukkitSyntaxInfos;
 import org.skriptlang.skript.registration.SyntaxRegistry;
-import owlbe.skriptLuckPerms.luckpermsstuff.luckpermsevents.OnGroupMetaRemove;
+import owlbe.skriptLuckPerms.luckperms.bukkitevents.OnGroupMetaRemove;
 
 public class EvtGroupMetaRemove extends SkriptEvent {
 
@@ -36,14 +36,17 @@ public class EvtGroupMetaRemove extends SkriptEvent {
                         """)
                 .addSince("1.0")
                 .build());
+
         registry.register(EventValue.builder(OnGroupMetaRemove.class, String.class)
                 .getter(OnGroupMetaRemove::getValue)
                 .patterns("value")
                 .build());
+
         registry.register(EventValue.builder(OnGroupMetaRemove.class, String.class)
                 .getter(OnGroupMetaRemove::getKey)
                 .patterns("key")
                 .build());
+
         registry.register(EventValue.builder(OnGroupMetaRemove.class, Group.class)
                 .getter(OnGroupMetaRemove::getGroup)
                 .patterns("group")
@@ -64,7 +67,5 @@ public class EvtGroupMetaRemove extends SkriptEvent {
     public String toString(@Nullable Event event, boolean b) {
         return "group meta remove";
     }
+
 }
-
-
-

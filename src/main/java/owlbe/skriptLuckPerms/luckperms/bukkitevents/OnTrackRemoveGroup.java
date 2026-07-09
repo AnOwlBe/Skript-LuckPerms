@@ -1,7 +1,6 @@
-package owlbe.skriptLuckPerms.luckpermsstuff.luckpermsevents;
+package owlbe.skriptLuckPerms.luckperms.bukkitevents;
 
 import net.luckperms.api.LuckPermsProvider;
-import net.luckperms.api.event.track.mutate.TrackAddGroupEvent;
 import net.luckperms.api.event.track.mutate.TrackRemoveGroupEvent;
 import net.luckperms.api.model.group.Group;
 import net.luckperms.api.track.Track;

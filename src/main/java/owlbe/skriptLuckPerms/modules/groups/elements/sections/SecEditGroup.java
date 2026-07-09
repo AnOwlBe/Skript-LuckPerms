@@ -33,9 +33,9 @@ import static owlbe.skriptLuckPerms.SkriptLuckPerms.instance;
     edit group "example":
         add 5 to group weight
     """)
-
 @Since("1.0")
 public class SecEditGroup extends Section {
+
     public static class GroupEvent extends Event {
 
         private final String group;
@@ -54,13 +54,15 @@ public class SecEditGroup extends Section {
             throw new IllegalStateException();
         }
     }
-    public static void register(SyntaxRegistry syntaxRegistry,EventValueRegistry registry) {
+
+    public static void register(SyntaxRegistry syntaxRegistry, EventValueRegistry registry) {
         syntaxRegistry.register(
                 SyntaxRegistry.SECTION,
                 SyntaxInfo.builder(SecEditGroup.class)
                         .addPattern("edit [the] group %string%")
                         .build()
         );
+
         registry.register(EventValue.builder(GroupEvent.class, String.class)
                 .getter(GroupEvent::getGroup)
                 .patterns("group")
@@ -90,16 +92,15 @@ public class SecEditGroup extends Section {
             if (group == null) return null;
             SecEditGroup.GroupEvent groupevent = new SecEditGroup.GroupEvent(group);
             Object variables = Variables.copyLocalVariables(event);
+            Variables.setLocalVariables(groupevent,variables);
+            TriggerItem.walk(trigger, groupevent);
             Bukkit.getScheduler().runTaskAsynchronously(instance, () -> {
-                Variables.setLocalVariables(groupevent,variables);
-                TriggerItem.walk(trigger, groupevent);
                 Group lpGroup = LuckPermsProvider.get().getGroupManager().getGroup(group);
                 if (lpGroup == null) return;
                 LuckPermsProvider.get().getGroupManager().saveGroup(lpGroup);
                 Bukkit.getScheduler().runTask(instance, () -> {
                     Variables.setLocalVariables(event, Variables.copyLocalVariables(groupevent));
                     Variables.removeLocals(groupevent);
-                    TriggerItem.walk(getNext(), event);
                     Variables.removeLocals(event);
                 });
 
@@ -115,9 +116,5 @@ public class SecEditGroup extends Section {
                 .append(groupExpr)
                 .toString();
     }
+
 }
-
-
-
-
-

@@ -27,4 +27,5 @@ public class JoinListener implements Listener {
                     player.sendMessage(minimessage("<shadow:#63FFA4:0.3><#63FFA4>⏩ <reset><white>Download at: <shadow:#63FFA4:0.3><#63FFA4><click:open_url:" + version.getUpdateLink() + ">" + version.getUpdateLink()));
                 }), 30L);
     }
+
 }

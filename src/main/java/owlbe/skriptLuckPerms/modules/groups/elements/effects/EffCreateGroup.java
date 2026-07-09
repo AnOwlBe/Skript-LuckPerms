@@ -18,7 +18,7 @@ import org.skriptlang.skript.registration.SyntaxRegistry;
 @SuppressWarnings("unchecked")
 @Name("Create Group")
 @Description("""
-        Creates a new group and then loads it into memory.
+        Creates a new luckperms group and then loads it into memory.
         """)
 @Example("""
         function example(name: string):
@@ -35,6 +35,7 @@ public class EffCreateGroup extends AsyncEffect {
 
         );
     }
+
     private Expression<String> nameExpr;
 
     @Override
@@ -59,4 +60,5 @@ public class EffCreateGroup extends AsyncEffect {
                 .append(nameExpr)
                 .toString();
     }
+
 }

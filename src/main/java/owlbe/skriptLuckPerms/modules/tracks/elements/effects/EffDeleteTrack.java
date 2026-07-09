@@ -19,24 +19,24 @@ import org.skriptlang.skript.registration.SyntaxRegistry;
 @SuppressWarnings("unchecked")
 @Name("Delete Track")
 @Description("""
-        Deletes a track.
+        Deletes a luckperms track.
         """)
 @Example("""
         function example(name: string):
             delete luckperms track named {_name}
         """)
 @Since("1.0.2")
-
 public class EffDeleteTrack extends AsyncEffect {
+
     public static void register(SyntaxRegistry registry) {
         registry.register(
                 SyntaxRegistry.EFFECT,
                 SyntaxInfo.builder(EffDeleteTrack.class)
                         .addPatterns("delete luckperm[s] track %luckpermstrack%")
                         .build()
-
         );
     }
+
     private Expression<Track> trackExpr;
 
     @Override
@@ -60,4 +60,6 @@ public class EffDeleteTrack extends AsyncEffect {
                 .append(trackExpr)
                 .toString();
     }
+
 }
+

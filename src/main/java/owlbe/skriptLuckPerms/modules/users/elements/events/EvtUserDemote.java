@@ -10,7 +10,7 @@ import org.skriptlang.skript.bukkit.lang.eventvalue.EventValue;
 import org.skriptlang.skript.bukkit.lang.eventvalue.EventValueRegistry;
 import org.skriptlang.skript.bukkit.registration.BukkitSyntaxInfos;
 import org.skriptlang.skript.registration.SyntaxRegistry;
-import owlbe.skriptLuckPerms.luckpermsstuff.luckpermsevents.OnUserDemote;
+import owlbe.skriptLuckPerms.luckperms.bukkitevents.OnUserDemote;
 
 public class EvtUserDemote extends SkriptEvent {
 
@@ -33,15 +33,18 @@ public class EvtUserDemote extends SkriptEvent {
                         """)
                 .addSince("1.0")
                 .build());
+
         registry.register(EventValue.builder(OnUserDemote.class, Group.class)
                 .getter(OnUserDemote::getGroup)
                 .patterns("group")
                 .build());
+
         registry.register(EventValue.builder(OnUserDemote.class, Group.class)
                 .getter(OnUserDemote::getPreviousGroup)
                 .patterns("group")
                 .time(EventValue.Time.PAST)
                 .build());
+
         registry.register(EventValue.builder(OnUserDemote.class, String.class)
                 .getter(OnUserDemote::getTrack)
                 .patterns("track")
@@ -62,5 +65,5 @@ public class EvtUserDemote extends SkriptEvent {
     public String toString(@Nullable Event event, boolean b) {
         return "user demoted";
     }
-}
 
+}

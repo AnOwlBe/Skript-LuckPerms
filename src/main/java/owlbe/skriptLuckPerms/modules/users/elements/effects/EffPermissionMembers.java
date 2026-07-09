@@ -31,15 +31,17 @@ import java.util.UUID;
 @Example("""
         function search():
             get the users with perm "example" and store it in {_lp::*}
+            set {_lp::*} to all luckperms users with permission "example"
             send "%size of {_lp::*}% have 'example' permission!" to all ops
         """)
 @Since("1.0")
 public class EffPermissionMembers extends AsyncEffect {
+
     public static void register(SyntaxRegistry registry) {
         registry.register(
                 SyntaxRegistry.EFFECT,
                 SyntaxInfo.builder(EffPermissionMembers.class)
-                        .addPatterns("(fetch|get) [the] [luckperm[s]] (users|players) with perm[ission] %string% and store (it|the result) in %-~objects%")
+                        .addPatterns("set %-~objects% to (all|all of the) [luckperm[s]] (users|players) with perm[ission] %string%")
                         .build()
         );
     }
@@ -50,8 +52,8 @@ public class EffPermissionMembers extends AsyncEffect {
     @Override
     public boolean init(Expression<?>[] expressions, int i, Kleenean kleenean, SkriptParser.ParseResult parseResult) {
         getParser().setHasDelayBefore(Kleenean.TRUE);
-        permExpr = (Expression<String>) expressions[0];
-        varExpr = expressions[1];
+        permExpr = (Expression<String>) expressions[1];
+        varExpr = expressions[0];
         if (!Changer.ChangerUtils.acceptsChange(varExpr, Changer.ChangeMode.SET, UUID.class)) {
             Skript.error(varExpr.toString(null, Skript.debug()) + " cannot be set to UUIDS.");
             return false;
@@ -73,12 +75,11 @@ public class EffPermissionMembers extends AsyncEffect {
     @Override
     public String toString(@Nullable Event event, boolean b) {
         return new SyntaxStringBuilder(event, b)
-                .append("get users with permission")
-                .append(permExpr)
-                .append("and store in")
+                .append("set")
                 .append(varExpr)
+                .append("to all players with permission")
+                .append(permExpr)
                 .toString();
     }
+
 }
-
-

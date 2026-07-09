@@ -12,7 +12,6 @@ import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.data.NodeMap;
 import net.luckperms.api.model.group.Group;
 import net.luckperms.api.model.user.User;
@@ -33,37 +32,37 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@SuppressWarnings("unchecked")
 @Name("Prefix")
 @Description("""
         Returns the primary prefix of a user/group.
         If `prefixes` is used it will return a sorted list of all prefixes of the user/group.
-        Use `ExprChatMetaPriority` to get priority of a prefix.
+        Use `priority of..` to get priority of a prefix.
         """)
 @Example("""
         function get(p: offlineplayer):
-            get luckperms user {_p} and store it in {_lp}
-            set {_prefix} to formatted luckperms prefix of {_lp}
-            set {_prefixes::*} to luckperms prefixes of {_lp}
+            set {_lp} to luckperms user from {_p}
+            set {_prefix} to formatted luckperms prefix of user {_lp}
+            set {_prefixes::*} to luckperms prefixes of user {_lp}
             if {_p} is online:
                  send "Your prefix: %{_prefix}%" to {_p}
                  send "You have %size of {_prefixes::*}% prefixes!" to {_p}
                  loop {_prefixes::*}:
                       set {_prefix} to formatted loop-value
-                      send "Priority: %prefix priority of loop-value% Prefix: %{_prefix}%" to {_p}
+                      send "Priority: %priority of loop-value% Prefix: %{_prefix}%" to {_p}
         """)
 @Example("""
         function get(group: string):
-            set {_prefix} to formatted luckperms prefix of {_group}
-            set {_prefixes::*} to luckperms prefixes of {_group}
+            set {_prefix} to formatted luckperms prefix of group {_group}
+            set {_prefixes::*} to luckperms prefixes of group {_group}
             broadcast "%{_group}%'s primary prefix: %{_prefix}%"
             broadcast "Amount of all prefixes: %size of {_prefixes::*}%x"
             broadcast "All:"
                  loop {_prefixes::*}:
                       set {_prefix} to formatted loop-value
-                      broadcast "Priority: %prefix priority of loop-value% Prefix: %{_prefix}%"
+                      broadcast "Priority: %priority of loop-value% Prefix: %{_prefix}%"
         """)
 @Since("1.0")
+@SuppressWarnings("rawtypes")
 public class ExprPrefix extends SimpleExpression<ChatMetaNode> {
 
     public static void register(SyntaxRegistry syntaxRegistry) {
@@ -82,6 +81,7 @@ public class ExprPrefix extends SimpleExpression<ChatMetaNode> {
     private boolean isSingle;
 
     @Override
+    @SuppressWarnings("unchecked")
     public boolean init(Expression<?>[] expressions, int i, Kleenean kleenean, SkriptParser.ParseResult parseResult) {
         if (i == 0) {
             groupExpr = (Expression<Group>) expressions[0];
@@ -91,6 +91,7 @@ public class ExprPrefix extends SimpleExpression<ChatMetaNode> {
         isSingle = !parseResult.hasTag("es");
         return true;
     }
+
     @Override
     protected ChatMetaNode<?,?>[] get(Event event) {
         Collection<PrefixNode> nodes = null;
@@ -119,6 +120,7 @@ public class ExprPrefix extends SimpleExpression<ChatMetaNode> {
             return stream.toArray(ChatMetaNode[]::new);
         }
     }
+
     @Override
     public Class<?> @Nullable [] acceptChange(Changer.ChangeMode mode) {
         if (groupExpr != null && !getParser().isCurrentEvent(SecEditGroup.GroupEvent.class)) {
@@ -135,6 +137,7 @@ public class ExprPrefix extends SimpleExpression<ChatMetaNode> {
             default -> null;
         };
     }
+
     @Override
     public void change(Event event, Object @Nullable [] delta, Changer.ChangeMode mode) {
         Group group = groupExpr != null ? groupExpr.getSingle(event) : null;
@@ -180,7 +183,6 @@ public class ExprPrefix extends SimpleExpression<ChatMetaNode> {
         }
     }
 
-
     @Override
     public boolean isSingle() {
         return isSingle;
@@ -192,11 +194,11 @@ public class ExprPrefix extends SimpleExpression<ChatMetaNode> {
     }
 
     @Override
-    public String toString(@Nullable Event event, boolean b) {
-        return new SyntaxStringBuilder(event, b)
-                .append(isSingle ? "prefix" : "prefixes")
-                .append("of")
+    public String toString(@Nullable Event event, boolean debug) {
+        return new SyntaxStringBuilder(event, debug)
+                .append(isSingle ? "prefix" : "prefixes", "of")
                 .append(groupExpr != null ? groupExpr : userExpr)
                 .toString();
     }
+
 }

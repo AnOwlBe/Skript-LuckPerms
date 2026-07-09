@@ -24,9 +24,9 @@ import org.skriptlang.skript.registration.SyntaxRegistry;
         """)
 @Example("""
         function example(p: offlineplayer):
-            get luckperms user {_p} and store it in {_lp}
+            set {_lp} to luckperms user from {_p}
             broadcast "%{_p}% has %size of luckperms permissions of {_lp}% permissions!%
-            broadcast "their permissions: %luckperms p ermissions of {_lp}%"
+            broadcast "their permissions: %luckperms permissions of {_lp}%"
         """)
 @Since("1.0")
 public class ExprPermissionsOf extends SimpleExpression<String> {
@@ -59,6 +59,7 @@ public class ExprPermissionsOf extends SimpleExpression<String> {
                 .map(Node::getKey)
                 .toArray(String[]::new);
     }
+
     @Override
     public boolean isSingle() {
         return false;
@@ -76,4 +77,5 @@ public class ExprPermissionsOf extends SimpleExpression<String> {
                 .append(userExpr)
                 .toString();
     }
+
 }

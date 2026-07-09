@@ -1,4 +1,4 @@
-package owlbe.skriptLuckPerms.luckpermsstuff.luckpermsevents;
+package owlbe.skriptLuckPerms.luckperms.bukkitevents;
 
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.event.user.track.UserDemoteEvent;

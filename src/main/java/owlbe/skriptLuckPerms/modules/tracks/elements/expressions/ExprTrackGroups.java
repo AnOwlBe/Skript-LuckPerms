@@ -26,7 +26,6 @@ import org.skriptlang.skript.registration.SyntaxRegistry;
                      send name of loop-value to player
         """)
 @Since("1.0.2")
-
 public class ExprTrackGroups extends SimpleExpression<String> {
 
     public static void register(SyntaxRegistry syntaxRegistry) {
@@ -34,10 +33,11 @@ public class ExprTrackGroups extends SimpleExpression<String> {
                 SyntaxRegistry.EXPRESSION,
                 SyntaxInfo.Expression.builder(ExprTrackGroups.class, String.class)
                         .addPatterns(
-                                "[all of the] [luckperm[s]] groups (of|in) track %luckpermstrack%")
+                                "all [of the] [luckperm[s]] groups (of|in) track %luckpermstrack%")
                         .build()
         );
     }
+
     private Expression<Track> trackExpr;
 
     @Override
@@ -53,6 +53,7 @@ public class ExprTrackGroups extends SimpleExpression<String> {
         return track.getGroups().toArray(String[]::new);
 
     }
+
     @Override
     public boolean isSingle() {
         return false;
@@ -67,4 +68,5 @@ public class ExprTrackGroups extends SimpleExpression<String> {
     public String toString(@Nullable Event event, boolean b) {
         return "all users in track";
     }
+
 }

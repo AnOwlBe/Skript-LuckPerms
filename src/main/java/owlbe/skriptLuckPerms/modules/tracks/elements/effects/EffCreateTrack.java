@@ -18,24 +18,24 @@ import org.skriptlang.skript.registration.SyntaxRegistry;
 @SuppressWarnings("unchecked")
 @Name("Create Track")
 @Description("""
-        Creates a new track and then loads it into memory.
+        Creates a new luckperms track and then loads it into memory.
         """)
 @Example("""
         function example(name: string):
             create new luckperms track named {_name}
         """)
 @Since("1.0.2")
-
 public class EffCreateTrack extends AsyncEffect {
+
     public static void register(SyntaxRegistry registry) {
         registry.register(
                 SyntaxRegistry.EFFECT,
                 SyntaxInfo.builder(EffCreateTrack.class)
                         .addPatterns("create [new] luckperm[s] track (with name|named) %string%")
                         .build()
-
         );
     }
+
     private Expression<String> nameExpr;
 
     @Override
@@ -60,4 +60,6 @@ public class EffCreateTrack extends AsyncEffect {
                 .append(nameExpr)
                 .toString();
     }
+
 }
+
