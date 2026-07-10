@@ -19,66 +19,60 @@ import owlbe.skriptLuckPerms.modules.tracks.elements.expressions.ExprAllTracks;
 import owlbe.skriptLuckPerms.modules.tracks.elements.expressions.ExprTrackGroups;
 
 import javax.annotation.Nullable;
-import java.util.List;
 
 public class TrackModule extends HierarchicalAddonModule {
 
-    public TrackModule(AddonModule parentModule) {
-        super(parentModule);
-    }
+	public TrackModule(AddonModule parentModule) {
+		super(parentModule);
+	}
 
-    @Override
-    public Iterable<AddonModule> children() {
-        return List.of();
-    }
+	@Override
+	public void loadSelf(SkriptAddon addon) {
+		EventValueRegistry registry = addon.registry(EventValueRegistry.class);
+		register(addon,
+				ExprAllTracks::register,
+				ExprTrackGroups::register,
+				EffCreateTrack::register,
+				EffDeleteTrack::register,
+				syntaxRegistry -> EvtTrackAddGroup.register(syntaxRegistry, registry),
+				syntaxRegistry -> EvtTrackRemoveGroup.register(syntaxRegistry, registry)
+				);
 
-    @Override
-    public void loadSelf(SkriptAddon addon) {
-        EventValueRegistry registry = addon.registry(EventValueRegistry.class);
-        register(addon,
-                ExprAllTracks::register,
-                ExprTrackGroups::register,
-                EffCreateTrack::register,
-                EffDeleteTrack::register,
-                a -> EvtTrackAddGroup.register(a, registry),
-                a -> EvtTrackRemoveGroup.register(a, registry)
-                );
+		Classes.registerClass(new ClassInfo<>(Track.class, "luckpermstrack")
+				.user("luckperms ?tracks?")
+				.name("LuckPerms Track")
+				.description("A LuckPerms track.")
+				.parser(new Parser<>() {
+					@Override
+					@Nullable
+					public Track parse(String s, ParseContext context) {
+						return null;
+					}
 
-        Classes.registerClass(new ClassInfo<>(Track.class, "luckpermstrack")
-                .user("luckperms ?tracks?")
-                .name("LuckPerms Track")
-                .description("A LuckPerms track.")
-                .parser(new Parser<>() {
-                    @Override
-                    @Nullable
-                    public Track parse(String s, ParseContext context) {
-                        return null;
-                    }
+					@Override
+					public boolean canParse(ParseContext context) {
+						return false;
+					}
 
-                    @Override
-                    public boolean canParse(ParseContext context) {
-                        return false;
-                    }
+					@Override
+					public String toString(Track track, int i) {
+						return track.getName();
+					}
 
-                    @Override
-                    public String toString(Track track, int i) {
-                        return track.getName();
-                    }
+					@Override
+					public String toVariableNameString(Track track) {
+						return track.getName();
+					}
+				})
+				.since("1.0"));
 
-                    @Override
-                    public String toVariableNameString(Track track) {
-                        return track.getName();
-                    }
-                })
-                .since("1.0"));
+		Converters.registerConverter(Track.class, String.class, Track::getName);
+		Converters.registerConverter(String.class, Track.class, name -> LuckPermsProvider.get().getTrackManager().getTrack(name));
+	}
 
-        Converters.registerConverter(Track.class, String.class, Track::getName);
-        Converters.registerConverter(String.class, Track.class, name -> LuckPermsProvider.get().getTrackManager().getTrack(name));
-    }
-
-    @Override
-    public String name() {
-        return "track";
-    }
+	@Override
+	public String name() {
+		return "track";
+	}
 
 }

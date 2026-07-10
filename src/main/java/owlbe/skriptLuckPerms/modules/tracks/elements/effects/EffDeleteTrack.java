@@ -5,7 +5,7 @@ import ch.njol.skript.doc.Example;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.skript.util.AsyncEffect;
 import ch.njol.util.Kleenean;
@@ -16,50 +16,48 @@ import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.registration.SyntaxInfo;
 import org.skriptlang.skript.registration.SyntaxRegistry;
 
-@SuppressWarnings("unchecked")
 @Name("Delete Track")
-@Description("""
-        Deletes a luckperms track.
-        """)
+@Description("Deletes a luckperms track.")
 @Example("""
-        function example(name: string):
-            delete luckperms track named {_name}
-        """)
+		function example(name: string):
+			delete luckperms track named {_name}
+		""")
 @Since("1.0.2")
+@SuppressWarnings("unchecked")
 public class EffDeleteTrack extends AsyncEffect {
 
-    public static void register(SyntaxRegistry registry) {
-        registry.register(
-                SyntaxRegistry.EFFECT,
-                SyntaxInfo.builder(EffDeleteTrack.class)
-                        .addPatterns("delete luckperm[s] track %luckpermstrack%")
-                        .build()
-        );
-    }
+	public static void register(SyntaxRegistry registry) {
+		registry.register(
+				SyntaxRegistry.EFFECT,
+				SyntaxInfo.builder(EffDeleteTrack.class)
+						.addPattern("delete luckperm[s] track %luckpermstrack%")
+						.build()
+		);
+	}
 
-    private Expression<Track> trackExpr;
+	private Expression<Track> trackExpr;
 
-    @Override
-    public boolean init(Expression<?>[] expressions, int i, Kleenean kleenean, SkriptParser.ParseResult parseResult) {
-        getParser().setHasDelayBefore(Kleenean.TRUE);
-        trackExpr = (Expression<Track>) expressions[0];
-        return true;
-    }
+	@Override
+	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean kleenean, ParseResult parseResult) {
+		getParser().setHasDelayBefore(Kleenean.TRUE);
+		trackExpr = (Expression<Track>) expressions[0];
+		return true;
+	}
 
-    @Override
-    protected void execute(Event event) {
-        Track track = trackExpr.getSingle(event);
-        if (track == null) return;
-        LuckPermsProvider.get().getTrackManager().deleteTrack(track);
-    }
+	@Override
+	protected void execute(Event event) {
+		Track track = trackExpr.getSingle(event);
+		if (track == null)
+			return;
+		LuckPermsProvider.get().getTrackManager().deleteTrack(track);
+	}
 
-    @Override
-    public String toString(@Nullable Event event, boolean b) {
-        return new SyntaxStringBuilder(event, b)
-                .append("delete luckperms track")
-                .append(trackExpr)
-                .toString();
-    }
+	@Override
+	public String toString(@Nullable Event event, boolean debug) {
+		return new SyntaxStringBuilder(event, debug)
+				.append("delete luckperms track", trackExpr)
+				.toString();
+	}
 
 }
 

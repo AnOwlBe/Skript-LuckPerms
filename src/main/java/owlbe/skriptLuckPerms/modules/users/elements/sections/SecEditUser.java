@@ -23,96 +23,96 @@ import java.util.List;
 
 import static owlbe.skriptLuckPerms.SkriptLuckPerms.instance;
 
-@SuppressWarnings("unchecked")
 @Name("Edit User")
 @Description("""
-        Creates a section that allows you to modify the properties of the provided user.
-        After the code in the section has finished the user will be saved asynchronously.
-        """)
+		Creates a section that allows you to modify the properties of the provided user.
+		After the code in the section has finished the user will be saved asynchronously.
+		""")
 @Example("""
-        edit user {_lp}:
-            grant permission "mypermission"
-    """)
+		edit user {_lp}:
+			grant permission "mypermission"
+	""")
 @Since("1.0")
 public class SecEditUser extends Section {
 
-    public static class UserEvent extends Event {
+	public static void register(SyntaxRegistry syntaxRegistry, EventValueRegistry eventValueRegistry) {
+		syntaxRegistry.register(
+				SyntaxRegistry.SECTION,
+				SyntaxInfo.builder(SecEditUser.class)
+						.addPattern("edit [the] user %luckpermsuser%")
+						.build()
+		);
 
-        private final User user;
+		eventValueRegistry.register(EventValue.builder(UserEvent.class, User.class)
+				.getter(UserEvent::getUser)
+				.patterns("user")
+				.build());
+	}
+	private Expression<User> userExpr;
 
-        public UserEvent(User user) {
-            this.user = user;
-        }
+	@Nullable
+	private Trigger trigger;
 
-        public User getUser() {
-            return user;
-        }
+	@Override
+	@SuppressWarnings("unchecked")
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult,
+						@Nullable SectionNode sectionNode, @Nullable List<TriggerItem> triggerItems) {
+		userExpr = (Expression<User>) exprs[0];
+		if (sectionNode != null) {
+			trigger = SectionUtils.loadLinkedCode("user", (beforeLoading, afterLoading)
+					-> loadCode(sectionNode, "user", beforeLoading, afterLoading, UserEvent.class));
+			return trigger != null;
+		}
+		return true;
+	}
 
-        @Override
-        @NotNull
-        public HandlerList getHandlers() {
-            throw new IllegalStateException();
-        }
-    }
+	@Override
+	protected @Nullable TriggerItem walk(Event event) {
+		if (trigger != null) {
+			User user = userExpr.getSingle(event);
+			if (user == null)
+				return null;
+			SecEditUser.UserEvent userevent = new SecEditUser.UserEvent(user);
+			Object variables = Variables.copyLocalVariables(event);
+			Variables.setLocalVariables(userevent,variables);
+			TriggerItem.walk(trigger, userevent);
+			Bukkit.getScheduler().runTaskAsynchronously(instance, () -> {
+				LuckPermsProvider.get().getUserManager().saveUser(user);
+				Bukkit.getScheduler().runTask(instance, () -> {
+					Variables.setLocalVariables(event, Variables.copyLocalVariables(userevent));
+					Variables.removeLocals(userevent);
+					Variables.removeLocals(event);
+				});
 
-    public static void register(SyntaxRegistry syntaxRegistry,EventValueRegistry registry) {
-        syntaxRegistry.register(
-                SyntaxRegistry.SECTION,
-                SyntaxInfo.builder(SecEditUser.class)
-                        .addPattern("edit [the] user %luckpermsuser%")
-                        .build()
-        );
+			});
+		}
+		return super.walk(event, false);
+	}
 
-        registry.register(EventValue.builder(UserEvent.class, User.class)
-                .getter(UserEvent::getUser)
-                .patterns("user")
-                .build());
-    }
-    private Expression<User> userExpr;
+	@Override
+	public String toString(@Nullable Event event, boolean debug) {
+		return new SyntaxStringBuilder(event, debug)
+				.append("edit user", userExpr)
+				.toString();
+	}
 
-    @Nullable
-    private Trigger trigger;
+	public static class UserEvent extends Event {
 
-    @Override
-    public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult,
-                        @Nullable SectionNode sectionNode, @Nullable List<TriggerItem> triggerItems) {
-        userExpr = (Expression<User>) exprs[0];
-        if (sectionNode != null) {
-            trigger = SectionUtils.loadLinkedCode("user", (beforeLoading, afterLoading)
-                    -> loadCode(sectionNode, "user", beforeLoading, afterLoading, UserEvent.class));
-            return trigger != null;
-        }
-        return true;
-    }
+		private final User user;
 
-    @Override
-    protected @Nullable TriggerItem walk(Event event) {
-        if (trigger != null) {
-            User user = userExpr.getSingle(event);
-            if (user == null) return null;
-            SecEditUser.UserEvent userevent = new SecEditUser.UserEvent(user);
-            Object variables = Variables.copyLocalVariables(event);
-            Variables.setLocalVariables(userevent,variables);
-            TriggerItem.walk(trigger, userevent);
-            Bukkit.getScheduler().runTaskAsynchronously(instance, () -> {
-                LuckPermsProvider.get().getUserManager().saveUser(user);
-                Bukkit.getScheduler().runTask(instance, () -> {
-                    Variables.setLocalVariables(event, Variables.copyLocalVariables(userevent));
-                    Variables.removeLocals(userevent);
-                    Variables.removeLocals(event);
-                });
+		public UserEvent(User user) {
+			this.user = user;
+		}
 
-            });
-        }
-        return super.walk(event, false);
-    }
+		public User getUser() {
+			return user;
+		}
 
-    @Override
-    public String toString(@Nullable Event event, boolean b) {
-        return new SyntaxStringBuilder(event, b)
-                .append("edit user")
-                .append(userExpr)
-                .toString();
-    }
+		@Override
+		@NotNull
+		public HandlerList getHandlers() {
+			throw new IllegalStateException();
+		}
+	}
 
 }

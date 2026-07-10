@@ -15,7 +15,6 @@ import static owlbe.skriptLuckPerms.SkriptLuckPerms.addon;
 import static owlbe.skriptLuckPerms.skript.properties.Properties.*;
 
 @SuppressWarnings({"UnstableApiUsage", "unchecked", "rawtypes"})
-
 public class MetaClassInfo extends ClassInfo<ChatMetaNode> {
 
 	public MetaClassInfo() {

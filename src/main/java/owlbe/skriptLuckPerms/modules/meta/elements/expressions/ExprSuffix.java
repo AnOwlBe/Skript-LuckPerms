@@ -33,173 +33,179 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@SuppressWarnings("unchecked")
 @Name("Suffix")
 @Description("""
-        Returns the primary suffix of a user/group.
-        If `suffixes` is used it will return a sorted list of all suffixes of the user/group.
-        Use `priority of..` to get priority of a suffix.
-        """)
+		Returns the primary suffix of a user/group.
+		If `suffixes` is used it will return a sorted list of all suffixes of the user/group.
+		Use `priority of..` to get priority of a suffix.
+		""")
 @Example("""
-        function get(p: offlineplayer):
-            set {_lp} to luckperms user from {_p}
-            set {_suffix} to formatted luckperms suffix of {_lp}
-            set {_suffixes::*} to luckperms suffixes of {_lp}
-            if {_p} is online:
-                 send "Your suffix: %{_suffix}%" to {_p}
-                 send "You have %size of {_suffixes::*}% suffixes!" to {_p}
-                 loop {_suffixes::*}:
-                      set {_suffix} to formatted loop-value
-                      send "Priority: %priority of loop-value% Suffix: %{_suffix}%" to {_p}
-        """)
+		function get(p: offlineplayer):
+			set {_lp} to luckperms user from {_p}
+			set {_suffix} to formatted luckperms suffix of {_lp}
+			set {_suffixes::*} to luckperms suffixes of {_lp}
+			if {_p} is online:
+				 send "Your suffix: %{_suffix}%" to {_p}
+				 send "You have %size of {_suffixes::*}% suffixes!" to {_p}
+				 loop {_suffixes::*}:
+					  set {_suffix} to formatted loop-value
+					  send "Priority: %priority of loop-value% Suffix: %{_suffix}%" to {_p}
+		""")
 @Example("""
-        function get(group: string):
-            set {_prefix} to formatted luckperms prefix of {_group}
-            set {_prefixes::*} to luckperms prefixes of {_group}
-            broadcast "%{_group}%'s primary prefix: %{_prefix}%"
-            broadcast "Amount of all prefixes: %size of {_prefixes::*}%x"
-            broadcast "All:"
-            loop {_prefixes::*}:
-                set {_prefix} to formatted loop-value
-                broadcast "Priority: %priority of loop-value% Prefix: %{_prefix}%"
-        """)
+		function get(group: string):
+			set {_prefix} to formatted luckperms prefix of {_group}
+			set {_prefixes::*} to luckperms prefixes of {_group}
+			broadcast "%{_group}%'s primary prefix: %{_prefix}%"
+			broadcast "Amount of all prefixes: %size of {_prefixes::*}%x"
+			broadcast "All:"
+			loop {_prefixes::*}:
+				set {_prefix} to formatted loop-value
+				broadcast "Priority: %priority of loop-value% Prefix: %{_prefix}%"
+		""")
 @Since("1.0")
+@SuppressWarnings({"unchecked", "rawtypes"})
 public class ExprSuffix extends SimpleExpression<ChatMetaNode> {
 
-    public static void register(SyntaxRegistry syntaxRegistry) {
-        syntaxRegistry.register(
-                SyntaxRegistry.EXPRESSION,
-                SyntaxInfo.Expression.builder(ExprSuffix.class, ChatMetaNode.class)
-                        .addPatterns(
-                                "[the] [luckperm[s]] suffix[:es] of group %luckpermsgroup%",
-                                "[the] [luckperm[s]] suffix[:es] of user %luckpermsuser%")
-                        .build()
-        );
-    }
+	public static void register(SyntaxRegistry syntaxRegistry) {
+		syntaxRegistry.register(
+				SyntaxRegistry.EXPRESSION,
+				SyntaxInfo.Expression.builder(ExprSuffix.class, ChatMetaNode.class)
+						.addPatterns(
+								"[the] [luckperm[s]] suffix[:es] of group %luckpermsgroup%",
+								"[the] [luckperm[s]] suffix[:es] of user %luckpermsuser%"
+						)
+						.build()
+		);
+	}
 
-    private Expression<Group> groupExpr = null;
-    private Expression<User> userExpr = null;
-    private boolean isSingle;
+	private Expression<Group> groupExpr = null;
+	private Expression<User> userExpr = null;
+	private boolean isSingle;
 
-    @Override
-    public boolean init(Expression<?>[] expressions, int i, Kleenean kleenean, SkriptParser.ParseResult parseResult) {
-        if (i == 0) {
-            groupExpr = (Expression<Group>) expressions[0];
-        } else {
-            userExpr = (Expression<User>) expressions[0];
-        }
-        isSingle = !parseResult.hasTag("es");
-        return true;
-    }
+	@Override
+	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean kleenean, SkriptParser.ParseResult parseResult) {
+		if (matchedPattern == 0) {
+			groupExpr = (Expression<Group>) expressions[0];
+		} else {
+			userExpr = (Expression<User>) expressions[0];
+		}
+		isSingle = !parseResult.hasTag("es");
+		return true;
+	}
 
-    @Override
-    protected ChatMetaNode<?,?>[] get(Event event) {
-        Collection<SuffixNode> nodes = null;
-        if (groupExpr != null) {
-            Group group = groupExpr.getSingle(event);
-            if (group == null) return new ChatMetaNode[0];
-            nodes = group.getNodes(NodeType.SUFFIX);
-        } else if (userExpr != null) {
-            User user = userExpr.getSingle(event);
-            if (user == null) return new ChatMetaNode[0];
-            // sadly user.getNodes(NodeType.SUFFIX) doesn't include inherited prefixes ;c
-            nodes = user.resolveInheritedNodes(QueryOptions.nonContextual())
-                    .stream()
-                    .filter(NodeType.SUFFIX::matches)
-                    .map(NodeType.SUFFIX::cast)
-                    .collect(Collectors.toList());
-        }
-        if (nodes == null) {
-            return new ChatMetaNode[0];
-        }
-        Stream<SuffixNode> stream = nodes.stream()
-                .sorted(Comparator.comparingInt((SuffixNode node) -> node.getPriority()).reversed());
-        if (isSingle) {
-            return stream.findFirst().map(node -> new ChatMetaNode[]{node}).orElse(new ChatMetaNode[0]);
-        } else {
-            return stream.toArray(ChatMetaNode[]::new);
-        }
-    }
+	@Override
+	protected ChatMetaNode<?,?>[] get(Event event) {
+		Collection<SuffixNode> nodes = null;
+		if (groupExpr != null) {
+			Group group = groupExpr.getSingle(event);
+			if (group == null)
+				return new ChatMetaNode[0];
+			nodes = group.getNodes(NodeType.SUFFIX);
+		} else if (userExpr != null) {
+			User user = userExpr.getSingle(event);
+			if (user == null)
+				return new ChatMetaNode[0];
+			// sadly user.getNodes(NodeType.SUFFIX) doesn't include inherited prefixes ;c
+			nodes = user.resolveInheritedNodes(QueryOptions.nonContextual())
+					.stream()
+					.filter(NodeType.SUFFIX::matches)
+					.map(NodeType.SUFFIX::cast)
+					.collect(Collectors.toList());
+		}
+		if (nodes == null) {
+			return new ChatMetaNode[0];
+		}
+		Stream<SuffixNode> stream = nodes.stream()
+				.sorted(Comparator.comparingInt((SuffixNode node) -> node.getPriority()).reversed());
+		if (isSingle) {
+			return stream.findFirst().map(node -> new ChatMetaNode[]{node}).orElse(new ChatMetaNode[0]);
+		} else {
+			return stream.toArray(ChatMetaNode[]::new);
+		}
+	}
 
-    @Override
-    public Class<?> @Nullable [] acceptChange(Changer.ChangeMode mode) {
-        if (groupExpr != null && !getParser().isCurrentEvent(SecEditGroup.GroupEvent.class)) {
-            Skript.error("This can only be used inside an 'edit group' section");
-            return null;
-        }
-        if (userExpr != null && !getParser().isCurrentEvent(SecEditUser.UserEvent.class)) {
-            Skript.error("This can only be used inside an 'edit user' section");
-            return null;
-        }
-        return switch (mode) {
-            case SET, ADD, RESET, REMOVE ->
-                    CollectionUtils.array(ChatMetaNode[].class,ChatMetaNode.class); // ChatMetaNode.class is needed for SET (idk maybe better way)
-            default -> null;
-        };
-    }
+	@Override
+	public Class<?> @Nullable [] acceptChange(Changer.ChangeMode mode) {
+		if (groupExpr != null && !getParser().isCurrentEvent(SecEditGroup.GroupEvent.class)) {
+			Skript.error("This can only be used inside an 'edit group' section");
+			return null;
+		}
+		if (userExpr != null && !getParser().isCurrentEvent(SecEditUser.UserEvent.class)) {
+			Skript.error("This can only be used inside an 'edit user' section");
+			return null;
+		}
+		return switch (mode) {
+			case SET, ADD, RESET, REMOVE ->
+					CollectionUtils.array(ChatMetaNode[].class,ChatMetaNode.class); // ChatMetaNode.class is needed for SET (idk maybe better way)
+			default -> null;
+		};
+	}
 
-    @Override
-    public void change(Event event, Object @Nullable [] delta, Changer.ChangeMode mode) {
-        Group group = groupExpr != null ? groupExpr.getSingle(event) : null;
-        User user = userExpr != null ? userExpr.getSingle(event) : null;
-        NodeMap data = group != null ? group.data() : user != null ? user.data() : null;
-        if (data == null) return;
-        switch (mode) {
-            case ADD -> {
-                if (isSingle) {
-                    Skript.warning("Cannot add to a primary suffix — use 'suffixes' instead.");
-                    return;
-                }
-                if (delta == null) return;
-                ChatMetaNode node = (ChatMetaNode) delta[0];
-                data.add(node);
-            }
-            case SET -> {
-                if (delta == null) return;
-                ChatMetaNode node = (ChatMetaNode) delta[0];
-                if (!isSingle) {
-                    data.clear(NodeType.SUFFIX::matches);
-                    data.add(node);
-                } else {
-                    Collection<SuffixNode> nodes = group != null
-                            ? group.getNodes(NodeType.SUFFIX)
-                            : user != null ? user.getNodes(NodeType.SUFFIX) : List.of();
-                    nodes.stream()
-                            .max(Comparator.comparingInt(ChatMetaNode::getPriority))
-                            .ifPresent(data::remove);
-                    data.add(node);
-                }
-            }
-            case REMOVE -> {
-                if (isSingle) {
-                    Skript.warning("Cannot remove a single suffix — use reset to clear or 'suffixes' to remove specific ones.");
-                    return;
-                }
-                if (delta == null) return;
-                ChatMetaNode node = (ChatMetaNode) delta[0];
-                data.remove(node);
-            }
-            case RESET -> data.clear(NodeType.SUFFIX::matches);
-        }
-    }
+	@Override
+	public void change(Event event, Object @Nullable [] delta, Changer.ChangeMode mode) {
+		Group group = groupExpr != null ? groupExpr.getSingle(event) : null;
+		User user = userExpr != null ? userExpr.getSingle(event) : null;
+		NodeMap data = group != null ? group.data() : user != null ? user.data() : null;
+		if (data == null)
+			return;
+		switch (mode) {
+			case ADD -> {
+				if (isSingle) {
+					Skript.warning("Cannot add to a primary suffix — use 'suffixes' instead.");
+					return;
+				}
+				if (delta == null)
+					return;
+				ChatMetaNode node = (ChatMetaNode) delta[0];
+				data.add(node);
+			}
+			case SET -> {
+				if (delta == null)
+					return;
+				ChatMetaNode node = (ChatMetaNode) delta[0];
+				if (!isSingle) {
+					data.clear(NodeType.SUFFIX::matches);
+					data.add(node);
+				} else {
+					Collection<SuffixNode> nodes = group != null
+							? group.getNodes(NodeType.SUFFIX)
+							: user != null ? user.getNodes(NodeType.SUFFIX) : List.of();
+					nodes.stream()
+							.max(Comparator.comparingInt(ChatMetaNode::getPriority))
+							.ifPresent(data::remove);
+					data.add(node);
+				}
+			}
+			case REMOVE -> {
+				if (isSingle) {
+					Skript.warning("Cannot remove a single suffix — use reset to clear or 'suffixes' to remove specific ones.");
+					return;
+				}
+				if (delta == null)
+					return;
+				ChatMetaNode node = (ChatMetaNode) delta[0];
+				data.remove(node);
+			}
+			case RESET -> data.clear(NodeType.SUFFIX::matches);
+		}
+	}
 
-    @Override
-    public boolean isSingle() {
-        return isSingle;
-    }
+	@Override
+	public boolean isSingle() {
+		return isSingle;
+	}
 
-    @Override
-    public Class<? extends ChatMetaNode> getReturnType() {
-        return ChatMetaNode.class;
-    }
+	@Override
+	public Class<? extends ChatMetaNode> getReturnType() {
+		return ChatMetaNode.class;
+	}
 
-    @Override
-    public String toString(@Nullable Event event, boolean b) {
-        return new SyntaxStringBuilder(event, b)
-                .append(isSingle ? "suffix" : "suffixes")
-                .append("of")
-                .append(groupExpr != null ? groupExpr : userExpr)
-                .toString();
-    }
+	@Override
+	public String toString(@Nullable Event event, boolean debug) {
+		return new SyntaxStringBuilder(event, debug)
+				.append(isSingle ? "suffix" : "suffixes", "of")
+				.append(groupExpr != null ? groupExpr : userExpr)
+				.toString();
+	}
 
 }

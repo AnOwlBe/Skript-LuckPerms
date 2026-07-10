@@ -14,33 +14,33 @@ import static owlbe.skriptLuckPerms.utilitities.MiniMessageUtil.minimessage;
 
 public final class SkriptLuckPerms extends JavaPlugin {
 
-    public static SkriptLuckPerms instance;
-    public static SkriptAddon addon;
-    int pluginId = 31087;
+	public static SkriptLuckPerms instance;
+	public static SkriptAddon addon;
+	int pluginId = 31087;
 
-    @Override
-    public void onEnable() {
-        new Metrics(this, pluginId);
-        instance = this;
-        saveDefaultConfig();
+	@Override
+	public void onEnable() {
+		new Metrics(this, pluginId);
+		instance = this;
+		saveDefaultConfig();
 
-        addon = Skript.instance().registerAddon(SkriptLuckPerms.class, "skript-luckperms");
-        Properties.register(addon.syntaxRegistry());
-        addon.loadModules(new Modules());
-        Localizer addonLocalizer = addon.localizer();
-        addonLocalizer.setSourceDirectories("lang", null);
+		addon = Skript.instance().registerAddon(SkriptLuckPerms.class, "skript-luckperms");
+		Properties.register(addon.syntaxRegistry());
+		addon.loadModules(new Modules());
+		Localizer addonLocalizer = addon.localizer();
+		addonLocalizer.setSourceDirectories("lang", null);
 
 		Register.register();
-        UpdateChecker.enable();
-    }
+		UpdateChecker.enable();
+	}
 
-    public static void error(String message) {
-        Bukkit.getConsoleSender().sendMessage(minimessage("<#3CFF6E>Skript-LuckPerms <reset><dark_gray>→ <#FF4A59>" + message));
-    }
+	public static void error(String message) {
+		Bukkit.getConsoleSender().sendMessage(minimessage("<#3CFF6E>Skript-LuckPerms <reset><dark_gray>→ <#FF4A59>" + message));
+	}
 
-    @Override
-    public void onDisable() {
-        // null
-    }
+	@Override
+	public void onDisable() {
+		Bukkit.getConsoleSender().sendMessage(minimessage("Disabling Skript-LuckPerms.."));
+	}
 
 }

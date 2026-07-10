@@ -5,41 +5,33 @@ import net.luckperms.api.node.types.ChatMetaNode;
 import org.skriptlang.skript.addon.AddonModule;
 import org.skriptlang.skript.addon.HierarchicalAddonModule;
 import org.skriptlang.skript.addon.SkriptAddon;
-import org.skriptlang.skript.bukkit.lang.eventvalue.EventValueRegistry;
 import org.skriptlang.skript.lang.converter.Converters;
 import owlbe.skriptLuckPerms.modules.meta.elements.expressions.ExprPrefix;
 import owlbe.skriptLuckPerms.modules.meta.elements.expressions.ExprSuffix;
 import owlbe.skriptLuckPerms.modules.meta.elements.sections.SecChatMetaBuilder;
 
-import java.util.List;
-
 public class MetaModule extends HierarchicalAddonModule {
 
-    public MetaModule(AddonModule parentModule) {
-        super(parentModule);
-    }
+	public MetaModule(AddonModule parentModule) {
+		super(parentModule);
+	}
 
-    @Override
-    public Iterable<AddonModule> children() {
-        return List.of();
-    }
+	@Override
+	public void loadSelf(SkriptAddon addon) {
+		register(addon,
+				ExprPrefix::register,
+				ExprSuffix::register,
+				SecChatMetaBuilder::register
+		);
 
-    @Override
-    public void loadSelf(SkriptAddon addon) {
-        register(addon,
-                ExprPrefix::register,
-                ExprSuffix::register,
-                SecChatMetaBuilder::register
-        );
+		Classes.registerClass(new MetaClassInfo());
 
-        Classes.registerClass(new MetaClassInfo());
+		Converters.registerConverter(ChatMetaNode.class, String.class, ChatMetaNode::getMetaValue);
+	}
 
-        Converters.registerConverter(ChatMetaNode.class, String.class, ChatMetaNode::getMetaValue);
-    }
-
-    @Override
-    public String name() {
-        return "meta";
-    }
+	@Override
+	public String name() {
+		return "meta";
+	}
 
 }

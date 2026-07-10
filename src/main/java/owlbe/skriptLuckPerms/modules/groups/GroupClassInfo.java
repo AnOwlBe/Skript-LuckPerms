@@ -22,7 +22,6 @@ import static owlbe.skriptLuckPerms.skript.properties.Properties.WEIGHT;
 import static owlbe.skriptLuckPerms.skript.properties.Properties.getProperty;
 
 @SuppressWarnings({"UnstableApiUsage", "unchecked"})
-
 public class GroupClassInfo extends ClassInfo<Group> {
 
 	public GroupClassInfo() {

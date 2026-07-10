@@ -12,30 +12,30 @@ import org.jspecify.annotations.NonNull;
 
 public class OnUserReceiveGroup extends PlayerEvent {
 
-    private static final HandlerList HANDLER_LIST = new HandlerList();
-    private final NodeAddEvent event;
+	private static final HandlerList HANDLER_LIST = new HandlerList();
+	private final NodeAddEvent event;
 
-    public OnUserReceiveGroup(Player player,NodeAddEvent event) {
-        super(player);
-        this.event = event;
-    }
+	public OnUserReceiveGroup(Player player,NodeAddEvent event) {
+		super(player);
+		this.event = event;
+	}
 
-    public Timespan getDuration() {
-        return new Timespan(event.getNode().getExpiry() != null ? event.getNode().getExpiry().toEpochMilli() - System.currentTimeMillis() : 0);
-    }
+	public Timespan getDuration() {
+		return new Timespan(event.getNode().getExpiry() != null ? event.getNode().getExpiry().toEpochMilli() - System.currentTimeMillis() : 0);
+	}
 
-    public Group getGroup() {
-        String group = ((InheritanceNode) event.getNode()).getGroupName();
-        return LuckPermsProvider.get().getGroupManager().getGroup(group);
-    }
+	public Group getGroup() {
+		String group = ((InheritanceNode) event.getNode()).getGroupName();
+		return LuckPermsProvider.get().getGroupManager().getGroup(group);
+	}
 
-    public static HandlerList getHandlerList() {
-        return HANDLER_LIST;
-    }
+	public static HandlerList getHandlerList() {
+		return HANDLER_LIST;
+	}
 
-    @Override
-    public @NonNull HandlerList getHandlers() {
-        return HANDLER_LIST;
-    }
+	@Override
+	public @NonNull HandlerList getHandlers() {
+		return HANDLER_LIST;
+	}
 
 }

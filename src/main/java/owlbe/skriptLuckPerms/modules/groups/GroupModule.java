@@ -21,37 +21,37 @@ import java.util.List;
 
 public class GroupModule extends HierarchicalAddonModule {
 
-    public GroupModule(AddonModule parentModule) {
-        super(parentModule);
-    }
+	public GroupModule(AddonModule parentModule) {
+		super(parentModule);
+	}
 
-    @Override
-    public Iterable<AddonModule> children() {
-        return List.of();
-    }
+	@Override
+	public Iterable<AddonModule> children() {
+		return List.of();
+	}
 
-    @Override
-    public void loadSelf(SkriptAddon addon) {
-        EventValueRegistry registry = addon.registry(EventValueRegistry.class);
-        register(addon,
-                ExprAllGroups::register,
-                EffCreateGroup::register,
-                EffDeleteGroup::register,
-                a -> SecEditGroup.register(a, registry),
-                a -> EvtGroupLosePermission.register(a, registry),
-                a -> EvtGroupReceivePermission.register(a, registry),
-                a -> EvtGroupMetaSet.register(a, registry),
-                a -> EvtGroupMetaRemove.register(a, registry)
-        );
+	@Override
+	public void loadSelf(SkriptAddon addon) {
+		EventValueRegistry registry = addon.registry(EventValueRegistry.class);
+		register(addon,
+				ExprAllGroups::register,
+				EffCreateGroup::register,
+				EffDeleteGroup::register,
+				syntaxRegistry -> SecEditGroup.register(syntaxRegistry, registry),
+				syntaxRegistry -> EvtGroupLosePermission.register(syntaxRegistry, registry),
+				syntaxRegistry -> EvtGroupReceivePermission.register(syntaxRegistry, registry),
+				syntaxRegistry -> EvtGroupMetaSet.register(syntaxRegistry, registry),
+				syntaxRegistry -> EvtGroupMetaRemove.register(syntaxRegistry, registry)
+		);
 
-        Classes.registerClass(new GroupClassInfo());
-        Converters.registerConverter(Group.class, String.class, Group::getName);
-        Converters.registerConverter(String.class, Group.class, name -> LuckPermsProvider.get().getGroupManager().getGroup(name));
-    }
+		Classes.registerClass(new GroupClassInfo());
+		Converters.registerConverter(Group.class, String.class, Group::getName);
+		Converters.registerConverter(String.class, Group.class, name -> LuckPermsProvider.get().getGroupManager().getGroup(name));
+	}
 
-    @Override
-    public String name() {
-        return "group";
-    }
+	@Override
+	public String name() {
+		return "group";
+	}
 
 }

@@ -23,98 +23,99 @@ import java.util.List;
 
 import static owlbe.skriptLuckPerms.SkriptLuckPerms.instance;
 
-@SuppressWarnings("unchecked")
 @Name("Edit Group")
 @Description("""
-        Creates a section that allows you to modify the properties of the provided group.
-        After the code in the section has finished the group will be saved asynchronously.
-        """)
+		Creates a section that allows you to modify the properties of the provided group.
+		After the code in the section has finished the group will be saved asynchronously.
+		""")
 @Example("""
-    edit group "example":
-        add 5 to group weight
-    """)
+	edit group "example":
+		add 5 to group weight
+	""")
 @Since("1.0")
 public class SecEditGroup extends Section {
 
-    public static class GroupEvent extends Event {
+	public static void register(SyntaxRegistry syntaxRegistry, EventValueRegistry registry) {
+		syntaxRegistry.register(
+				SyntaxRegistry.SECTION,
+				SyntaxInfo.builder(SecEditGroup.class)
+						.addPattern("edit [the] group %string%")
+						.build()
+		);
 
-        private final String group;
+		registry.register(EventValue.builder(GroupEvent.class, String.class)
+				.getter(GroupEvent::getGroup)
+				.patterns("group")
+				.build());
+	}
+	private Expression<String> groupExpr;
 
-        public GroupEvent(String group) {
-            this.group = group;
-        }
+	@Nullable
+	private Trigger trigger;
 
-        public String getGroup() {
-            return group;
-        }
+	@Override
+	@SuppressWarnings("unchecked")
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult,
+						@Nullable SectionNode sectionNode, @Nullable List<TriggerItem> triggerItems) {
+		groupExpr = (Expression<String>) exprs[0];
+		if (sectionNode != null) {
+			trigger = SectionUtils.loadLinkedCode("group", (beforeLoading, afterLoading)
+					-> loadCode(sectionNode, "group", beforeLoading, afterLoading, GroupEvent.class));
+			return trigger != null;
+		}
+		return true;
+	}
 
-        @Override
-        @NotNull
-        public HandlerList getHandlers() {
-            throw new IllegalStateException();
-        }
-    }
+	@Override
+	protected @Nullable TriggerItem walk(Event event) {
+		if (trigger != null) {
+			String group = groupExpr.getSingle(event);
+			if (group == null)
+				return null;
+			SecEditGroup.GroupEvent groupevent = new SecEditGroup.GroupEvent(group);
+			Object variables = Variables.copyLocalVariables(event);
+			Variables.setLocalVariables(groupevent,variables);
+			TriggerItem.walk(trigger, groupevent);
+			Bukkit.getScheduler().runTaskAsynchronously(instance, () -> {
+				Group lpGroup = LuckPermsProvider.get().getGroupManager().getGroup(group);
+				if (lpGroup == null)
+					return;
+				LuckPermsProvider.get().getGroupManager().saveGroup(lpGroup);
+				Bukkit.getScheduler().runTask(instance, () -> {
+					Variables.setLocalVariables(event, Variables.copyLocalVariables(groupevent));
+					Variables.removeLocals(groupevent);
+					Variables.removeLocals(event);
+				});
 
-    public static void register(SyntaxRegistry syntaxRegistry, EventValueRegistry registry) {
-        syntaxRegistry.register(
-                SyntaxRegistry.SECTION,
-                SyntaxInfo.builder(SecEditGroup.class)
-                        .addPattern("edit [the] group %string%")
-                        .build()
-        );
+				});
+		}
+		return super.walk(event, false);
+	}
 
-        registry.register(EventValue.builder(GroupEvent.class, String.class)
-                .getter(GroupEvent::getGroup)
-                .patterns("group")
-                .build());
-    }
-    private Expression<String> groupExpr;
+	@Override
+	public String toString(@Nullable Event event, boolean debug) {
+		return new SyntaxStringBuilder(event, debug)
+				.append("edit group", groupExpr)
+				.toString();
+	}
 
-    @Nullable
-    private Trigger trigger;
+	public static class GroupEvent extends Event {
 
-    @Override
-    public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult,
-                        @Nullable SectionNode sectionNode, @Nullable List<TriggerItem> triggerItems) {
-        groupExpr = (Expression<String>) exprs[0];
-        if (sectionNode != null) {
-            trigger = SectionUtils.loadLinkedCode("group", (beforeLoading, afterLoading)
-                    -> loadCode(sectionNode, "group", beforeLoading, afterLoading, GroupEvent.class));
-            return trigger != null;
-        }
-        return true;
-    }
+		private final String group;
 
-    @Override
-    protected @Nullable TriggerItem walk(Event event) {
-        if (trigger != null) {
-            String group = groupExpr.getSingle(event);
-            if (group == null) return null;
-            SecEditGroup.GroupEvent groupevent = new SecEditGroup.GroupEvent(group);
-            Object variables = Variables.copyLocalVariables(event);
-            Variables.setLocalVariables(groupevent,variables);
-            TriggerItem.walk(trigger, groupevent);
-            Bukkit.getScheduler().runTaskAsynchronously(instance, () -> {
-                Group lpGroup = LuckPermsProvider.get().getGroupManager().getGroup(group);
-                if (lpGroup == null) return;
-                LuckPermsProvider.get().getGroupManager().saveGroup(lpGroup);
-                Bukkit.getScheduler().runTask(instance, () -> {
-                    Variables.setLocalVariables(event, Variables.copyLocalVariables(groupevent));
-                    Variables.removeLocals(groupevent);
-                    Variables.removeLocals(event);
-                });
+		public GroupEvent(String group) {
+			this.group = group;
+		}
 
-                });
-        }
-        return super.walk(event, false);
-    }
+		public String getGroup() {
+			return group;
+		}
 
-    @Override
-    public String toString(@Nullable Event event, boolean b) {
-        return new SyntaxStringBuilder(event, b)
-                .append("edit group")
-                .append(groupExpr)
-                .toString();
-    }
+		@Override
+		@NotNull
+		public HandlerList getHandlers() {
+			throw new IllegalStateException();
+		}
+	}
 
 }

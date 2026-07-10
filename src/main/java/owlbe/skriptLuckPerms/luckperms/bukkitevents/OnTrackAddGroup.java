@@ -10,29 +10,29 @@ import org.jspecify.annotations.NonNull;
 
 public class OnTrackAddGroup extends Event {
 
-    private static final HandlerList HANDLER_LIST = new HandlerList();
-    private final TrackAddGroupEvent event;
+	private static final HandlerList HANDLER_LIST = new HandlerList();
+	private final TrackAddGroupEvent event;
 
-    public OnTrackAddGroup(TrackAddGroupEvent event) {
-        this.event = event;
-    }
+	public OnTrackAddGroup(TrackAddGroupEvent event) {
+		this.event = event;
+	}
 
-    public Group getGroup() {
-        return LuckPermsProvider.get().getGroupManager().getGroup(event.getGroup());
-    }
+	public Group getGroup() {
+		return LuckPermsProvider.get().getGroupManager().getGroup(event.getGroup());
+	}
 
-    public Track getTrack() {
-        return event.getTrack();
-    }
+	public Track getTrack() {
+		return event.getTrack();
+	}
 
 
-    public static HandlerList getHandlerList() {
-        return HANDLER_LIST;
-    }
+	public static HandlerList getHandlerList() {
+		return HANDLER_LIST;
+	}
 
-    @Override
-    public @NonNull HandlerList getHandlers() {
-        return HANDLER_LIST;
-    }
+	@Override
+	public @NonNull HandlerList getHandlers() {
+		return HANDLER_LIST;
+	}
 
 }

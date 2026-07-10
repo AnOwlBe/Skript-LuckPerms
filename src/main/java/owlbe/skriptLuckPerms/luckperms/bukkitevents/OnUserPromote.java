@@ -10,35 +10,35 @@ import org.jspecify.annotations.NonNull;
 
 public class OnUserPromote extends PlayerEvent {
 
-    private static final HandlerList HANDLER_LIST = new HandlerList();
-    private final UserPromoteEvent event;
+	private static final HandlerList HANDLER_LIST = new HandlerList();
+	private final UserPromoteEvent event;
 
-    public OnUserPromote(Player player,UserPromoteEvent event) {
-        super(player);
-        this.event = event;
-    }
+	public OnUserPromote(Player player,UserPromoteEvent event) {
+		super(player);
+		this.event = event;
+	}
 
-    public String getTrack() {
-        return event.getTrack().getName();
-    }
+	public String getTrack() {
+		return event.getTrack().getName();
+	}
 
-    public Group getPreviousGroup() {
-        if (event.getGroupFrom().orElse(null) == null) return null;
-        return LuckPermsProvider.get().getGroupManager().getGroup(event.getGroupFrom().orElse(null));
-    }
+	public Group getPreviousGroup() {
+		if (event.getGroupFrom().orElse(null) == null) return null;
+		return LuckPermsProvider.get().getGroupManager().getGroup(event.getGroupFrom().orElse(null));
+	}
 
-    public Group getGroup() {
-        if (event.getGroupTo().orElse(null) == null) return null;
-        return LuckPermsProvider.get().getGroupManager().getGroup(event.getGroupTo().orElse(null));
-    }
+	public Group getGroup() {
+		if (event.getGroupTo().orElse(null) == null) return null;
+		return LuckPermsProvider.get().getGroupManager().getGroup(event.getGroupTo().orElse(null));
+	}
 
-    public static HandlerList getHandlerList() {
-        return HANDLER_LIST;
-    }
+	public static HandlerList getHandlerList() {
+		return HANDLER_LIST;
+	}
 
-    @Override
-    public @NonNull HandlerList getHandlers() {
-        return HANDLER_LIST;
-    }
+	@Override
+	public @NonNull HandlerList getHandlers() {
+		return HANDLER_LIST;
+	}
 
 }
