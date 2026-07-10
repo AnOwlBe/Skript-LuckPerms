@@ -13,6 +13,7 @@ import owlbe.skriptLuckPerms.luckperms.bukkitevents.*;
 import static owlbe.skriptLuckPerms.SkriptLuckPerms.instance;
 
 public class NodeAddListener {
+
 	public static void register(EventBus eventBus, BukkitScheduler bukkitScheduler, PluginManager pluginManager) {
 		eventBus.subscribe(instance, NodeAddEvent.class, event -> {
 			NodeType<?> type = event.getNode().getType();
@@ -43,4 +44,5 @@ public class NodeAddListener {
 			});
 		});
 	}
+
 }

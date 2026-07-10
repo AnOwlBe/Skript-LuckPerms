@@ -11,13 +11,13 @@ import org.bukkit.event.player.PlayerEvent;
 import org.jspecify.annotations.NonNull;
 
 public class OnUserMetaRemove extends PlayerEvent {
+
     private static final HandlerList HANDLER_LIST = new HandlerList();
     private final Node event;
 
     public OnUserMetaRemove(Player player, Node event) {
         super(player);
         this.event = event;
-
     }
 
     public String getKey() {
@@ -25,11 +25,13 @@ public class OnUserMetaRemove extends PlayerEvent {
         if (event.getType() == NodeType.SUFFIX) return "suffix";
         return ((MetaNode) event).getMetaKey();
     }
+
     public String getValue() {
         if (event.getType() == NodeType.PREFIX) return ((PrefixNode) event).getMetaValue();
         if (event.getType() == NodeType.SUFFIX) return ((SuffixNode) event).getMetaValue();
         return ((MetaNode) event).getMetaValue();
     }
+
     public static HandlerList getHandlerList() {
         return HANDLER_LIST;
     }
@@ -38,4 +40,5 @@ public class OnUserMetaRemove extends PlayerEvent {
     public @NonNull HandlerList getHandlers() {
         return HANDLER_LIST;
     }
+
 }

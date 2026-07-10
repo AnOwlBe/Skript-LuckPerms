@@ -10,6 +10,7 @@ import owlbe.skriptLuckPerms.luckperms.bukkitevents.OnUserDemote;
 import static owlbe.skriptLuckPerms.SkriptLuckPerms.instance;
 
 public class UserDemoteListener {
+
 	public static void register(EventBus eventBus, BukkitScheduler bukkitScheduler, PluginManager pluginManager) {
 		eventBus.subscribe(instance, UserDemoteEvent.class, event -> {
 			bukkitScheduler.runTask(instance, () -> {
@@ -17,4 +18,5 @@ public class UserDemoteListener {
 			});
 		});
 	}
+
 }

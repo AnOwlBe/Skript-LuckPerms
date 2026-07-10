@@ -7,6 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.scheduler.BukkitScheduler;
 import owlbe.skriptLuckPerms.luckperms.bukkitevents.*;
+
 public class Register {
 
     public static void register() {

@@ -7,19 +7,22 @@ import org.bukkit.event.HandlerList;
 import org.jspecify.annotations.NonNull;
 
 public class OnGroupLosePermission extends Event {
+
     private static final HandlerList HANDLER_LIST = new HandlerList();
     private final NodeRemoveEvent event;
 
     public OnGroupLosePermission(NodeRemoveEvent event) {
         this.event = event;
-
     }
+
     public Group getGroup() {
         return (Group) event.getTarget();
     }
+
     public String getPermission() {
         return event.getNode().getKey();
     }
+
     public static HandlerList getHandlerList() {
         return HANDLER_LIST;
     }
@@ -28,4 +31,5 @@ public class OnGroupLosePermission extends Event {
     public @NonNull HandlerList getHandlers() {
         return HANDLER_LIST;
     }
+
 }

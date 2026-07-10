@@ -11,22 +11,24 @@ import org.bukkit.event.player.PlayerEvent;
 import org.jspecify.annotations.NonNull;
 
 public class OnUserReceiveGroup extends PlayerEvent {
+
     private static final HandlerList HANDLER_LIST = new HandlerList();
     private final NodeAddEvent event;
-
 
     public OnUserReceiveGroup(Player player,NodeAddEvent event) {
         super(player);
         this.event = event;
-
     }
+
     public Timespan getDuration() {
         return new Timespan(event.getNode().getExpiry() != null ? event.getNode().getExpiry().toEpochMilli() - System.currentTimeMillis() : 0);
     }
+
     public Group getGroup() {
         String group = ((InheritanceNode) event.getNode()).getGroupName();
         return LuckPermsProvider.get().getGroupManager().getGroup(group);
     }
+
     public static HandlerList getHandlerList() {
         return HANDLER_LIST;
     }
@@ -35,7 +37,5 @@ public class OnUserReceiveGroup extends PlayerEvent {
     public @NonNull HandlerList getHandlers() {
         return HANDLER_LIST;
     }
+
 }
-
-
-

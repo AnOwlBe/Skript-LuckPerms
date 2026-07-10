@@ -10,18 +10,20 @@ import org.bukkit.event.player.PlayerEvent;
 import org.jspecify.annotations.NonNull;
 
 public class OnUserLoseGroup extends PlayerEvent {
+
     private static final HandlerList HANDLER_LIST = new HandlerList();
     private final NodeRemoveEvent event;
 
     public OnUserLoseGroup(Player player, NodeRemoveEvent event) {
         super(player);
         this.event = event;
-
     }
+
     public Group getGroup() {
         String group =  ((InheritanceNode) event.getNode()).getGroupName();
         return LuckPermsProvider.get().getGroupManager().getGroup(group);
     }
+
     public static HandlerList getHandlerList() {
         return HANDLER_LIST;
     }
@@ -30,4 +32,5 @@ public class OnUserLoseGroup extends PlayerEvent {
     public @NonNull HandlerList getHandlers() {
         return HANDLER_LIST;
     }
+
 }

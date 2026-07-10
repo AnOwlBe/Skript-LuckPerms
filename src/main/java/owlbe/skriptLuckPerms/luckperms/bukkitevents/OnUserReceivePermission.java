@@ -8,13 +8,13 @@ import org.bukkit.event.player.PlayerEvent;
 import org.jspecify.annotations.NonNull;
 
 public class OnUserReceivePermission extends PlayerEvent {
+
     private static final HandlerList HANDLER_LIST = new HandlerList();
     private final NodeAddEvent event;
 
     public OnUserReceivePermission(Player player,NodeAddEvent event) {
         super(player);
         this.event = event;
-
     }
 
     public String getPermission() {
@@ -23,6 +23,7 @@ public class OnUserReceivePermission extends PlayerEvent {
     public Timespan getDuration() {
         return new Timespan(event.getNode().getExpiry() != null ? event.getNode().getExpiry().toEpochMilli() - System.currentTimeMillis() : 0);
     }
+
     public static HandlerList getHandlerList() {
         return HANDLER_LIST;
     }
@@ -31,6 +32,5 @@ public class OnUserReceivePermission extends PlayerEvent {
     public @NonNull HandlerList getHandlers() {
         return HANDLER_LIST;
     }
+
 }
-
-

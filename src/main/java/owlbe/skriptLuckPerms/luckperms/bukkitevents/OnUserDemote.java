@@ -9,26 +9,29 @@ import org.bukkit.event.player.PlayerEvent;
 import org.jspecify.annotations.NonNull;
 
 public class OnUserDemote extends PlayerEvent {
+
     private static final HandlerList HANDLER_LIST = new HandlerList();
     private final UserDemoteEvent event;
 
     public OnUserDemote(Player player,UserDemoteEvent event) {
         super(player);
         this.event = event;
-
     }
 
     public String getTrack() {
         return event.getTrack().getName();
     }
+
     public Group getPreviousGroup() {
         if (event.getGroupFrom().orElse(null) == null) return null;
         return LuckPermsProvider.get().getGroupManager().getGroup(event.getGroupFrom().orElse(null));
     }
+
     public Group getGroup() {
         if (event.getGroupTo().orElse(null) == null) return null;
         return LuckPermsProvider.get().getGroupManager().getGroup(event.getGroupTo().orElse(null));
     }
+
     public static HandlerList getHandlerList() {
         return HANDLER_LIST;
     }
@@ -37,5 +40,5 @@ public class OnUserDemote extends PlayerEvent {
     public @NonNull HandlerList getHandlers() {
         return HANDLER_LIST;
     }
-}
 
+}

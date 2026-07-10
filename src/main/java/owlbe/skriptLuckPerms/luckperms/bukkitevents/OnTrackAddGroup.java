@@ -9,16 +9,18 @@ import org.bukkit.event.HandlerList;
 import org.jspecify.annotations.NonNull;
 
 public class OnTrackAddGroup extends Event {
+
     private static final HandlerList HANDLER_LIST = new HandlerList();
     private final TrackAddGroupEvent event;
 
     public OnTrackAddGroup(TrackAddGroupEvent event) {
         this.event = event;
-
     }
+
     public Group getGroup() {
         return LuckPermsProvider.get().getGroupManager().getGroup(event.getGroup());
     }
+
     public Track getTrack() {
         return event.getTrack();
     }
@@ -32,4 +34,5 @@ public class OnTrackAddGroup extends Event {
     public @NonNull HandlerList getHandlers() {
         return HANDLER_LIST;
     }
+
 }

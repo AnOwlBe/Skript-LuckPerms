@@ -9,20 +9,21 @@ import org.bukkit.event.HandlerList;
 import org.jspecify.annotations.NonNull;
 
 public class OnTrackRemoveGroup extends Event {
+
     private static final HandlerList HANDLER_LIST = new HandlerList();
     private final TrackRemoveGroupEvent event;
 
     public OnTrackRemoveGroup(TrackRemoveGroupEvent event) {
         this.event = event;
-
     }
+
     public Group getGroup() {
         return LuckPermsProvider.get().getGroupManager().getGroup(event.getGroup());
     }
+
     public Track getTrack() {
         return event.getTrack();
     }
-
 
     public static HandlerList getHandlerList() {
         return HANDLER_LIST;
@@ -32,4 +33,5 @@ public class OnTrackRemoveGroup extends Event {
     public @NonNull HandlerList getHandlers() {
         return HANDLER_LIST;
     }
+
 }

@@ -16,6 +16,7 @@ import owlbe.skriptLuckPerms.luckperms.bukkitevents.OnUserMetaRemove;
 import static owlbe.skriptLuckPerms.SkriptLuckPerms.instance;
 
 public class NodeClearListener {
+
 	public static void register(EventBus eventBus, BukkitScheduler bukkitScheduler, PluginManager pluginManager) {
 		eventBus.subscribe(instance, NodeClearEvent.class, event -> {
 			for (Node node : event.getNodes()) {
@@ -33,4 +34,5 @@ public class NodeClearListener {
 			}
 		});
 	}
+
 }

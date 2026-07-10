@@ -11,6 +11,7 @@ import org.bukkit.event.HandlerList;
 import org.jspecify.annotations.NonNull;
 
 public class OnGroupMetaRemove extends Event {
+
     private static final HandlerList HANDLER_LIST = new HandlerList();
     private final Group group;
     private final Node node;
@@ -46,8 +47,5 @@ public class OnGroupMetaRemove extends Event {
     public @NonNull HandlerList getHandlers() {
         return HANDLER_LIST;
     }
+
 }
-
-
-
-

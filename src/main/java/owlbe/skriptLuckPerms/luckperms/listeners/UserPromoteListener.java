@@ -10,6 +10,7 @@ import owlbe.skriptLuckPerms.luckperms.bukkitevents.OnUserPromote;
 import static owlbe.skriptLuckPerms.SkriptLuckPerms.instance;
 
 public class UserPromoteListener {
+
 	public static void register(EventBus eventBus, BukkitScheduler bukkitScheduler, PluginManager pluginManager) {
 		eventBus.subscribe(instance, UserPromoteEvent.class, event -> bukkitScheduler.runTask(instance, () ->
 				pluginManager.callEvent(new OnUserPromote(Bukkit.getPlayer(event.getUser().getUniqueId()), event))));

@@ -9,6 +9,7 @@ import owlbe.skriptLuckPerms.luckperms.bukkitevents.OnTrackRemoveGroup;
 import static owlbe.skriptLuckPerms.SkriptLuckPerms.instance;
 
 public class TrackRemoveGroupListener {
+
 	public static void register(EventBus eventBus, BukkitScheduler bukkitScheduler, PluginManager pluginManager) {
 		eventBus.subscribe(instance, TrackRemoveGroupEvent.class, event -> {
 			bukkitScheduler.runTask(instance, () -> {
@@ -16,4 +17,5 @@ public class TrackRemoveGroupListener {
 			});
 		});
 	}
+
 }
