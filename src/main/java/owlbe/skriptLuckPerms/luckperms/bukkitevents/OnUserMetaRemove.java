@@ -13,23 +13,23 @@ import org.jspecify.annotations.NonNull;
 public class OnUserMetaRemove extends PlayerEvent {
 
 	private static final HandlerList HANDLER_LIST = new HandlerList();
-	private final Node event;
+	private final Node node;
 
-	public OnUserMetaRemove(Player player, Node event) {
+	public OnUserMetaRemove(Player player, Node node) {
 		super(player);
-		this.event = event;
+		this.node = node;
 	}
 
-	public String getKey() {
-		if (event.getType() == NodeType.PREFIX) return "prefix";
-		if (event.getType() == NodeType.SUFFIX) return "suffix";
-		return ((MetaNode) event).getMetaKey();
+	public String getKey() {;
+		if (node.getType() == NodeType.PREFIX)
+			return "prefix";
+		if (node.getType() == NodeType.SUFFIX)
+			return "suffix";
+		return ((MetaNode) node).getMetaKey();
 	}
 
 	public String getValue() {
-		if (event.getType() == NodeType.PREFIX) return ((PrefixNode) event).getMetaValue();
-		if (event.getType() == NodeType.SUFFIX) return ((SuffixNode) event).getMetaValue();
-		return ((MetaNode) event).getMetaValue();
+		return ((MetaNode) node).getMetaValue();
 	}
 
 	public static HandlerList getHandlerList() {

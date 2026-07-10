@@ -1,14 +1,14 @@
 package owlbe.skriptLuckPerms.luckperms.bukkitevents;
 
 import ch.njol.skript.util.Timespan;
-import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.event.node.NodeAddEvent;
 import net.luckperms.api.model.group.Group;
-import net.luckperms.api.node.types.InheritanceNode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.PlayerEvent;
 import org.jspecify.annotations.NonNull;
+
+import java.time.Duration;
 
 public class OnUserReceiveGroup extends PlayerEvent {
 
@@ -21,12 +21,14 @@ public class OnUserReceiveGroup extends PlayerEvent {
 	}
 
 	public Timespan getDuration() {
-		return new Timespan(event.getNode().getExpiry() != null ? event.getNode().getExpiry().toEpochMilli() - System.currentTimeMillis() : 0);
+		Duration expiry = event.getNode().getExpiryDuration();
+		if (expiry == null)
+			return new Timespan(0);
+		return new Timespan(expiry.toMillis());
 	}
 
 	public Group getGroup() {
-		String group = ((InheritanceNode) event.getNode()).getGroupName();
-		return LuckPermsProvider.get().getGroupManager().getGroup(group);
+		return ((Group) event.getTarget());
 	}
 
 	public static HandlerList getHandlerList() {

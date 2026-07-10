@@ -23,13 +23,15 @@ public class OnUserPromote extends PlayerEvent {
 	}
 
 	public Group getPreviousGroup() {
-		if (event.getGroupFrom().orElse(null) == null) return null;
-		return LuckPermsProvider.get().getGroupManager().getGroup(event.getGroupFrom().orElse(null));
+		return event.getGroupFrom()
+				.map(name -> LuckPermsProvider.get().getGroupManager().getGroup(name))
+				.orElse(null);
 	}
 
 	public Group getGroup() {
-		if (event.getGroupTo().orElse(null) == null) return null;
-		return LuckPermsProvider.get().getGroupManager().getGroup(event.getGroupTo().orElse(null));
+		return event.getGroupTo()
+				.map(name -> LuckPermsProvider.get().getGroupManager().getGroup(name))
+				.orElse(null);
 	}
 
 	public static HandlerList getHandlerList() {

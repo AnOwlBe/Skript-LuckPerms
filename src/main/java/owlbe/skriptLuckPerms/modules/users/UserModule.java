@@ -63,7 +63,7 @@ public class UserModule extends HierarchicalAddonModule {
 				.parser(new Parser<>() {
 					@Override
 					@Nullable
-					public User parse(String s, ParseContext context) {
+					public User parse(String string, ParseContext context) {
 						return null;
 					}
 

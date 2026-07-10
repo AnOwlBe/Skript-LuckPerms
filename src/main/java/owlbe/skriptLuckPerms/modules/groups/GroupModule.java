@@ -17,17 +17,10 @@ import owlbe.skriptLuckPerms.modules.groups.elements.events.EvtGroupReceivePermi
 import owlbe.skriptLuckPerms.modules.groups.elements.expressions.ExprAllGroups;
 import owlbe.skriptLuckPerms.modules.groups.elements.sections.SecEditGroup;
 
-import java.util.List;
-
 public class GroupModule extends HierarchicalAddonModule {
 
 	public GroupModule(AddonModule parentModule) {
 		super(parentModule);
-	}
-
-	@Override
-	public Iterable<AddonModule> children() {
-		return List.of();
 	}
 
 	@Override

@@ -7,6 +7,8 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jspecify.annotations.NonNull;
 
+import java.time.Duration;
+
 public class OnGroupReceivePermission extends Event {
 
 	private static final HandlerList HANDLER_LIST = new HandlerList();
@@ -25,7 +27,10 @@ public class OnGroupReceivePermission extends Event {
 	}
 
 	public Timespan getDuration() {
-		return new Timespan(event.getNode().getExpiry() != null ? event.getNode().getExpiry().toEpochMilli() - System.currentTimeMillis() : 0);
+		Duration expiry = event.getNode().getExpiryDuration();
+		if (expiry == null)
+			return new Timespan(0);
+		return new Timespan(expiry.toMillis());
 	}
 
 	public static HandlerList getHandlerList() {

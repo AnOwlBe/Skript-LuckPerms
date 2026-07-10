@@ -20,8 +20,7 @@ public class OnUserLoseGroup extends PlayerEvent {
 	}
 
 	public Group getGroup() {
-		String group =  ((InheritanceNode) event.getNode()).getGroupName();
-		return LuckPermsProvider.get().getGroupManager().getGroup(group);
+		return (Group) event.getTarget();
 	}
 
 	public static HandlerList getHandlerList() {

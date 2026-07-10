@@ -13,7 +13,7 @@ public class OnUserDemote extends PlayerEvent {
 	private static final HandlerList HANDLER_LIST = new HandlerList();
 	private final UserDemoteEvent event;
 
-	public OnUserDemote(Player player,UserDemoteEvent event) {
+	public OnUserDemote(Player player, UserDemoteEvent event) {
 		super(player);
 		this.event = event;
 	}
@@ -23,13 +23,15 @@ public class OnUserDemote extends PlayerEvent {
 	}
 
 	public Group getPreviousGroup() {
-		if (event.getGroupFrom().orElse(null) == null) return null;
-		return LuckPermsProvider.get().getGroupManager().getGroup(event.getGroupFrom().orElse(null));
+		return event.getGroupFrom()
+				.map(name -> LuckPermsProvider.get().getGroupManager().getGroup(name))
+				.orElse(null);
 	}
 
 	public Group getGroup() {
-		if (event.getGroupTo().orElse(null) == null) return null;
-		return LuckPermsProvider.get().getGroupManager().getGroup(event.getGroupTo().orElse(null));
+		return event.getGroupTo()
+				.map(name -> LuckPermsProvider.get().getGroupManager().getGroup(name))
+				.orElse(null);
 	}
 
 	public static HandlerList getHandlerList() {
