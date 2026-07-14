@@ -13,8 +13,8 @@ import owlbe.skriptLuckPerms.modules.users.elements.conditions.CondHasGroup;
 import owlbe.skriptLuckPerms.modules.users.elements.conditions.CondHasPermission;
 import owlbe.skriptLuckPerms.modules.users.elements.effects.*;
 import owlbe.skriptLuckPerms.modules.users.elements.events.*;
-import owlbe.skriptLuckPerms.modules.users.elements.expressions.ExprGroupsOf;
-import owlbe.skriptLuckPerms.modules.users.elements.expressions.ExprPermissionsOf;
+import owlbe.skriptLuckPerms.modules.users.elements.expressions.ExprGroupsOfUser;
+import owlbe.skriptLuckPerms.modules.users.elements.expressions.ExprPermissionsOfUser;
 import owlbe.skriptLuckPerms.modules.users.elements.expressions.ExprPlayerFromUser;
 import owlbe.skriptLuckPerms.modules.users.elements.sections.SecEditUser;
 
@@ -30,8 +30,8 @@ public class UserModule extends HierarchicalAddonModule {
 	public void loadSelf(SkriptAddon addon) {
 		EventValueRegistry registry = addon.registry(EventValueRegistry.class);
 		register(addon,
-				ExprGroupsOf::register,
-				ExprPermissionsOf::register,
+				//ExprGroupsOfUser::register,
+				//ExprPermissionsOfUser::register,
 				ExprPlayerFromUser::register,
 				CondHasGroup::register,
 				CondHasPermission::register,

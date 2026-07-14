@@ -3,6 +3,7 @@ package owlbe.skriptLuckPerms.modules.users.elements.events;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import net.luckperms.api.node.types.PermissionNode;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.bukkit.lang.eventvalue.EventValue;
@@ -30,7 +31,7 @@ public class EvtUserLosePermission extends SkriptEvent {
 				.addSince("1.0")
 				.build());
 
-		eventValueRegistry.register(EventValue.builder(OnUserLosePermission.class, String.class)
+		eventValueRegistry.register(EventValue.builder(OnUserLosePermission.class, PermissionNode.class)
 				.getter(OnUserLosePermission::getPermission)
 				.patterns("permission")
 				.build());

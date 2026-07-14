@@ -4,6 +4,7 @@ import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.Timespan;
+import net.luckperms.api.node.types.PermissionNode;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.bukkit.lang.eventvalue.EventValue;
@@ -33,7 +34,7 @@ public class EvtUserReceivePermission extends SkriptEvent {
 				.addSince("1.0")
 				.build());
 
-		eventValueRegistry.register(EventValue.builder(OnUserReceivePermission.class, String.class)
+		eventValueRegistry.register(EventValue.builder(OnUserReceivePermission.class, PermissionNode.class)
 				.getter(OnUserReceivePermission::getPermission)
 				.patterns("permission")
 				.build());
@@ -55,7 +56,7 @@ public class EvtUserReceivePermission extends SkriptEvent {
 	}
 
 	@Override
-	public String toString(@Nullable Event event, boolean b) {
+	public String toString(@Nullable Event event, boolean debug) {
 		return "user receive permission";
 	}
 

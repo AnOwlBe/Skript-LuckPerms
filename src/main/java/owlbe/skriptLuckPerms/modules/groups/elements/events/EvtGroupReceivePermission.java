@@ -5,6 +5,7 @@ import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.Timespan;
 import net.luckperms.api.model.group.Group;
+import net.luckperms.api.node.types.PermissionNode;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.bukkit.lang.eventvalue.EventValue;
@@ -35,7 +36,7 @@ public class EvtGroupReceivePermission extends SkriptEvent {
 				.addSince("1.0")
 				.build());
 
-		eventValueRegistry.register(EventValue.builder(OnGroupReceivePermission.class, String.class)
+		eventValueRegistry.register(EventValue.builder(OnGroupReceivePermission.class, PermissionNode.class)
 				.getter(OnGroupReceivePermission::getPermission)
 				.patterns("permission")
 				.build());

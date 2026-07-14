@@ -1,6 +1,7 @@
 package owlbe.skriptLuckPerms.luckperms.bukkitevents;
 
 import net.luckperms.api.event.node.NodeRemoveEvent;
+import net.luckperms.api.node.types.PermissionNode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.PlayerEvent;
@@ -16,8 +17,8 @@ public class OnUserLosePermission extends PlayerEvent {
 		this.event = event;
 	}
 
-	public String getPermission() {
-		return event.getNode().getKey();
+	public PermissionNode getPermission() {
+		return (PermissionNode) event.getNode();
 	}
 
 	public static HandlerList getHandlerList() {

@@ -3,6 +3,7 @@ package owlbe.skriptLuckPerms.luckperms.bukkitevents;
 import ch.njol.skript.util.Timespan;
 import net.luckperms.api.event.node.NodeAddEvent;
 import net.luckperms.api.model.group.Group;
+import net.luckperms.api.node.types.PermissionNode;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jspecify.annotations.NonNull;
@@ -22,8 +23,8 @@ public class OnGroupReceivePermission extends Event {
 		return (Group) event.getTarget();
 	}
 
-	public String getPermission() {
-		return event.getNode().getKey();
+	public PermissionNode getPermission() {
+		return (PermissionNode) event.getNode();
 	}
 
 	public Timespan getDuration() {

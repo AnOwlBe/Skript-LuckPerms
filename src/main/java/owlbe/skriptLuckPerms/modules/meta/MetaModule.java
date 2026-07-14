@@ -8,7 +8,7 @@ import org.skriptlang.skript.addon.SkriptAddon;
 import org.skriptlang.skript.lang.converter.Converters;
 import owlbe.skriptLuckPerms.modules.meta.elements.expressions.ExprPrefix;
 import owlbe.skriptLuckPerms.modules.meta.elements.expressions.ExprSuffix;
-import owlbe.skriptLuckPerms.modules.meta.elements.sections.SecChatMetaBuilder;
+import owlbe.skriptLuckPerms.modules.meta.elements.expressions.SecExprChatMetaBuilder;
 
 public class MetaModule extends HierarchicalAddonModule {
 
@@ -21,7 +21,7 @@ public class MetaModule extends HierarchicalAddonModule {
 		register(addon,
 				ExprPrefix::register,
 				ExprSuffix::register,
-				SecChatMetaBuilder::register
+				SecExprChatMetaBuilder::register
 		);
 
 		Classes.registerClass(new MetaClassInfo());

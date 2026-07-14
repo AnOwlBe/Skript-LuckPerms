@@ -6,6 +6,7 @@ import org.skriptlang.skript.addon.HierarchicalAddonModule;
 import org.skriptlang.skript.addon.SkriptAddon;
 import owlbe.skriptLuckPerms.modules.groups.GroupModule;
 import owlbe.skriptLuckPerms.modules.meta.MetaModule;
+import owlbe.skriptLuckPerms.modules.permission.PermissionModule;
 import owlbe.skriptLuckPerms.modules.tracks.TrackModule;
 import owlbe.skriptLuckPerms.modules.users.UserModule;
 
@@ -23,6 +24,7 @@ public class Modules extends HierarchicalAddonModule {
         return List.of(
                 new GroupModule(this),
                 new MetaModule(this),
+            //    new PermissionModule(this),
                 new TrackModule(this),
                 new UserModule(this)
         );

@@ -15,6 +15,7 @@ import ch.njol.util.Kleenean;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.node.Node;
 import net.luckperms.api.node.matcher.NodeMatcher;
+import net.luckperms.api.node.types.PermissionNode;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.registration.SyntaxInfo;
@@ -40,19 +41,19 @@ public class EffPermissionMembers extends AsyncEffect {
 		registry.register(
 				SyntaxRegistry.EFFECT,
 				SyntaxInfo.builder(EffPermissionMembers.class)
-						.addPattern("set %-~objects% to (all|all of the) [luckperm[s]] (users|players) with perm[ission] %string%")
+						.addPattern("set %-~objects% to (all|all of the) [luckperm[s]] (users|players) with perm[ission] %luckpermspermission%")
 						.build()
 		);
 	}
 
-	private Expression<String> permExpr;
+	private Expression<PermissionNode> permExpr;
 	private Expression<?> varExpr;
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean kleenean, ParseResult parseResult) {
 		getParser().setHasDelayBefore(Kleenean.TRUE);
-		permExpr = (Expression<String>) expressions[1];
+		permExpr = (Expression<PermissionNode>) expressions[1];
 		varExpr = expressions[0];
 		if (!ChangerUtils.acceptsChange(varExpr, ChangeMode.SET, UUID.class)) {
 			Skript.error(varExpr.toString(null, Skript.debug()) + " cannot be set to UUIDS.");
@@ -63,11 +64,11 @@ public class EffPermissionMembers extends AsyncEffect {
 
 	@Override
 	protected void execute(Event event) {
-		String perm = permExpr.getSingle(event);
-		if (perm == null)
+		PermissionNode permission = permExpr.getSingle(event);
+		if (permission == null)
 			return;
 		var results = LuckPermsProvider.get().getUserManager()
-				.searchAll(NodeMatcher.key(Node.builder(perm).build()))
+				.searchAll(NodeMatcher.key(Node.builder(permission.getKey()).build()))
 				.join();
 		varExpr.change(event, results.keySet().toArray(), ChangeMode.SET);
 

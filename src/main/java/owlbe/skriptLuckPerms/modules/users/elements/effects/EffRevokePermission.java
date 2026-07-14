@@ -34,12 +34,12 @@ public class EffRevokePermission extends Effect {
 		registry.register(
 				SyntaxRegistry.EFFECT,
 				SyntaxInfo.builder(EffRevokePermission.class)
-						.addPattern("(revoke|remove) [luckperm[s]] perm[ission] %string% [from %-luckpermsuser%]")
+						.addPattern("(revoke|remove) [luckperm[s]] perm[ission] %luckpermspermission% [from %-luckpermsuser%]")
 						.build()
 		);
 	}
 
-	private Expression<String> permissionExpr;
+	private Expression<PermissionNode> permissionExpr;
 	private Expression<User> userExpr;
 
 	@Override
@@ -49,7 +49,7 @@ public class EffRevokePermission extends Effect {
 			Skript.error("This can only be used inside an 'edit user' section");
 			return false;
 		}
-		permissionExpr = (Expression<String>) expressions[0];
+		permissionExpr = (Expression<PermissionNode>) expressions[0];
 		if (expressions[1] != null)
 			userExpr = (Expression<User>) expressions[1];
 		return true;
@@ -57,11 +57,11 @@ public class EffRevokePermission extends Effect {
 
 	@Override
 	protected void execute(Event event) {
-		String permission = permissionExpr.getSingle(event);
+		PermissionNode permission = permissionExpr.getSingle(event);
 		User user = userExpr != null ? userExpr.getSingle(event) : ((SecEditUser.UserEvent) event).getUser();
 		if (permission == null || user == null)
 			return;
-		user.data().remove(PermissionNode.builder(permission).build());
+		user.data().remove(permission);
 	}
 
 	@Override

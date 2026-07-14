@@ -43,6 +43,16 @@ public class Properties {
 			addon,
 			ExpressionPropertyHandler.class);
 
+	/**
+	 * A property for getting the expiry of something.
+	 */
+	public static final Property<ExpressionPropertyHandler<?,?>> EXPIRY = Property.of(
+			"expiry",
+			"The expiry of something.",
+			"INSERT VERSION",
+			addon,
+			ExpressionPropertyHandler.class);
+
 	public static void register(SyntaxRegistry syntaxRegistry) {
 
 		if (getProperty(WEIGHT) != null) {
@@ -59,6 +69,11 @@ public class Properties {
 			PropExprSource.register(syntaxRegistry);
 		} else {
 			SkriptLuckPerms.error("It appears another addon tried to register a SOURCE property & Skript-LuckPerms failed to hook into it. Disabling Skript-LuckPerms usages of SOURCE property.");
+		}
+		if (getProperty(EXPIRY) != null) {
+			PropExprExpiry.register(syntaxRegistry);
+		} else {
+			SkriptLuckPerms.error("It appears another addon tried to register a EXPIRY property & Skript-LuckPerms failed to hook into it. Disabling Skript-LuckPerms usages of EXPIRY property.");
 		}
 	}
 

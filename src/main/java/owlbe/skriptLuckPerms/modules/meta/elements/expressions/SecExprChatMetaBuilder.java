@@ -1,4 +1,4 @@
-package owlbe.skriptLuckPerms.modules.meta.elements.sections;
+package owlbe.skriptLuckPerms.modules.meta.elements.expressions;
 
 import ch.njol.skript.config.SectionNode;
 import ch.njol.skript.doc.Description;
@@ -53,7 +53,7 @@ command /test:
 	""")
 @Since("1.0")
 @SuppressWarnings({"unchecked", "rawtypes"})
-public class SecChatMetaBuilder extends SectionExpression<ChatMetaNode> {
+public class SecExprChatMetaBuilder extends SectionExpression<ChatMetaNode> {
 
 	private static EntryValidator VALIDATOR;
 
@@ -66,7 +66,7 @@ public class SecChatMetaBuilder extends SectionExpression<ChatMetaNode> {
 
 		syntaxRegistry.register(
 				SyntaxRegistry.EXPRESSION,
-				SyntaxInfo.Expression.builder(SecChatMetaBuilder.class, ChatMetaNode.class)
+				SyntaxInfo.Expression.builder(SecExprChatMetaBuilder.class, ChatMetaNode.class)
 						.addPattern("a [new] (prefix|suffix) builder")
 						.build()
 		);
