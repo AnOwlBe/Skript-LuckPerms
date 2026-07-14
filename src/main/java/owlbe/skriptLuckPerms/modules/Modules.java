@@ -15,7 +15,7 @@ public class Modules extends HierarchicalAddonModule {
 
     @Override
     protected boolean canLoadSelf(SkriptAddon addon) {
-        return Skript.classExists("net.luckperms.api");
+        return Skript.classExists("org.bukkit.Bukkit");
     }
 
     @Override
