@@ -26,8 +26,8 @@ import org.skriptlang.skript.registration.SyntaxRegistry;
 @SuppressWarnings("unchecked")
 public class EffDeleteTrack extends AsyncEffect {
 
-	public static void register(SyntaxRegistry registry) {
-		registry.register(
+	public static void register(SyntaxRegistry syntaxRegistry) {
+		syntaxRegistry.register(
 				SyntaxRegistry.EFFECT,
 				SyntaxInfo.builder(EffDeleteTrack.class)
 						.addPattern("delete luckperm[s] track %luckpermstrack%")

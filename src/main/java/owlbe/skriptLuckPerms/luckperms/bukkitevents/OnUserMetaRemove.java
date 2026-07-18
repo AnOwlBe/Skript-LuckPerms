@@ -8,6 +8,7 @@ import net.luckperms.api.node.types.SuffixNode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.PlayerEvent;
+import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
 
 public class OnUserMetaRemove extends PlayerEvent {
@@ -20,7 +21,7 @@ public class OnUserMetaRemove extends PlayerEvent {
 		this.node = node;
 	}
 
-	public String getKey() {;
+	public @NotNull String getKey() {;
 		if (node.getType() == NodeType.PREFIX)
 			return "prefix";
 		if (node.getType() == NodeType.SUFFIX)
@@ -28,7 +29,7 @@ public class OnUserMetaRemove extends PlayerEvent {
 		return ((MetaNode) node).getMetaKey();
 	}
 
-	public String getValue() {
+	public @NotNull String getValue() {
 		return ((MetaNode) node).getMetaValue();
 	}
 

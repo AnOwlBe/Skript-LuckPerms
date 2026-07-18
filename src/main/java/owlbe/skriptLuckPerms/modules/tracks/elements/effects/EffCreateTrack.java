@@ -15,6 +15,8 @@ import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.registration.SyntaxInfo;
 import org.skriptlang.skript.registration.SyntaxRegistry;
 
+import static owlbe.skriptLuckPerms.utilitities.LuckPermsUtils.isValidNodeName;
+
 @Name("Create Track")
 @Description("Creates a new luckperms track and then loads it into memory.")
 @Example("""
@@ -22,7 +24,6 @@ import org.skriptlang.skript.registration.SyntaxRegistry;
 			create new luckperms track named {_name}
 		""")
 @Since("1.0.2")
-@SuppressWarnings("unchecked")
 public class EffCreateTrack extends AsyncEffect {
 
 	public static void register(SyntaxRegistry registry) {
@@ -37,6 +38,7 @@ public class EffCreateTrack extends AsyncEffect {
 	private Expression<String> nameExpr;
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean kleenean, ParseResult parseResult) {
 		getParser().setHasDelayBefore(Kleenean.TRUE);
 		nameExpr = (Expression<String>) expressions[0];
@@ -50,6 +52,8 @@ public class EffCreateTrack extends AsyncEffect {
 			return;
 		// No public method to check if name is valid for some reason but also names don't support spaces.
 		if (!name.matches("[a-z0-9_.-]+"))
+			return;
+		if (!(isValidNodeName(name)))
 			return;
 		LuckPermsProvider.get().getTrackManager().createAndLoadTrack(name);
 	}

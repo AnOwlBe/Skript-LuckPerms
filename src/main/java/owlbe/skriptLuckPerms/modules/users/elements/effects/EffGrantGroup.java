@@ -20,7 +20,7 @@ import org.skriptlang.skript.registration.SyntaxInfo;
 import org.skriptlang.skript.registration.SyntaxRegistry;
 import owlbe.skriptLuckPerms.modules.users.elements.sections.SecEditUser;
 
-import java.time.Duration;
+import static owlbe.skriptLuckPerms.modules.users.UserUtils.getUser;
 
 @Name("Grant Group")
 @Description("Adds a group to a user.")
@@ -39,8 +39,8 @@ function example(p: offlineplayer,group: string,duration: timespan=0 seconds):
 @Since("1.0")
 public class EffGrantGroup extends Effect {
 
-	public static void register(SyntaxRegistry registry) {
-		registry.register(
+	public static void register(SyntaxRegistry syntaxRegistry) {
+		syntaxRegistry.register(
 				SyntaxRegistry.EFFECT,
 				SyntaxInfo.builder(EffGrantGroup.class)
 						.addPattern("(grant|add) luckperm[s] group %luckpermsgroup% [to %-luckpermsuser%] [for %-timespan%]")
@@ -48,9 +48,9 @@ public class EffGrantGroup extends Effect {
 		);
 	}
 
-	private Expression<Group> groupExpr;
-	private Expression<User> userExpr;
-	private Expression<Timespan> durationExpr;
+	private Expression<Group> group;
+	private Expression<User> user;
+	private Expression<Timespan> duration;
 
 	@Override
 	@SuppressWarnings("unchecked")
@@ -59,34 +59,36 @@ public class EffGrantGroup extends Effect {
 			Skript.error("This can only be used inside an 'edit user' section");
 			return false;
 		}
-		groupExpr = (Expression<Group>) expressions[0];
+
+		group = (Expression<Group>) expressions[0];
 		if (expressions[1] != null)
-			userExpr = (Expression<User>) expressions[1];
-		durationExpr = (Expression<Timespan>) expressions[2];
+			user = (Expression<User>) expressions[1];
+		duration = (Expression<Timespan>) expressions[2];
 		return true;
 	}
 
 	@Override
 	protected void execute(Event event) {
-		Group group = groupExpr.getSingle(event);
-		User user = userExpr != null ? userExpr.getSingle(event) : ((SecEditUser.UserEvent) event).getUser();
+		Group group = this.group.getSingle(event);
+		User user = getUser(event, this.user);
 		if (group == null || user == null)
 			return;
-		Timespan duration = durationExpr != null ? durationExpr.getSingle(event) : null;
-		if (duration != null) {
-			user.data().add(InheritanceNode.builder(group)
-					.expiry(duration.getDuration())
-					.build());
-		} else {
+		Timespan duration = this.duration != null ? this.duration.getSingle(event) : null;
+
+		if (duration == null) {
 			user.data().add(InheritanceNode.builder(group).build());
+			return;
 		}
+		user.data().add(InheritanceNode.builder(group)
+				.expiry(duration.getDuration())
+				.build());
 	}
 
 	@Override
 	public String toString(@Nullable Event event, boolean debug) {
 		return new SyntaxStringBuilder(event, debug)
-				.append("grant group", groupExpr, "to", userExpr)
-				.appendIf(durationExpr != null, "for", durationExpr)
+				.append("grant group", group, "to", user)
+				.appendIf(duration != null, "for", duration)
 				.toString();
 	}
 

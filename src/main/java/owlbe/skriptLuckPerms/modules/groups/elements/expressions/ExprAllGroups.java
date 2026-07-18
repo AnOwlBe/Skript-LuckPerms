@@ -5,7 +5,7 @@ import ch.njol.skript.doc.Example;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import net.luckperms.api.LuckPermsProvider;
@@ -22,28 +22,26 @@ import org.skriptlang.skript.registration.SyntaxRegistry;
 			trigger:
 				 send all of the luckperms groups to player
 		""")
-@Since("1.0")
-public class ExprAllGroups extends SimpleExpression<String> {
+@Since("1.0, INSERT VERSION (returns groups)")
+public class ExprAllGroups extends SimpleExpression<Group> {
 
 	public static void register(SyntaxRegistry syntaxRegistry) {
 		syntaxRegistry.register(
 				SyntaxRegistry.EXPRESSION,
-				SyntaxInfo.Expression.builder(ExprAllGroups.class, String.class)
+				SyntaxInfo.Expression.builder(ExprAllGroups.class, Group.class)
 						.addPatterns("all [of the] luckperm[s] groups")
 						.build()
 		);
 	}
 
 	@Override
-	public boolean init(Expression<?>[] expressions, int i, Kleenean kleenean, SkriptParser.ParseResult parseResult) {
+	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean kleenean, ParseResult parseResult) {
 		return true;
 	}
 
 	@Override
-	protected String[] get(Event event) {
-		return LuckPermsProvider.get().getGroupManager().getLoadedGroups().stream()
-				.map(Group::getName)
-				.toArray(String[]::new);
+	protected Group[] get(Event event) {
+		return LuckPermsProvider.get().getGroupManager().getLoadedGroups().toArray(Group[]::new);
 	}
 
 	@Override
@@ -52,8 +50,8 @@ public class ExprAllGroups extends SimpleExpression<String> {
 	}
 
 	@Override
-	public Class<? extends String> getReturnType() {
-		return String.class;
+	public Class<? extends Group> getReturnType() {
+		return Group.class;
 	}
 
 	@Override

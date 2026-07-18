@@ -18,6 +18,8 @@ import org.skriptlang.skript.registration.SyntaxInfo;
 import org.skriptlang.skript.registration.SyntaxRegistry;
 import owlbe.skriptLuckPerms.modules.users.elements.sections.SecEditUser;
 
+import static owlbe.skriptLuckPerms.modules.users.UserUtils.getUser;
+
 @Name("Revoke Permission")
 @Description("Removes a permission from a user.")
 @Example("""
@@ -39,8 +41,8 @@ public class EffRevokePermission extends Effect {
 		);
 	}
 
-	private Expression<PermissionNode> permissionExpr;
-	private Expression<User> userExpr;
+	private Expression<PermissionNode> permission;
+	private Expression<User> user;
 
 	@Override
 	@SuppressWarnings("unchecked")
@@ -49,16 +51,16 @@ public class EffRevokePermission extends Effect {
 			Skript.error("This can only be used inside an 'edit user' section");
 			return false;
 		}
-		permissionExpr = (Expression<PermissionNode>) expressions[0];
+		permission = (Expression<PermissionNode>) expressions[0];
 		if (expressions[1] != null)
-			userExpr = (Expression<User>) expressions[1];
+			user = (Expression<User>) expressions[1];
 		return true;
 	}
 
 	@Override
 	protected void execute(Event event) {
-		PermissionNode permission = permissionExpr.getSingle(event);
-		User user = userExpr != null ? userExpr.getSingle(event) : ((SecEditUser.UserEvent) event).getUser();
+		PermissionNode permission = this.permission.getSingle(event);
+		User user = getUser(event, this.user);
 		if (permission == null || user == null)
 			return;
 		user.data().remove(permission);
@@ -67,7 +69,7 @@ public class EffRevokePermission extends Effect {
 	@Override
 	public String toString(@Nullable Event event, boolean b) {
 		return new SyntaxStringBuilder(event, b)
-				.append("revoke permission", permissionExpr, "from", userExpr)
+				.append("revoke permission", permission, "from", user)
 				.toString();
 	}
 

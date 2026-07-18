@@ -9,14 +9,14 @@ import org.skriptlang.skript.registration.SyntaxRegistry;
 
 import static owlbe.skriptLuckPerms.skript.properties.Properties.WEIGHT;
 
-@SuppressWarnings("UnstableApiUsage")
 @Name("Weight")
 @Description("""
-		Represents the weight of something.
-		""")
+	Represents the weight of something.
+	""")
 @Example("set the weight of {_mygroup} to 5")
 @Since("1.0.3")
 @RelatedProperty("weight")
+@SuppressWarnings("UnstableApiUsage")
 public class PropExprWeight extends PropertyBaseExpression<ExpressionPropertyHandler<?, ?>> {
 
 	public static void register(SyntaxRegistry registry) {

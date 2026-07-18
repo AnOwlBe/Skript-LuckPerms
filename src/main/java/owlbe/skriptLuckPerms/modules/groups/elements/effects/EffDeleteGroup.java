@@ -5,7 +5,7 @@ import ch.njol.skript.doc.Example;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.skript.util.AsyncEffect;
 import ch.njol.util.Kleenean;
@@ -18,7 +18,7 @@ import org.skriptlang.skript.registration.SyntaxRegistry;
 
 @Name("Delete Group")
 @Description("""
-		Deletes a luckperms group.
+		Deletes the given LuckPerms group.
 		""")
 @Example("""
 		function example(name: string):
@@ -26,6 +26,7 @@ import org.skriptlang.skript.registration.SyntaxRegistry;
 		""")
 @Since("1.0.2")
 public class EffDeleteGroup extends AsyncEffect {
+
 	public static void register(SyntaxRegistry registry) {
 		registry.register(
 				SyntaxRegistry.EFFECT,
@@ -35,19 +36,19 @@ public class EffDeleteGroup extends AsyncEffect {
 		);
 	}
 
-	private Expression<Group> groupExpr;
+	private Expression<Group> group;
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Expression<?>[] expressions, int i, Kleenean kleenean, SkriptParser.ParseResult parseResult) {
+	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean kleenean, ParseResult parseResult) {
 		getParser().setHasDelayBefore(Kleenean.TRUE);
-		groupExpr = (Expression<Group>) expressions[0];
+		group = (Expression<Group>) expressions[0];
 		return true;
 	}
 
 	@Override
 	protected void execute(Event event) {
-		Group group = groupExpr.getSingle(event);
+		Group group = this.group.getSingle(event);
 		if (group == null)
 			return;
 		LuckPermsProvider.get().getGroupManager().deleteGroup(group);
@@ -56,7 +57,7 @@ public class EffDeleteGroup extends AsyncEffect {
 	@Override
 	public String toString(@Nullable Event event, boolean debug) {
 		return new SyntaxStringBuilder(event, debug)
-				.append("delete luckperms group", groupExpr)
+				.append("delete luckperms group", group)
 				.toString();
 	}
 

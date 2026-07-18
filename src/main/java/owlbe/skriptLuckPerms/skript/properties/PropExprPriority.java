@@ -9,14 +9,14 @@ import org.skriptlang.skript.registration.SyntaxRegistry;
 
 import static owlbe.skriptLuckPerms.skript.properties.Properties.PRIORITY;
 
-@SuppressWarnings("UnstableApiUsage")
 @Name("Priority")
 @Description("""
-		Represents the priority of something.
-		""")
+	Represents the priority of something.
+	""")
 @Example("set {_m} to the priority of {_chatmeta}")
 @Since("1.0.3")
 @RelatedProperty("priority")
+@SuppressWarnings("UnstableApiUsage")
 public class PropExprPriority extends PropertyBaseExpression<ExpressionPropertyHandler<?, ?>> {
 
 	public static void register(SyntaxRegistry registry) {

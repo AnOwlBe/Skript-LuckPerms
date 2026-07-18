@@ -4,15 +4,21 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Example;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
+import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.util.Kleenean;
 import net.luckperms.api.model.group.Group;
 import net.luckperms.api.model.user.User;
 import net.luckperms.api.query.QueryOptions;
+import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.registration.SyntaxRegistry;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Name("Groups Of User")
 @Description("""
@@ -26,14 +32,14 @@ import org.skriptlang.skript.registration.SyntaxRegistry;
 			broadcast "their groups: %luckperms groups of {_lp}%"
 		""")
 @Since("1.0")
-public class ExprGroupsOfUser extends SimplePropertyExpression<User, Group[]> {
+public class ExprGroupsOfUser extends PropertyExpression<User, Group> {
 
 	public static void register(SyntaxRegistry registry) {
 		registry.register(
 				SyntaxRegistry.EXPRESSION,
 				infoBuilder(
 						ExprGroupsOfUser.class,
-						Group[].class,
+						Group.class,
 						"luckperm[s] groups",
 						"luckpermsuser",
 						false
@@ -44,23 +50,34 @@ public class ExprGroupsOfUser extends SimplePropertyExpression<User, Group[]> {
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+		setExpr((Expression<User>) expressions[0]);
 		return true;
 	}
 
 	@Override
-	public @Nullable Group[] convert(User user) {
-		return user.getInheritedGroups(QueryOptions.nonContextual()).toArray(Group[]::new);
+	protected Group[] get(Event event, User[] users) {
+		return Arrays.stream(users)
+				.flatMap(user -> user.getInheritedGroups(QueryOptions.nonContextual()).stream())
+				.toArray(Group[]::new);
 	}
 
 	@Override
-	public Class<? extends Group[]> getReturnType() {
-		return Group[].class;
+	public boolean isSingle() {
+		return false;
 	}
 
 	@Override
-	protected String getPropertyName() {
-		return "luckperms groups";
+	public Class<? extends Group> getReturnType() {
+		return Group.class;
+	}
+
+	@Override
+	public String toString(@Nullable Event event, boolean debug) {
+		return new SyntaxStringBuilder(event, debug)
+				.append("luckperms groups of")
+				.toString();
 	}
 
 }

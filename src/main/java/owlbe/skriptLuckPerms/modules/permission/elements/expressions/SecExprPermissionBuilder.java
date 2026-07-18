@@ -28,7 +28,7 @@ import java.util.List;
 
 @Name("Permission Builder")
 @Description("""
-		Creates a builder for a permission.
+		Builds a permission with the given values.
 		
 		`duration` = How long the permission will last for.
 		`context` = The context needed for this permission to apply.
@@ -46,7 +46,7 @@ public class SecExprPermissionBuilder extends SectionExpression<PermissionNode> 
 	public static void register(SyntaxRegistry syntaxRegistry) {
 		VALIDATOR = EntryValidator.builder()
 				.addEntryData(new ExpressionEntryData<>("duration", null, true, Timespan.class))
-				//.addEntryData(new ExpressionEntryData<>("context", null, true, ContextSet.class))
+				.addEntryData(new ExpressionEntryData<>("context", null, true, ContextSet.class))
 				.build();
 
 		syntaxRegistry.register(
@@ -59,18 +59,19 @@ public class SecExprPermissionBuilder extends SectionExpression<PermissionNode> 
 
 	private Expression<String> key = null;
 	private Expression<Timespan> duration = null;
-	//private Expression<ContextSet> context = null;
+	private Expression<ContextSet> context = null;
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean kleenean, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> list) {
-		EntryContainer container = VALIDATOR.validate(sectionNode);
-		if (container == null)
-			return false;
-
 		key = (Expression<String>) expressions[0];
-		duration = (Expression<Timespan>) container.getOptional("duration", false);
-		//context = (Expression<ContextSet>) container.getOptional("context", false);
+		if (sectionNode != null) {
+			EntryContainer container = VALIDATOR.validate(sectionNode);
+			if (container == null)
+				return false;
+			duration = (Expression<Timespan>) container.getOptional("duration", false);
+			context = (Expression<ContextSet>) container.getOptional("context", false);
+		}
 		return true;
 	}
 
@@ -87,14 +88,14 @@ public class SecExprPermissionBuilder extends SectionExpression<PermissionNode> 
 			return new PermissionNode[0];
 
 		ContextSet context = ImmutableContextSet.empty();
-		//if (this.context != null)
-		//	context = this.context.getSingle(event);
-		//if (context == null)
-		//	return new PermissionNode[0];
+		if (this.context != null)
+			context = this.context.getSingle(event);
+		if (context == null)
+			return new PermissionNode[0];
 
 		PermissionNode permissionNode = PermissionNode.builder(key)
-				.expiry(Duration.ofMillis(duration.getAs(Timespan.TimePeriod.MILLISECOND)))
-				//.context(context)
+				.expiry(duration)
+				.context(context)
 				.build();
 
 		return new PermissionNode[]{permissionNode};

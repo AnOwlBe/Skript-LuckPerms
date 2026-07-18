@@ -69,7 +69,7 @@ public class GroupClassInfo extends ClassInfo<Group> {
 
 		@Override
 		public @Nullable Integer convert(Group group) {
-			return group.getWeight().isPresent() ? group.getWeight().getAsInt() : 0;
+			return group.getWeight().orElse(0);
 		}
 
 
@@ -79,6 +79,7 @@ public class GroupClassInfo extends ClassInfo<Group> {
 				Skript.error("You can only change weight of a group in an edit group section.");
 				return null;
 			}
+
 			return switch (mode) {
 				case SET, ADD, REMOVE, RESET -> CollectionUtils.array(Integer.class);
 				default -> null;
@@ -88,22 +89,15 @@ public class GroupClassInfo extends ClassInfo<Group> {
 		@Override
 		public void change(Group group, Object[] delta, ChangeMode mode) {
 			int amount = delta != null ? (Integer) delta[0] : 0;
-			int groupWeight = group.getWeight().isPresent() ? group.getWeight().getAsInt() : 0;
-			switch (mode) {
-				case SET -> {
-					group.data().clear(NodeType.WEIGHT::matches);
-					group.data().add(WeightNode.builder(Math.max(0, amount)).build());
-				}
-				case ADD -> {
-					group.data().clear(NodeType.WEIGHT::matches);
-					group.data().add(WeightNode.builder(Math.max(0, groupWeight + amount)).build());
-				}
-				case REMOVE -> {
-					group.data().clear(NodeType.WEIGHT::matches);
-					group.data().add(WeightNode.builder(Math.max(0, groupWeight - amount)).build());
-				}
-				case RESET -> group.data().clear(NodeType.WEIGHT::matches);
-			}
+			int weight = group.getWeight().orElse(0);
+			group.data().clear(NodeType.WEIGHT::matches);
+			int newWeight = switch (mode) {
+				case SET -> amount;
+				case ADD -> weight + amount;
+				case REMOVE -> weight - amount;
+				default -> weight;
+			};
+			group.data().add(WeightNode.builder(Math.max(0, newWeight)).build());
 		}
 
 		@Override

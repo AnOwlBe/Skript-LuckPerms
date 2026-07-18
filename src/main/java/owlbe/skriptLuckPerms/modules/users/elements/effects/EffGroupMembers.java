@@ -26,6 +26,8 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.UUID;
 
+import static org.skriptlang.skript.lang.script.ScriptWarning.printDeprecationWarning;
+
 @Name("Group Members")
 @Description(""" 
 		 Returns a list of UUIDS of users who have the specified group.
@@ -39,26 +41,34 @@ import java.util.UUID;
 @Since("1.0")
 public class EffGroupMembers extends AsyncEffect {
 
-	public static void register(SyntaxRegistry registry) {
-		registry.register(
+	public static void register(SyntaxRegistry syntaxRegistry) {
+		syntaxRegistry.register(
 				SyntaxRegistry.EFFECT,
 				SyntaxInfo.builder(EffGroupMembers.class)
-						.addPattern("(fetch|get) [the] [luckperm[s]] (members|players) (of|in) group %luckpermsgroup% and store (it|the result) in %-~objects%")
+						.addPatterns(
+								"set %-~objects% to [the] [luckperm[s]] (members|players) (of|in) group %luckpermsgroup%",
+								"(fetch|get) [the] [luckperm[s]] (members|players) (of|in) group %luckpermsgroup% and store (it|the result) in %-~objects%")
 						.build()
 		);
 	}
 
-	private Expression<Group> groupExpr;
-	private Expression<?> varExpr;
+	private Expression<Group> group;
+	private Expression<?> variable;
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean kleenean, ParseResult parseResult) {
 		getParser().setHasDelayBefore(Kleenean.TRUE);
-		groupExpr = (Expression<Group>) expressions[0];
-		varExpr = expressions[1];
-		if (!ChangerUtils.acceptsChange(varExpr, ChangeMode.SET, UUID.class)) {
-			Skript.error(varExpr.toString(null, Skript.debug()) + " cannot be set to multiple UUIDS.");
+		if (matchedPattern == 0) {
+			group = (Expression<Group>) expressions[1];
+			variable = expressions[0];
+		} else {
+			group = (Expression<Group>) expressions[0];
+			variable = expressions[1];
+			printDeprecationWarning("This pattern is deprecated and scheduled for removal. Please consider using the other pattern.");
+		}
+		if (!ChangerUtils.acceptsChange(variable, ChangeMode.SET, UUID.class)) {
+			Skript.error(variable.toString(null, Skript.debug()) + " cannot be set to multiple UUIDS.");
 			return false;
 		}
 		return true;
@@ -66,20 +76,20 @@ public class EffGroupMembers extends AsyncEffect {
 
 	@Override
 	protected void execute(Event event) {
-		Group group = groupExpr.getSingle(event);
+		Group group = this.group.getSingle(event);
 		if (group == null)
 			return;
-		Map<UUID, Collection<Node>> results = LuckPermsProvider.get().getUserManager()
+
+		LuckPermsProvider.get().getUserManager()
 				.searchAll(NodeMatcher.key((Node) InheritanceNode.builder(group).build()))
+				.thenAccept(results -> variable.change(event, results.keySet().toArray(), ChangeMode.SET))
 				.join();
-		varExpr.change(event, results.keySet().toArray(), ChangeMode.SET);
 	}
 
 	@Override
 	public String toString(@Nullable Event event, boolean debug) {
 		return new SyntaxStringBuilder(event, debug)
-				.append("get members of group", groupExpr)
-				.append("and store it in", varExpr)
+				.append("set", variable, "to luckperms members in group", group)
 				.toString();
 	}
 

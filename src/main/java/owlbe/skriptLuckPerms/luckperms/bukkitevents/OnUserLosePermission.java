@@ -5,6 +5,7 @@ import net.luckperms.api.node.types.PermissionNode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.PlayerEvent;
+import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
 
 public class OnUserLosePermission extends PlayerEvent {
@@ -17,7 +18,7 @@ public class OnUserLosePermission extends PlayerEvent {
 		this.event = event;
 	}
 
-	public PermissionNode getPermission() {
+	public @NotNull PermissionNode getPermission() {
 		return (PermissionNode) event.getNode();
 	}
 

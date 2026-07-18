@@ -8,7 +8,6 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SectionExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.util.Timespan;
 import ch.njol.util.Kleenean;
@@ -23,12 +22,12 @@ import org.skriptlang.skript.lang.entry.util.ExpressionEntryData;
 import org.skriptlang.skript.registration.SyntaxInfo;
 import org.skriptlang.skript.registration.SyntaxRegistry;
 
-import java.time.Duration;
 import java.util.List;
 
 @Name("Chat Node Builder")
 @Description("""
-		Creates a builder for a prefix/suffix.
+		Builds a prefix/suffix with the given values.
+		
 		You can add said prefix/suffix to a user or a group via the prefix or suffix expression.
 		""")
 @Example("""
@@ -52,7 +51,7 @@ command /test:
 		add {_m} to prefixes of {_lp}
 	""")
 @Since("1.0")
-@SuppressWarnings({"unchecked", "rawtypes"})
+@SuppressWarnings("rawtypes")
 public class SecExprChatMetaBuilder extends SectionExpression<ChatMetaNode> {
 
 	private static EntryValidator VALIDATOR;
@@ -72,40 +71,46 @@ public class SecExprChatMetaBuilder extends SectionExpression<ChatMetaNode> {
 		);
 	}
 
-	private Expression<String> valueExpr = null;
-	private Expression<Integer> priorityExpr = null;
-	private Expression<Timespan> durationExpr = null;
+	private Expression<String> value;
+	private Expression<Integer> priority;
+	private Expression<Timespan> duration;
 	private String type;
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public boolean init(Expression<?>[] expressions, int i, Kleenean kleenean, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> list) {
 		type = parseResult.expr.contains("prefix") ? "prefix" : "suffix";
-		EntryContainer container = VALIDATOR.validate(sectionNode);
+
+		EntryContainer container = null;
+		if (sectionNode != null)
+			container = VALIDATOR.validate(sectionNode);
 		if (container == null)
 			return false;
 
-		valueExpr = (Expression<String>) container.getOptional("value", false);
-		priorityExpr = (Expression<Integer>) container.getOptional("priority", false);
-		durationExpr = (Expression<Timespan>) container.getOptional("duration", false);
+		value = (Expression<String>) container.getOptional("value", false);
+		priority = (Expression<Integer>) container.getOptional("priority", false);
+		duration = (Expression<Timespan>) container.getOptional("duration", false);
 		return true;
 	}
 
 	@Override
 	protected ChatMetaNode @Nullable [] get(Event event) {
-		String value = valueExpr != null ? valueExpr.getSingle(event) : "";
+		String value = this.value != null ? this.value.getSingle(event) : "";
 		if (value == null)
 			return new ChatMetaNode[0];
-		int priority = priorityExpr != null ? priorityExpr.getSingle(event) : 0;
-		Timespan duration = durationExpr != null ? durationExpr.getSingle(event) : null;
+
+		int priority = this.priority != null ? this.priority.getSingle(event) : 0;
+		Timespan duration = this.duration != null ? this.duration.getSingle(event) : null;
+
 		if (type.equals("prefix")) {
 			PrefixNode.Builder builder = PrefixNode.builder(value, priority);
 			if (duration != null)
-				builder.expiry(Duration.ofMillis(duration.getAs(Timespan.TimePeriod.MILLISECOND)));
+				builder.expiry(duration);
 			return new ChatMetaNode[]{builder.build()};
 		} else {
 			SuffixNode.Builder builder = SuffixNode.builder(value, priority);
 			if (duration != null)
-				builder.expiry(Duration.ofMillis(duration.getAs(Timespan.TimePeriod.MILLISECOND)));
+				builder.expiry(duration);
 			return new ChatMetaNode[]{builder.build()};
 		}
 	}
@@ -122,9 +127,7 @@ public class SecExprChatMetaBuilder extends SectionExpression<ChatMetaNode> {
 
 	@Override
 	public String toString(@Nullable Event event, boolean debug) {
-		return new SyntaxStringBuilder(event, debug)
-				.append("a", type, "builder")
-				.toString();
+		return "a" + type + "builder";
 	}
 
 }

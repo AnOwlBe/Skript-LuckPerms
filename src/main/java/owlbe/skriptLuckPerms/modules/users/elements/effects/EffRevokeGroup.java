@@ -20,6 +20,8 @@ import org.skriptlang.skript.registration.SyntaxInfo;
 import org.skriptlang.skript.registration.SyntaxRegistry;
 import owlbe.skriptLuckPerms.modules.users.elements.sections.SecEditUser;
 
+import static owlbe.skriptLuckPerms.modules.users.UserUtils.getUser;
+
 @Name("Revoke Group")
 @Description("Removes a group from a user.")
 @Example("""
@@ -32,8 +34,8 @@ function example(p: offlineplayer,group: string):
 @Since("1.0")
 public class EffRevokeGroup extends Effect {
 
-	public static void register(SyntaxRegistry registry) {
-		registry.register(
+	public static void register(SyntaxRegistry syntaxRegistry) {
+		syntaxRegistry.register(
 				SyntaxRegistry.EFFECT,
 				SyntaxInfo.builder(EffRevokeGroup.class)
 						.addPatterns("(revoke|remove) luckperm[s] group [%-luckpermsgroup%] [from %-luckpermsuser%]")
@@ -41,8 +43,8 @@ public class EffRevokeGroup extends Effect {
 		);
 	}
 
-	private Expression<Group> groupExpr;
-	private Expression<User> userExpr;
+	private Expression<Group> group;
+	private Expression<User> user;
 
 	@Override
 	@SuppressWarnings("unchecked")
@@ -51,18 +53,19 @@ public class EffRevokeGroup extends Effect {
 			Skript.error("This can only be used inside an 'edit user' section");
 			return false;
 		}
-		groupExpr = (Expression<Group>) expressions[0];
+		group = (Expression<Group>) expressions[0];
 		if (expressions[1] != null)
-			userExpr = (Expression<User>) expressions[1];
+			user = (Expression<User>) expressions[1];
 		return true;
 	}
 
 	@Override
 	protected void execute(Event event) {
-		Group group = groupExpr.getSingle(event);
-		User user = userExpr != null ? userExpr.getSingle(event) : ((SecEditUser.UserEvent) event).getUser();
+		Group group = this.group.getSingle(event);
+		User user = getUser(event, this.user);
 		if (group == null || user == null)
 			return;
+
 		if (user.getNodes(NodeType.INHERITANCE).stream()
 				.map(InheritanceNode::getGroupName)
 				.noneMatch(lpGroup-> lpGroup.equals(group.getName())))
@@ -73,7 +76,7 @@ public class EffRevokeGroup extends Effect {
 	@Override
 	public String toString(@Nullable Event event, boolean debug) {
 		return new SyntaxStringBuilder(event, debug)
-				.append("revoke group", groupExpr, "from", userExpr)
+				.append("revoke group", group, "from", user)
 				.toString();
 	}
 

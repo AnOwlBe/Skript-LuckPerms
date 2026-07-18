@@ -4,9 +4,11 @@ import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import net.luckperms.api.model.group.Group;
+import net.luckperms.api.track.Track;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.bukkit.lang.eventvalue.EventValue;
+import org.skriptlang.skript.bukkit.lang.eventvalue.EventValue.Time;
 import org.skriptlang.skript.bukkit.lang.eventvalue.EventValueRegistry;
 import org.skriptlang.skript.bukkit.registration.BukkitSyntaxInfos;
 import org.skriptlang.skript.registration.SyntaxRegistry;
@@ -42,10 +44,10 @@ public class EvtUserDemote extends SkriptEvent {
 		eventValueRegistry.register(EventValue.builder(OnUserDemote.class, Group.class)
 				.getter(OnUserDemote::getPreviousGroup)
 				.patterns("group")
-				.time(EventValue.Time.PAST)
+				.time(Time.PAST)
 				.build());
 
-		eventValueRegistry.register(EventValue.builder(OnUserDemote.class, String.class)
+		eventValueRegistry.register(EventValue.builder(OnUserDemote.class, Track.class)
 				.getter(OnUserDemote::getTrack)
 				.patterns("track")
 				.build());

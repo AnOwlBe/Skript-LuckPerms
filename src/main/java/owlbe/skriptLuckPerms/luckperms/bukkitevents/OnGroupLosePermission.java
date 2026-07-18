@@ -1,10 +1,13 @@
 package owlbe.skriptLuckPerms.luckperms.bukkitevents;
 
+import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.event.node.NodeRemoveEvent;
 import net.luckperms.api.model.group.Group;
+import net.luckperms.api.node.types.InheritanceNode;
 import net.luckperms.api.node.types.PermissionNode;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
 
 public class OnGroupLosePermission extends Event {
@@ -16,8 +19,9 @@ public class OnGroupLosePermission extends Event {
 		this.event = event;
 	}
 
-	public Group getGroup() {
-		return (Group) event.getTarget();
+	public @Nullable Group getGroup() {
+		String groupName = ((InheritanceNode) event.getNode()).getGroupName();
+		return LuckPermsProvider.get().getGroupManager().getGroup(groupName);
 	}
 
 	public PermissionNode getPermission() {

@@ -30,29 +30,29 @@ import org.skriptlang.skript.registration.SyntaxRegistry;
 			set {_lp} to luckperms user from {_p}
 			broadcast "%{_p}% has %size of groups of {_lp}% groups!"
 		""")
-@Since("1.0, 1.0.2 (pattern change)")
+@Since("1.0, 1.0.2 (pattern change), INSERT VERSION (player)")
 public class EffLoadPlayer extends AsyncEffect {
 
-	public static void register(SyntaxRegistry registry) {
-		registry.register(
+	public static void register(SyntaxRegistry syntaxRegistry) {
+		syntaxRegistry.register(
 				SyntaxRegistry.EFFECT,
 				SyntaxInfo.builder(EffLoadPlayer.class)
-						.addPattern("set %-~objects% to luckperm[s] user [from] %offlineplayer%")
+						.addPattern("set %-~objects% to luckperm[s] user [from] [player] %offlineplayer%")
 						.build()
 		);
 	}
 
-	private Expression<OfflinePlayer> playerExpr;
-	private Expression<?> varExpr;
+	private Expression<OfflinePlayer> player;
+	private Expression<?> variable;
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean kleenean, ParseResult parseResult) {
 		getParser().setHasDelayBefore(Kleenean.TRUE);
-		playerExpr = (Expression<OfflinePlayer>) expressions[1];
-		varExpr = expressions[0];
-		if (!ChangerUtils.acceptsChange(varExpr, ChangeMode.SET, User.class)) {
-			Skript.error(varExpr.toString(null, Skript.debug()) + " cannot be set to a LuckPerms user.");
+		player = (Expression<OfflinePlayer>) expressions[1];
+		variable = expressions[0];
+		if (!ChangerUtils.acceptsChange(variable, ChangeMode.SET, User.class)) {
+			Skript.error(variable.toString(null, Skript.debug()) + " cannot be set to a LuckPerms user.");
 			return false;
 		}
 		return true;
@@ -60,20 +60,20 @@ public class EffLoadPlayer extends AsyncEffect {
 
 	@Override
 	protected void execute(Event event) {
-		OfflinePlayer player = playerExpr.getSingle(event);
+		OfflinePlayer player = this.player.getSingle(event);
 		if (player == null)
 			return;
 		User user = LuckPermsProvider.get().getUserManager()
 				.loadUser(player.getUniqueId())
 				.join();
-		varExpr.change(event, new Object[]{user}, ChangeMode.SET);
+		variable.change(event, new Object[]{user}, ChangeMode.SET);
 	}
 
 	@Override
 	public String toString(@Nullable Event event, boolean debug) {
 		return new SyntaxStringBuilder(event, debug)
-				.append("set", varExpr)
-				.append("to luckperms user from", playerExpr)
+				.append("set", variable)
+				.append("to luckperms user from", player)
 				.toString();
 	}
 

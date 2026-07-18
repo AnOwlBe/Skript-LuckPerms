@@ -7,7 +7,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 import static owlbe.skriptLuckPerms.SkriptLuckPerms.instance;
-import static owlbe.skriptLuckPerms.utilitities.MiniMessageUtil.minimessage;
+import static owlbe.skriptLuckPerms.utilitities.MiniMessageUtils.minimessage;
 
 // Credit to
 // https://github.com/ShaneBeee/SkBee/tree/master/src/main/java/com/shanebeestudios/skbee/api/util/update for the original versions
@@ -18,7 +18,8 @@ public class JoinListener implements Listener {
 	@EventHandler
 	private void onJoin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
-		if (!player.hasPermission("skriptluckperms.updates.view")) return;
+		if (!player.hasPermission("skriptluckperms.updates.view"))
+			return;
 
 		Bukkit.getScheduler().runTaskLater(instance, () ->
 				UpdateChecker.getUpdateVersion(true).thenAccept(version -> {

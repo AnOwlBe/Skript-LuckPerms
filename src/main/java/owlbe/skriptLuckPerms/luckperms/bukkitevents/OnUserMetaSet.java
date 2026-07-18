@@ -10,6 +10,7 @@ import net.luckperms.api.node.types.SuffixNode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.PlayerEvent;
+import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
 
 public class OnUserMetaSet extends PlayerEvent {
@@ -22,20 +23,20 @@ public class OnUserMetaSet extends PlayerEvent {
 		this.event = event;
 	}
 
-	public String getKey() {
+	public @NotNull String getKey() {
 		Node node = event.getNode();
 		if (node.getType() == NodeType.PREFIX)
 			return "prefix";
 		if (node.getType() == NodeType.SUFFIX)
 			return "suffix";
-		return ((MetaNode) node).getMetaKey();
+		return node.getKey();
 	}
 
-	public String getValue() {
+	public @NotNull String getValue() {
 		return ((MetaNode) event.getNode()).getMetaValue();
 	}
 
-	public Group getGroup() {
+	public @NotNull Group getGroup() {
 		return (Group) event.getTarget();
 	}
 

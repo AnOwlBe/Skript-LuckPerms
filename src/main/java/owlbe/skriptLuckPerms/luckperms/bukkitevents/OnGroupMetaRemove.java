@@ -6,6 +6,7 @@ import net.luckperms.api.node.NodeType;
 import net.luckperms.api.node.types.MetaNode;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
 
 public class OnGroupMetaRemove extends Event {
@@ -19,11 +20,11 @@ public class OnGroupMetaRemove extends Event {
 		this.node = node;
 	}
 
-	public Group getGroup() {
+	public @NotNull Group getGroup() {
 		return group;
 	}
 
-	public String getKey() {
+	public @NotNull String getKey() {
 		if (node.getType() == NodeType.PREFIX)
 			return "prefix";
 		if (node.getType() == NodeType.SUFFIX)
@@ -31,7 +32,7 @@ public class OnGroupMetaRemove extends Event {
 		return ((MetaNode) node).getMetaKey();
 	}
 
-	public String getValue() {
+	public @NotNull String getValue() {
 		return ((MetaNode) node).getMetaValue();
 	}
 

@@ -6,6 +6,7 @@ import net.luckperms.api.node.types.PermissionNode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.PlayerEvent;
+import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
 
 import java.time.Duration;
@@ -20,11 +21,11 @@ public class OnUserReceivePermission extends PlayerEvent {
 		this.event = event;
 	}
 
-	public PermissionNode getPermission() {
+	public @NotNull PermissionNode getPermission() {
 		return (PermissionNode) event.getNode();
 	}
 
-	public Timespan getDuration() {
+	public @NotNull Timespan getDuration() {
 		Duration expiry = event.getNode().getExpiryDuration();
 		if (expiry == null)
 			return new Timespan(0);

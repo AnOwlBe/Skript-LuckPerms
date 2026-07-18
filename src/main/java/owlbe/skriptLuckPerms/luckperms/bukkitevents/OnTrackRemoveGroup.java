@@ -6,6 +6,8 @@ import net.luckperms.api.model.group.Group;
 import net.luckperms.api.track.Track;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
 
 public class OnTrackRemoveGroup extends Event {
@@ -17,11 +19,11 @@ public class OnTrackRemoveGroup extends Event {
 		this.event = event;
 	}
 
-	public Group getGroup() {
+	public @Nullable Group getGroup() {
 		return LuckPermsProvider.get().getGroupManager().getGroup(event.getGroup());
 	}
 
-	public Track getTrack() {
+	public @NotNull Track getTrack() {
 		return event.getTrack();
 	}
 

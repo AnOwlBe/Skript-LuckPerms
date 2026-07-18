@@ -9,14 +9,14 @@ import org.skriptlang.skript.registration.SyntaxRegistry;
 
 import static owlbe.skriptLuckPerms.skript.properties.Properties.EXPIRY;
 
-@SuppressWarnings("UnstableApiUsage")
 @Name("Expiry")
 @Description("""
-		Represents when something will expire.
-		""")
+	Represents when something will expire.
+	""")
 @Example("set {_m} to the expiry of {_chatmeta}")
 @Since("INSERT VERSION")
 @RelatedProperty("expiry")
+@SuppressWarnings("UnstableApiUsage")
 public class PropExprExpiry extends PropertyBaseExpression<ExpressionPropertyHandler<?, ?>> {
 
 	public static void register(SyntaxRegistry registry) {

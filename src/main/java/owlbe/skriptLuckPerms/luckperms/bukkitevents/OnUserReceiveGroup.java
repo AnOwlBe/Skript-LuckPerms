@@ -1,8 +1,10 @@
 package owlbe.skriptLuckPerms.luckperms.bukkitevents;
 
 import ch.njol.skript.util.Timespan;
+import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.event.node.NodeAddEvent;
 import net.luckperms.api.model.group.Group;
+import net.luckperms.api.node.types.InheritanceNode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.PlayerEvent;
@@ -28,7 +30,8 @@ public class OnUserReceiveGroup extends PlayerEvent {
 	}
 
 	public Group getGroup() {
-		return ((Group) event.getTarget());
+		String groupName = ((InheritanceNode) event.getNode()).getGroupName();
+		return LuckPermsProvider.get().getGroupManager().getGroup(groupName);
 	}
 
 	public static HandlerList getHandlerList() {

@@ -3,9 +3,12 @@ package owlbe.skriptLuckPerms.luckperms.bukkitevents;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.event.user.track.UserPromoteEvent;
 import net.luckperms.api.model.group.Group;
+import net.luckperms.api.track.Track;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.PlayerEvent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
 
 public class OnUserPromote extends PlayerEvent {
@@ -18,17 +21,17 @@ public class OnUserPromote extends PlayerEvent {
 		this.event = event;
 	}
 
-	public String getTrack() {
-		return event.getTrack().getName();
+	public @NotNull Track getTrack() {
+		return event.getTrack();
 	}
 
-	public Group getPreviousGroup() {
+	public @Nullable Group getPreviousGroup() {
 		return event.getGroupFrom()
 				.map(name -> LuckPermsProvider.get().getGroupManager().getGroup(name))
 				.orElse(null);
 	}
 
-	public Group getGroup() {
+	public @Nullable Group getGroup() {
 		return event.getGroupTo()
 				.map(name -> LuckPermsProvider.get().getGroupManager().getGroup(name))
 				.orElse(null);

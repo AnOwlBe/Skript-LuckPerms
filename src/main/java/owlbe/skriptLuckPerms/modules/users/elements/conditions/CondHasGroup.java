@@ -20,7 +20,7 @@ import org.skriptlang.skript.registration.SyntaxRegistry;
 @Name("Has LuckPerms Group")
 @Description(""" 
 		 Returns whether a user has/doesn't have a group.
-		 This is different from Skript's has group condition as with `user` this supports offline players.
+		 This is different from Skript's has group condition as this supports offline players.
 		 """)
 @Example("""
 		function hasGroup(p: player,group: string) :: boolean:
@@ -33,8 +33,8 @@ import org.skriptlang.skript.registration.SyntaxRegistry;
 @Since("1.0")
 public class CondHasGroup extends Condition {
 
-	public static void register(SyntaxRegistry registry) {
-		registry.register(
+	public static void register(SyntaxRegistry syntaxRegistry) {
+		syntaxRegistry.register(
 				SyntaxRegistry.CONDITION,
 				SyntaxInfo.builder(CondHasGroup.class)
 						.addPatterns(
@@ -45,24 +45,24 @@ public class CondHasGroup extends Condition {
 		);
 	}
 
-	private Expression<User> userExpr;
-	private Expression<Group> groupExpr;
+	private Expression<User> user;
+	private Expression<Group> group;
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean kleenean, ParseResult parseResult) {
-		userExpr = (Expression<User>) expressions[0];
-		groupExpr = (Expression<Group>) expressions[1];
+		user = (Expression<User>) expressions[0];
+		group = (Expression<Group>) expressions[1];
 		setNegated(matchedPattern == 1);
 		return true;
 	}
 
 	@Override
 	public boolean check(Event event) {
-		User user = userExpr.getSingle(event);
+		User user = this.user.getSingle(event);
 		if (user == null)
 			return false;
-		Group group = groupExpr.getSingle(event);
+		Group group = this.group.getSingle(event);
 		if (group == null)
 			return false;
 		boolean result = user.getNodes(NodeType.INHERITANCE).stream()
@@ -73,7 +73,7 @@ public class CondHasGroup extends Condition {
 	@Override
 	public String toString(@Nullable Event event, boolean debug) {
 		return new SyntaxStringBuilder(event, debug)
-				.append(userExpr, isNegated() ? "doesn't have group" : "has group", groupExpr)
+				.append(user, isNegated() ? "doesn't have group" : "has group", group)
 				.toString();
 	}
 

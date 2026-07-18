@@ -19,6 +19,8 @@ import org.skriptlang.skript.registration.SyntaxInfo;
 import org.skriptlang.skript.registration.SyntaxRegistry;
 import owlbe.skriptLuckPerms.modules.users.elements.sections.SecEditUser;
 
+import static owlbe.skriptLuckPerms.modules.users.UserUtils.getUser;
+
 @Name("Promote User")
 @Description("""
 	 Promotes a user along a track.
@@ -35,8 +37,8 @@ function example(p: offlineplayer,track: string):
 @Since("1.0")
 public class EffPromoteUser extends Effect {
 
-	public static void register(SyntaxRegistry registry) {
-		registry.register(
+	public static void register(SyntaxRegistry syntaxRegistry) {
+		syntaxRegistry.register(
 				SyntaxRegistry.EFFECT,
 				SyntaxInfo.builder(EffPromoteUser.class)
 						.addPattern("promote user [%-luckpermsuser%] (along|on) track %luckpermstrack%")
@@ -44,8 +46,8 @@ public class EffPromoteUser extends Effect {
 		);
 	}
 
-	private Expression<Track> trackExpr;
-	private Expression<User> userExpr;
+	private Expression<Track> track;
+	private Expression<User> user;
 
 	@Override
 	@SuppressWarnings("unchecked")
@@ -54,25 +56,26 @@ public class EffPromoteUser extends Effect {
 			Skript.error("This can only be used inside an 'edit user' section");
 			return false;
 		}
-		userExpr = expressions[0] != null ? (Expression<User>) expressions[0] : null;
-		trackExpr = (Expression<Track>) expressions[1];
+		if (expressions[0] != null)
+			user = (Expression<User>) expressions[0];
+		track = (Expression<Track>) expressions[1];
 		return true;
 	}
 
 	@Override
 	protected void execute(Event event) {
-		Track track = trackExpr.getSingle(event);
-		User user = userExpr != null ? userExpr.getSingle(event) : ((SecEditUser.UserEvent) event).getUser();
+		Track track = this.track.getSingle(event);
+		User user = getUser(event, this.user);
 		if (track == null || user == null)
 			return;
-		track.promote(user,ImmutableContextSet.empty());
+		track.promote(user, ImmutableContextSet.empty());
 	}
 
 	@Override
 	public String toString(@Nullable Event event, boolean debug) {
 		return new SyntaxStringBuilder(event, debug)
-				.append("promote", userExpr)
-				.append("on track", trackExpr)
+				.append("promote", user)
+				.append("on track", track)
 				.toString();
 	}
 

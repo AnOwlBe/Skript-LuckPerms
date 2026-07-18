@@ -22,13 +22,13 @@ import org.skriptlang.skript.registration.SyntaxRegistry;
 			trigger:
 				 send all of the luckperms tracks to player
 		""")
-@Since("1.0")
-public class ExprAllTracks extends SimpleExpression<String> {
+@Since("1.0, INSERT VERSION (returns tracks)")
+public class ExprAllTracks extends SimpleExpression<Track> {
 
 	public static void register(SyntaxRegistry syntaxRegistry) {
 		syntaxRegistry.register(
 				SyntaxRegistry.EXPRESSION,
-				SyntaxInfo.Expression.builder(ExprAllTracks.class, String.class)
+				SyntaxInfo.Expression.builder(ExprAllTracks.class, Track.class)
 						.addPattern("all [of the] luckperm[s] tracks")
 						.build()
 		);
@@ -40,10 +40,8 @@ public class ExprAllTracks extends SimpleExpression<String> {
 	}
 
 	@Override
-	protected String[] get(Event event) {
-		return LuckPermsProvider.get().getTrackManager().getLoadedTracks().stream()
-				.map(Track::getName)
-				.toArray(String[]::new);
+	protected Track[] get(Event event) {
+		return LuckPermsProvider.get().getTrackManager().getLoadedTracks().toArray(Track[]::new);
 	}
 
 	@Override
@@ -52,13 +50,13 @@ public class ExprAllTracks extends SimpleExpression<String> {
 	}
 
 	@Override
-	public Class<? extends String> getReturnType() {
-		return String.class;
+	public Class<? extends Track> getReturnType() {
+		return Track.class;
 	}
 
 	@Override
 	public String toString(@Nullable Event event, boolean debug) {
-		return "all tracks";
+		return "all luckperms tracks";
 	}
 
 }

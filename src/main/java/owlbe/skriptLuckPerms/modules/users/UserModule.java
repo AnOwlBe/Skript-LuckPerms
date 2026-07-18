@@ -16,6 +16,7 @@ import owlbe.skriptLuckPerms.modules.users.elements.events.*;
 import owlbe.skriptLuckPerms.modules.users.elements.expressions.ExprGroupsOfUser;
 import owlbe.skriptLuckPerms.modules.users.elements.expressions.ExprPermissionsOfUser;
 import owlbe.skriptLuckPerms.modules.users.elements.expressions.ExprPlayerFromUser;
+import owlbe.skriptLuckPerms.modules.users.elements.expressions.ExprQuickUser;
 import owlbe.skriptLuckPerms.modules.users.elements.sections.SecEditUser;
 
 import javax.annotation.Nullable;
@@ -30,9 +31,10 @@ public class UserModule extends HierarchicalAddonModule {
 	public void loadSelf(SkriptAddon addon) {
 		EventValueRegistry registry = addon.registry(EventValueRegistry.class);
 		register(addon,
-				//ExprGroupsOfUser::register,
-				//ExprPermissionsOfUser::register,
+				ExprGroupsOfUser::register,
+				ExprPermissionsOfUser::register,
 				ExprPlayerFromUser::register,
+				ExprQuickUser::register,
 				CondHasGroup::register,
 				CondHasPermission::register,
 				EffGrantGroup::register,
@@ -41,7 +43,6 @@ public class UserModule extends HierarchicalAddonModule {
 				EffGrantPermission::register,
 				EffGroupMembers::register,
 				EffLoadPlayer::register,
-				EffQuickLoadPlayer::register,
 				EffPermissionMembers::register,
 				EffPromoteUser::register,
 				EffRevokeGroup::register,

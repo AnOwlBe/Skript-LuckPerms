@@ -1,11 +1,15 @@
 package owlbe.skriptLuckPerms.luckperms.bukkitevents;
 
 import ch.njol.skript.util.Timespan;
+import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.event.node.NodeAddEvent;
 import net.luckperms.api.model.group.Group;
+import net.luckperms.api.node.types.InheritanceNode;
 import net.luckperms.api.node.types.PermissionNode;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
 
 import java.time.Duration;
@@ -19,15 +23,16 @@ public class OnGroupReceivePermission extends Event {
 		this.event = event;
 	}
 
-	public Group getGroup() {
-		return (Group) event.getTarget();
+	public @Nullable Group getGroup() {
+		String groupName = ((InheritanceNode) event.getNode()).getGroupName();
+		return LuckPermsProvider.get().getGroupManager().getGroup(groupName);
 	}
 
-	public PermissionNode getPermission() {
+	public @NotNull PermissionNode getPermission() {
 		return (PermissionNode) event.getNode();
 	}
 
-	public Timespan getDuration() {
+	public @NotNull Timespan getDuration() {
 		Duration expiry = event.getNode().getExpiryDuration();
 		if (expiry == null)
 			return new Timespan(0);

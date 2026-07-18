@@ -37,8 +37,8 @@ import java.util.UUID;
 @Since("1.0")
 public class EffPermissionMembers extends AsyncEffect {
 
-	public static void register(SyntaxRegistry registry) {
-		registry.register(
+	public static void register(SyntaxRegistry syntaxRegistry) {
+		syntaxRegistry.register(
 				SyntaxRegistry.EFFECT,
 				SyntaxInfo.builder(EffPermissionMembers.class)
 						.addPattern("set %-~objects% to (all|all of the) [luckperm[s]] (users|players) with perm[ission] %luckpermspermission%")
@@ -46,17 +46,17 @@ public class EffPermissionMembers extends AsyncEffect {
 		);
 	}
 
-	private Expression<PermissionNode> permExpr;
-	private Expression<?> varExpr;
+	private Expression<PermissionNode> permission;
+	private Expression<?> variable;
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean kleenean, ParseResult parseResult) {
 		getParser().setHasDelayBefore(Kleenean.TRUE);
-		permExpr = (Expression<PermissionNode>) expressions[1];
-		varExpr = expressions[0];
-		if (!ChangerUtils.acceptsChange(varExpr, ChangeMode.SET, UUID.class)) {
-			Skript.error(varExpr.toString(null, Skript.debug()) + " cannot be set to UUIDS.");
+		permission = (Expression<PermissionNode>) expressions[1];
+		variable = expressions[0];
+		if (!ChangerUtils.acceptsChange(variable, ChangeMode.SET, UUID.class)) {
+			Skript.error(variable.toString(null, Skript.debug()) + " cannot be set to UUIDS.");
 			return false;
 		}
 		return true;
@@ -64,21 +64,21 @@ public class EffPermissionMembers extends AsyncEffect {
 
 	@Override
 	protected void execute(Event event) {
-		PermissionNode permission = permExpr.getSingle(event);
+		PermissionNode permission = this.permission.getSingle(event);
 		if (permission == null)
 			return;
 		var results = LuckPermsProvider.get().getUserManager()
 				.searchAll(NodeMatcher.key(Node.builder(permission.getKey()).build()))
 				.join();
-		varExpr.change(event, results.keySet().toArray(), ChangeMode.SET);
+		variable.change(event, results.keySet().toArray(), ChangeMode.SET);
 
 	}
 
 	@Override
 	public String toString(@Nullable Event event, boolean debug) {
 		return new SyntaxStringBuilder(event, debug)
-				.append("set", varExpr)
-				.append("to all players with permission", permExpr)
+				.append("set", variable)
+				.append("to all players with permission", permission)
 				.toString();
 	}
 

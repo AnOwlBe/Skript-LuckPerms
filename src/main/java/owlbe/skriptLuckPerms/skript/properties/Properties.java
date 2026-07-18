@@ -4,12 +4,11 @@ import org.skriptlang.skript.lang.properties.Property;
 import org.skriptlang.skript.lang.properties.PropertyRegistry;
 import org.skriptlang.skript.lang.properties.handlers.base.ExpressionPropertyHandler;
 import org.skriptlang.skript.registration.SyntaxRegistry;
-import owlbe.skriptLuckPerms.SkriptLuckPerms;
+import owlbe.skriptLuckPerms.utilitities.Logger;
 
 import static owlbe.skriptLuckPerms.SkriptLuckPerms.addon;
 
 @SuppressWarnings({"UnstableApiUsage", "rawtypes"})
-
 public class Properties {
 
 	/**
@@ -54,26 +53,25 @@ public class Properties {
 			ExpressionPropertyHandler.class);
 
 	public static void register(SyntaxRegistry syntaxRegistry) {
-
 		if (getProperty(WEIGHT) != null) {
 			PropExprWeight.register(syntaxRegistry);
 		} else {
-			SkriptLuckPerms.error("It appears another addon tried to register a WEIGHT property & Skript-LuckPerms failed to hook into it. Disabling Skript-LuckPerms usages of WEIGHT property.");
+			Logger.error("It appears another addon tried to register a WEIGHT property & Skript-LuckPerms failed to hook into it. Disabling Skript-LuckPerms usages of WEIGHT property.");
 		}
 		if (getProperty(PRIORITY) != null) {
 			PropExprPriority.register(syntaxRegistry);
 		} else {
-			SkriptLuckPerms.error("It appears another addon tried to register a PRIORITY property & Skript-LuckPerms failed to hook into it. Disabling Skript-LuckPerms usages of PRIORITY property.");
+			Logger.error("It appears another addon tried to register a PRIORITY property & Skript-LuckPerms failed to hook into it. Disabling Skript-LuckPerms usages of PRIORITY property.");
 		}
 		if (getProperty(SOURCE) != null) {
 			PropExprSource.register(syntaxRegistry);
 		} else {
-			SkriptLuckPerms.error("It appears another addon tried to register a SOURCE property & Skript-LuckPerms failed to hook into it. Disabling Skript-LuckPerms usages of SOURCE property.");
+			Logger.error("It appears another addon tried to register a SOURCE property & Skript-LuckPerms failed to hook into it. Disabling Skript-LuckPerms usages of SOURCE property.");
 		}
 		if (getProperty(EXPIRY) != null) {
 			PropExprExpiry.register(syntaxRegistry);
 		} else {
-			SkriptLuckPerms.error("It appears another addon tried to register a EXPIRY property & Skript-LuckPerms failed to hook into it. Disabling Skript-LuckPerms usages of EXPIRY property.");
+			Logger.error("It appears another addon tried to register a EXPIRY property & Skript-LuckPerms failed to hook into it. Disabling Skript-LuckPerms usages of EXPIRY property.");
 		}
 	}
 

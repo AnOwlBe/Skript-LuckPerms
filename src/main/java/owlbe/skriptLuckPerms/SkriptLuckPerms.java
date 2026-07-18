@@ -9,8 +9,9 @@ import owlbe.skriptLuckPerms.modules.Modules;
 import owlbe.skriptLuckPerms.luckperms.listeners.Register;
 import owlbe.skriptLuckPerms.skript.properties.Properties;
 import owlbe.skriptLuckPerms.update.UpdateChecker;
+import owlbe.skriptLuckPerms.utilitities.ConfigUpdater;
 
-import static owlbe.skriptLuckPerms.utilitities.MiniMessageUtil.minimessage;
+import static owlbe.skriptLuckPerms.utilitities.MiniMessageUtils.minimessage;
 
 public final class SkriptLuckPerms extends JavaPlugin {
 
@@ -23,7 +24,8 @@ public final class SkriptLuckPerms extends JavaPlugin {
 		new Metrics(this, pluginId);
 		instance = this;
 		saveDefaultConfig();
-
+		if (getConfig().isSet("check-for-updates"))
+			ConfigUpdater.update();
 		addon = Skript.instance().registerAddon(SkriptLuckPerms.class, "skript-luckperms");
 		Properties.register(addon.syntaxRegistry());
 		addon.loadModules(new Modules());
@@ -32,10 +34,8 @@ public final class SkriptLuckPerms extends JavaPlugin {
 
 		Register.register();
 		UpdateChecker.enable();
-	}
 
-	public static void error(String message) {
-		Bukkit.getConsoleSender().sendMessage(minimessage("<#3CFF6E>Skript-LuckPerms <reset><dark_gray>→ <#FF4A59>" + message));
+
 	}
 
 	@Override

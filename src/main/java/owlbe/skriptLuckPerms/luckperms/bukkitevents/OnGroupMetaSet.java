@@ -1,12 +1,16 @@
 package owlbe.skriptLuckPerms.luckperms.bukkitevents;
 
+import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.event.node.NodeAddEvent;
 import net.luckperms.api.model.group.Group;
 import net.luckperms.api.node.Node;
 import net.luckperms.api.node.NodeType;
+import net.luckperms.api.node.types.InheritanceNode;
 import net.luckperms.api.node.types.MetaNode;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
 
 public class OnGroupMetaSet extends Event {
@@ -18,11 +22,12 @@ public class OnGroupMetaSet extends Event {
 		this.event = event;
 	}
 
-	public Group getGroup() {
-		return (Group) event.getTarget();
+	public @Nullable Group getGroup() {
+		String groupName = ((InheritanceNode) event.getNode()).getGroupName();
+		return LuckPermsProvider.get().getGroupManager().getGroup(groupName);
 	}
 
-	public String getKey() {
+	public @NotNull String getKey() {
 		Node node = event.getNode();
 		if (node.getType() == NodeType.PREFIX)
 			return "prefix";
@@ -31,7 +36,7 @@ public class OnGroupMetaSet extends Event {
 		return ((MetaNode) node).getMetaKey();
 	}
 
-	public String getValue() {
+	public @NotNull String getValue() {
 		return ((MetaNode) event.getNode()).getMetaValue();
 	}
 

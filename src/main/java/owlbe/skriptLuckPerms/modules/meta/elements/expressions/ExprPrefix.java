@@ -136,7 +136,7 @@ public class ExprPrefix extends SimpleExpression<ChatMetaNode> {
 		}
 		return switch (mode) {
 			case SET, ADD, RESET, REMOVE ->
-					CollectionUtils.array(ChatMetaNode[].class,ChatMetaNode.class); // ChatMetaNode.class is needed for SET (idk maybe better way)
+					CollectionUtils.array(ChatMetaNode[].class);
 			default -> null;
 		};
 	}

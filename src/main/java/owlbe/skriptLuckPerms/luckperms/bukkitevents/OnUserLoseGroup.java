@@ -7,6 +7,7 @@ import net.luckperms.api.node.types.InheritanceNode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.PlayerEvent;
+import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
 
 public class OnUserLoseGroup extends PlayerEvent {
@@ -19,8 +20,9 @@ public class OnUserLoseGroup extends PlayerEvent {
 		this.event = event;
 	}
 
-	public Group getGroup() {
-		return (Group) event.getTarget();
+	public @Nullable Group getGroup() {
+		String groupName = ((InheritanceNode) event.getNode()).getGroupName();
+		return LuckPermsProvider.get().getGroupManager().getGroup(groupName);
 	}
 
 	public static HandlerList getHandlerList() {

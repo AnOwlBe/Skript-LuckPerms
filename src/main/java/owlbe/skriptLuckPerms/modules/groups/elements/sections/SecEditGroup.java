@@ -29,26 +29,26 @@ import static owlbe.skriptLuckPerms.SkriptLuckPerms.instance;
 		After the code in the section has finished the group will be saved asynchronously.
 		""")
 @Example("""
-	edit group "example":
-		add 5 to group weight
+	edit luckperms group "example":
+		add 5 to weight of event-group
 	""")
-@Since("1.0")
+@Since("1.0, INSERT VERSION (edit luckpermsgroup)")
 public class SecEditGroup extends Section {
 
 	public static void register(SyntaxRegistry syntaxRegistry, EventValueRegistry registry) {
 		syntaxRegistry.register(
 				SyntaxRegistry.SECTION,
 				SyntaxInfo.builder(SecEditGroup.class)
-						.addPattern("edit [the] group %string%")
+						.addPattern("edit [the] [luckperm[s]] group %luckpermsgroup%")
 						.build()
 		);
 
-		registry.register(EventValue.builder(GroupEvent.class, String.class)
+		registry.register(EventValue.builder(GroupEvent.class, Group.class)
 				.getter(GroupEvent::getGroup)
 				.patterns("group")
 				.build());
 	}
-	private Expression<String> groupExpr;
+	private Expression<Group> group;
 
 	@Nullable
 	private Trigger trigger;
@@ -57,7 +57,7 @@ public class SecEditGroup extends Section {
 	@SuppressWarnings("unchecked")
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult,
 						@Nullable SectionNode sectionNode, @Nullable List<TriggerItem> triggerItems) {
-		groupExpr = (Expression<String>) exprs[0];
+		group = (Expression<Group>) exprs[0];
 		if (sectionNode != null) {
 			trigger = SectionUtils.loadLinkedCode("group", (beforeLoading, afterLoading)
 					-> loadCode(sectionNode, "group", beforeLoading, afterLoading, GroupEvent.class));
@@ -69,7 +69,7 @@ public class SecEditGroup extends Section {
 	@Override
 	protected @Nullable TriggerItem walk(Event event) {
 		if (trigger != null) {
-			String group = groupExpr.getSingle(event);
+			Group group = this.group.getSingle(event);
 			if (group == null)
 				return null;
 			SecEditGroup.GroupEvent groupevent = new SecEditGroup.GroupEvent(group);
@@ -77,10 +77,7 @@ public class SecEditGroup extends Section {
 			Variables.setLocalVariables(groupevent,variables);
 			TriggerItem.walk(trigger, groupevent);
 			Bukkit.getScheduler().runTaskAsynchronously(instance, () -> {
-				Group lpGroup = LuckPermsProvider.get().getGroupManager().getGroup(group);
-				if (lpGroup == null)
-					return;
-				LuckPermsProvider.get().getGroupManager().saveGroup(lpGroup);
+				LuckPermsProvider.get().getGroupManager().saveGroup(group);
 				Bukkit.getScheduler().runTask(instance, () -> {
 					Variables.setLocalVariables(event, Variables.copyLocalVariables(groupevent));
 					Variables.removeLocals(groupevent);
@@ -95,19 +92,19 @@ public class SecEditGroup extends Section {
 	@Override
 	public String toString(@Nullable Event event, boolean debug) {
 		return new SyntaxStringBuilder(event, debug)
-				.append("edit group", groupExpr)
+				.append("edit group", group)
 				.toString();
 	}
 
 	public static class GroupEvent extends Event {
 
-		private final String group;
+		private final Group group;
 
-		public GroupEvent(String group) {
+		public GroupEvent(Group group) {
 			this.group = group;
 		}
 
-		public String getGroup() {
+		public Group getGroup() {
 			return group;
 		}
 

@@ -5,7 +5,7 @@ import ch.njol.skript.doc.Example;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.skript.util.AsyncEffect;
 import ch.njol.util.Kleenean;
@@ -15,9 +15,11 @@ import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.registration.SyntaxInfo;
 import org.skriptlang.skript.registration.SyntaxRegistry;
 
+import static owlbe.skriptLuckPerms.utilitities.LuckPermsUtils.isValidNodeName;
+
 @Name("Create Group")
 @Description("""
-		Creates a new luckperms group and then loads it into memory.
+		Creates a new LuckPerms group with the given name and then loads it into memory.
 		""")
 @Example("""
 		function example(name: string):
@@ -35,23 +37,23 @@ public class EffCreateGroup extends AsyncEffect {
 		);
 	}
 
-	private Expression<String> nameExpr;
+	private Expression<String> name;
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Expression<?>[] expressions, int i, Kleenean kleenean, SkriptParser.ParseResult parseResult) {
+	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean kleenean, ParseResult parseResult) {
 		getParser().setHasDelayBefore(Kleenean.TRUE);
-		nameExpr = (Expression<String>) expressions[0];
+		name = (Expression<String>) expressions[0];
 		return true;
 	}
 
 	@Override
 	protected void execute(Event event) {
-		String name = nameExpr.getSingle(event);
+		String name = this.name.getSingle(event);
 		if (name == null)
 			return;
-		// No public method to check if name is valid for some reason but also names don't support spaces.
-		if (!name.matches("[a-z0-9_.-]+"))
+
+		if (!isValidNodeName(name))
 			return;
 		LuckPermsProvider.get().getGroupManager().createAndLoadGroup(name);
 	}
@@ -59,7 +61,7 @@ public class EffCreateGroup extends AsyncEffect {
 	@Override
 	public String toString(@Nullable Event event, boolean debug) {
 		return new SyntaxStringBuilder(event, debug)
-				.append("create luckperms group", nameExpr)
+				.append("create luckperms group", name)
 				.toString();
 	}
 

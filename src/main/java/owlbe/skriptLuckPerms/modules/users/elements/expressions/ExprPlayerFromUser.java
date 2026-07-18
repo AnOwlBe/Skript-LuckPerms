@@ -19,7 +19,7 @@ import org.skriptlang.skript.registration.SyntaxRegistry;
 
 @Name("Player From User")
 @Description("""
-		Returns an offline player from a luckperms user.
+		Returns an offline player from a LuckPerms user.
 		""")
 @Example("""
 		function example(user: luckpermsuser):
