@@ -1,17 +1,15 @@
 package owlbe.skriptLuckPerms;
 
-import org.bukkit.Bukkit;
-import org.bukkit.plugin.java.JavaPlugin;
 import ch.njol.skript.Skript;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.skriptlang.skript.addon.SkriptAddon;
 import org.skriptlang.skript.localization.Localizer;
+import owlbe.skriptLuckPerms.luckperms.listeners.LuckPermsListeners;
 import owlbe.skriptLuckPerms.modules.Modules;
-import owlbe.skriptLuckPerms.luckperms.listeners.Register;
 import owlbe.skriptLuckPerms.skript.properties.Properties;
 import owlbe.skriptLuckPerms.update.UpdateChecker;
-import owlbe.skriptLuckPerms.utilitities.ConfigUpdater;
-
-import static owlbe.skriptLuckPerms.utilitities.MiniMessageUtils.minimessage;
+import owlbe.skriptLuckPerms.utils.ConfigUpdater;
+import owlbe.skriptLuckPerms.utils.Logger;
 
 public final class SkriptLuckPerms extends JavaPlugin {
 
@@ -21,26 +19,58 @@ public final class SkriptLuckPerms extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
+		//<editor-fold desc="on enable" defaultstate="collapsed">
+		Logger.fine("Enabling Skript-LuckPerms..");
+
 		new Metrics(this, pluginId);
+
 		instance = this;
+
 		saveDefaultConfig();
 		if (getConfig().isSet("check-for-updates"))
 			ConfigUpdater.update();
-		addon = Skript.instance().registerAddon(SkriptLuckPerms.class, "skript-luckperms");
-		Properties.register(addon.syntaxRegistry());
-		addon.loadModules(new Modules());
-		Localizer addonLocalizer = addon.localizer();
-		addonLocalizer.setSourceDirectories("lang", null);
 
-		Register.register();
+		setupSkript();
+		setupLuckPerms();
+		setupPaper();
+
 		UpdateChecker.enable();
 
+		Logger.fine("Skript-LuckPerms enabled successfully!");
+		//</editor-fold>
+	}
 
+	private void setupSkript() {
+		//<editor-fold desc="setup skript" defaultstate="collapsed">
+		addon = Skript.instance().registerAddon(SkriptLuckPerms.class, "skript-luckperms");
+
+		Properties.register(addon.syntaxRegistry());
+		addon.loadModules(new Modules());
+
+		Localizer addonLocalizer = addon.localizer();
+		addonLocalizer.setSourceDirectories("lang", null);
+		//</editor-fold>
+	}
+
+	private void setupLuckPerms() {
+		LuckPermsListeners.register();
+	}
+
+	private void setupPaper() {
+		MainCommand.register(getLifecycleManager());
+	}
+
+	public static SkriptAddon getAddonInstance() {
+		return addon;
+	}
+
+	public static SkriptLuckPerms getPluginInstance() {
+		return instance;
 	}
 
 	@Override
 	public void onDisable() {
-		Bukkit.getConsoleSender().sendMessage(minimessage("Disabling Skript-LuckPerms.."));
+		Logger.fine("Disabling Skript-LuckPerms..");
 	}
 
 }

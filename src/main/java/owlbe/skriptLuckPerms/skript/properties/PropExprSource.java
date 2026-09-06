@@ -7,14 +7,13 @@ import org.skriptlang.skript.lang.properties.PropertyBaseExpression;
 import org.skriptlang.skript.lang.properties.handlers.base.ExpressionPropertyHandler;
 import org.skriptlang.skript.registration.SyntaxRegistry;
 
-import static owlbe.skriptLuckPerms.skript.properties.Properties.PRIORITY;
 import static owlbe.skriptLuckPerms.skript.properties.Properties.SOURCE;
 
 @Name("Source")
 @Description("""
 	Represents the source of something.
 	""")
-@Example("set {_m} to the source of {_chatmeta}")
+@Example("set {_source} to the source of {_chatmeta}")
 @Since("1.0.3")
 @RelatedProperty("source")
 @SuppressWarnings("UnstableApiUsage")

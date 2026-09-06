@@ -1,8 +1,8 @@
 
-updatechecker:
+update-checker:
   # Whether the update checker is enabled.
   enabled: true
 
-  # Generally should keep this ASYNC
-  # Valid options: ASYNC, SYNC
+  # Generally should keep this ASYNC.
+  # Valid options: ASYNC or SYNC.
   type: ASYNC

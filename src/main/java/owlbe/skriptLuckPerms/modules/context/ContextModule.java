@@ -1,9 +1,9 @@
 package owlbe.skriptLuckPerms.modules.context;
 
-import net.luckperms.api.context.*;
 import org.skriptlang.skript.addon.AddonModule;
 import org.skriptlang.skript.addon.HierarchicalAddonModule;
 import org.skriptlang.skript.addon.SkriptAddon;
+import owlbe.skriptLuckPerms.modules.context.elements.StructContextCalculator;
 
 public class ContextModule extends HierarchicalAddonModule {
 
@@ -13,16 +13,14 @@ public class ContextModule extends HierarchicalAddonModule {
 
 	@Override
 	public void loadSelf(SkriptAddon addon) {
-		ImmutableContextSet test = ImmutableContextSet.builder()
-				.add("server", "survival")
-				.build();
-
-		register(addon);
+		register(addon,
+				StructContextCalculator::register
+		);
 	}
 
 	@Override
 	public String name() {
-		return "meta";
+		return "context";
 	}
 
 }

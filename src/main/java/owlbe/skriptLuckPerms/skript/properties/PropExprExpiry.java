@@ -2,6 +2,7 @@ package owlbe.skriptLuckPerms.skript.properties;
 
 import ch.njol.skript.doc.*;
 import ch.njol.skript.expressions.base.PropertyExpression;
+import org.jspecify.annotations.NonNull;
 import org.skriptlang.skript.lang.properties.Property;
 import org.skriptlang.skript.lang.properties.PropertyBaseExpression;
 import org.skriptlang.skript.lang.properties.handlers.base.ExpressionPropertyHandler;
@@ -13,7 +14,7 @@ import static owlbe.skriptLuckPerms.skript.properties.Properties.EXPIRY;
 @Description("""
 	Represents when something will expire.
 	""")
-@Example("set {_m} to the expiry of {_chatmeta}")
+@Example("set {_expiry} to the expiry of {_mypermission}")
 @Since("INSERT VERSION")
 @RelatedProperty("expiry")
 @SuppressWarnings("UnstableApiUsage")
@@ -27,7 +28,7 @@ public class PropExprExpiry extends PropertyBaseExpression<ExpressionPropertyHan
 	}
 
 	@Override
-	public Property<ExpressionPropertyHandler<?, ?>> getProperty() {
+	public @NonNull Property<ExpressionPropertyHandler<?, ?>> getProperty() {
 		return Properties.getProperty(EXPIRY);
 	}
 

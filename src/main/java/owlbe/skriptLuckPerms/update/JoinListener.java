@@ -7,7 +7,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 import static owlbe.skriptLuckPerms.SkriptLuckPerms.instance;
-import static owlbe.skriptLuckPerms.utilitities.MiniMessageUtils.minimessage;
+import static owlbe.skriptLuckPerms.utils.MiniMessageUtils.minimessage;
 
 // Credit to
 // https://github.com/ShaneBeee/SkBee/tree/master/src/main/java/com/shanebeestudios/skbee/api/util/update for the original versions

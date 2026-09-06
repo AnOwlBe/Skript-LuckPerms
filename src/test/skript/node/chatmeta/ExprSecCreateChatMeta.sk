@@ -1,0 +1,15 @@
+test "create chat meta":
+	set {_prefix} to a new luckperms prefix from value "test prefix":
+		set priority of event-chat meta to 95
+		set expiry of event-prefix node to 6 months
+	assert value of {_prefix} is "test prefix" with "Failed to build a prefix with a value"
+	assert priority of {_prefix} is 95 with "Failed to build a prefix with a priority"
+	assert expiry of {_prefix} is 6 months with "Failed to build a prefix with an expiry"
+
+	set {_suffix} to a luckperms suffix with value "test suffix":
+		set priority of event-chat meta to 5
+		set expiry of event-chat meta to 9 months
+		set value of event-chat meta to "test changed suffix"
+	assert priority of {_suffix} is 5 with "Failed to build a suffix with a priority"
+	assert expiry of {_suffix} is 9 months with "Failed to build a suffix with an expiry"
+	assert value of {_suffix} is "test changed suffix" with "Failed to build a suffix with a value"

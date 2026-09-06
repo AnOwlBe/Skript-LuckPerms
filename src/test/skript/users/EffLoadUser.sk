@@ -1,0 +1,12 @@
+test "load user":
+	set {_lp} to test-luckperms user
+	assert {_lp} is set with "Failed to get luckperms user from offline player"
+	set {_meta} to a new luckperms prefix from value "test":
+		set priority of event-chat meta to 255
+		set expiry of event-chat meta to 1 hour
+	edit luckperms user {_lp}:
+		set luckperms prefix of event-user to {_meta}
+	assert luckperms prefix of {_lp} is "test" with "Failed to do basic edit on user"
+	edit luckperms user {_lp}:
+		reset luckperms prefix of event-user
+

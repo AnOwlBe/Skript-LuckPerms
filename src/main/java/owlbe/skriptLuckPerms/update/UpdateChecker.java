@@ -6,7 +6,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import org.bukkit.Bukkit;
-import owlbe.skriptLuckPerms.utilitities.Logger;
+import owlbe.skriptLuckPerms.utils.Logger;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,6 +14,7 @@ import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
 import static owlbe.skriptLuckPerms.SkriptLuckPerms.instance;
@@ -31,15 +32,16 @@ public class UpdateChecker {
 	public static void enable() {
 		PLUGIN_VERSION = new Version(instance.getPluginMeta().getVersion());
 
-		if (instance.getConfig().getBoolean("check-for-updates")) {
+		if (instance.getConfig().getBoolean("update-checker.enabled")) {
 			Bukkit.getPluginManager().registerEvents(new JoinListener(), instance);
-			boolean executeAsync = instance.getConfig().getBoolean("check-async-for-updates");
+			String type = instance.getConfig().getString("update-checker.type");
+			boolean executeAsync = Objects.equals(type, "ASYNC");
 			checkUpdate(executeAsync);
 		}
 	}
 
 	private static void checkUpdate(boolean async) {
-		instance.getLogger().fine("Checking for updates..");
+		Logger.fine("Checking for updates..");
 		getUpdateVersion(async).thenApply(modrinthVersion -> {
 			if (modrinthVersion != null) {
 				Logger.warning("Plugin is not up to date!");
@@ -105,7 +107,7 @@ public class UpdateChecker {
 			JsonArray elements = new Gson().fromJson(reader, JsonArray.class);
 			JsonElement latestVersion = elements.get(0);
 			return new ModrinthVersion(latestVersion);
-		} catch (IOException | URISyntaxException e) {
+		} catch (IOException | URISyntaxException exception) {
 			Logger.warning("<#FF4040>Checking for updates failed!");
 		}
 		return null;

@@ -13,7 +13,7 @@ import static owlbe.skriptLuckPerms.skript.properties.Properties.WEIGHT;
 @Description("""
 	Represents the weight of something.
 	""")
-@Example("set the weight of {_mygroup} to 5")
+@Example("set {_weight} to the weight of {_mygroup}")
 @Since("1.0.3")
 @RelatedProperty("weight")
 @SuppressWarnings("UnstableApiUsage")

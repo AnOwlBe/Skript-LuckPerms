@@ -4,7 +4,7 @@ import org.skriptlang.skript.lang.properties.Property;
 import org.skriptlang.skript.lang.properties.PropertyRegistry;
 import org.skriptlang.skript.lang.properties.handlers.base.ExpressionPropertyHandler;
 import org.skriptlang.skript.registration.SyntaxRegistry;
-import owlbe.skriptLuckPerms.utilitities.Logger;
+import owlbe.skriptLuckPerms.utils.Logger;
 
 import static owlbe.skriptLuckPerms.SkriptLuckPerms.addon;
 
@@ -52,6 +52,16 @@ public class Properties {
 			addon,
 			ExpressionPropertyHandler.class);
 
+	/**
+	 * A property for getting the context of something.
+	 */
+	public static final Property<ExpressionPropertyHandler<?,?>> CONTEXT = Property.of(
+			"context",
+			"The context of something.",
+			"INSERT VERSION",
+			addon,
+			ExpressionPropertyHandler.class);
+
 	public static void register(SyntaxRegistry syntaxRegistry) {
 		if (getProperty(WEIGHT) != null) {
 			PropExprWeight.register(syntaxRegistry);
@@ -72,6 +82,11 @@ public class Properties {
 			PropExprExpiry.register(syntaxRegistry);
 		} else {
 			Logger.error("It appears another addon tried to register a EXPIRY property & Skript-LuckPerms failed to hook into it. Disabling Skript-LuckPerms usages of EXPIRY property.");
+		}
+		if (getProperty(CONTEXT) != null) {
+			PropExprContext.register(syntaxRegistry);
+		} else {
+			Logger.error("It appears another addon tried to register a CONTEXT property & Skript-LuckPerms failed to hook into it. Disabling Skript-LuckPerms usages of CONTEXT property.");
 		}
 	}
 

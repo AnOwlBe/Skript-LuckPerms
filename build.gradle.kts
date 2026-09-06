@@ -1,6 +1,7 @@
 plugins {
     id("java-library")
     id("xyz.jpenilla.run-paper") version "3.0.2"
+    id("skript-test") version "1.0.0"
 }
 
 repositories {
@@ -34,6 +35,20 @@ tasks {
         val props = mapOf("version" to version, "description" to project.description)
         filesMatching("paper-plugin.yml") {
             expand(props)
+        }
+    }
+}
+
+tasks.named<org.skriptlang.gradle.test.plugin.SkriptTestTask>("skriptTest") {
+    group = "execution"
+    testScriptDirectory = file("src/test/skript")
+    extraPluginsDirectory = file("src/test/plugins")
+    dependsOn("jar")
+    doFirst {
+        delete(fileTree("src/test/plugins").matching { include("Skript-LuckPerms*.jar") })
+        copy {
+            from(tasks.named("jar").get().outputs.files)
+            into("src/test/plugins")
         }
     }
 }

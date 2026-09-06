@@ -4,11 +4,11 @@ import ch.njol.skript.Skript;
 import org.skriptlang.skript.addon.AddonModule;
 import org.skriptlang.skript.addon.HierarchicalAddonModule;
 import org.skriptlang.skript.addon.SkriptAddon;
-import owlbe.skriptLuckPerms.modules.groups.GroupModule;
-import owlbe.skriptLuckPerms.modules.meta.MetaModule;
-import owlbe.skriptLuckPerms.modules.permission.PermissionModule;
-import owlbe.skriptLuckPerms.modules.tracks.TrackModule;
-import owlbe.skriptLuckPerms.modules.users.UserModule;
+import owlbe.skriptLuckPerms.modules.context.ContextModule;
+import owlbe.skriptLuckPerms.modules.node.NodeModule;
+import owlbe.skriptLuckPerms.modules.permholder.PermHolderModule;
+import owlbe.skriptLuckPerms.modules.test.TestModule;
+import owlbe.skriptLuckPerms.modules.track.TrackModule;
 
 import java.util.List;
 
@@ -22,22 +22,17 @@ public class Modules extends HierarchicalAddonModule {
     @Override
     public Iterable<AddonModule> children() {
         return List.of(
-                new GroupModule(this),
-                new MetaModule(this),
-                new PermissionModule(this),
-                new TrackModule(this),
-                new UserModule(this)
+                new ContextModule(this),
+                new NodeModule(this),
+                new PermHolderModule(this),
+                new TestModule(this),
+                new TrackModule(this)
         );
     }
 
     @Override
-    protected void initSelf(SkriptAddon addon) {
-      // null
-    }
-
-    @Override
     protected void loadSelf(SkriptAddon addon) {
-        // null
+        // nothing to do
     }
 
     @Override
