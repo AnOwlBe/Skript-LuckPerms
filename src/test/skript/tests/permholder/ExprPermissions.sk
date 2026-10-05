@@ -1,0 +1,66 @@
+test "permissions":
+
+	set {_user} to test-luckperms user
+
+	set {_group} to test-luckperms group
+
+	set {_permission} to a new luckperms permission with key "aperm":
+		set expiry of event-permission to 1 hour
+
+	# Modifying permissions (user)
+
+	edit luckperms user {_user}:
+		add {_permission} to luckperms permissions of event-user
+
+	set {_user} to luckperms user from test-offline player
+
+	assert unsafely luckperms permissions of {_user} does not contain {_permission} with "Failed to add a permission to a user"
+
+	edit luckperms user {_user}:
+		reset luckperms permissions of event-user
+
+	assert unsafely luckperms permissions of {_user} is not set with "Failed to reset luckperms permissions of a user"
+
+	set {_user} to luckperms user from test-offline player
+
+	edit luckperms user {_user}:
+		set luckperms permissions of event-user to {_permission}
+
+	assert unsafely size of luckperms permissions of {_user} >= 2 with "Setting the permissions of a user should result in the user only having 1 permission"
+
+	set {_user} to luckperms user from test-offline player
+
+	# Getting permissions (user)
+
+	set {_user::perms::*} to luckperms perms of {_user}
+
+	assert unsafely {_user::perms::*} is set with "Failed to get luckperms permissions of a user"
+
+	# Modifying permissions (group)
+
+	edit luckperms group {_group}:
+		add {_permission} to luckperms permissions of event-group
+
+	set {_group} to luckperms group from "test"
+
+	assert unsafely luckperms permissions of {_group} contains {_permission} with "Failed to add a permission to a group"
+
+	edit luckperms group {_group}:
+		reset luckperms permissions of event-group
+
+	assert unsafely luckperms permissions of {_group} is not set with "Failed to reset luckperms permissions of a group"
+
+	set {_group} to luckperms group from "test"
+
+	edit luckperms group {_group}:
+		set luckperms permissions of event-group to {_permission}
+
+	assert unsafely size of luckperms permissions of {_group} >= 2 with "Setting the permissions of a group should result in the group only having 1 permission"
+
+	set {_group} to luckperms group "test"
+
+	# Getting permissions (group)
+
+	set {_group::perms::*} to luckperms perms of {_group}
+
+	assert unsafely {_group::perms::*} is set with "Failed to get luckperms permissions of a group"

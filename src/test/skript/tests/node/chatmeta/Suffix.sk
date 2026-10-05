@@ -1,0 +1,72 @@
+using error catching
+
+test "suffix":
+
+	set {_context} to a new luckperms context with key "gamemode" and value "survival"
+
+	set {_suffix} to a new luckperms suffix with value "suffix":
+		set {_wrapper} to event-chat meta
+		set priority of event-chat meta to 72
+		set expiry of event-chat meta to 6 hours
+		set context of event-chat meta to {_context}
+		make event-chat meta negated
+
+	assert value of {_suffix} is "suffix" with "Failed to set value of a suffix"
+	assert priority of {_suffix} is 72 with "Failed to set priority of a suffix"
+	assert expiry of {_suffix} is 6 hours with "Failed to set expiry of a suffix"
+	assert {_suffix} is negated with "Failed to make a suffix negated"
+	set {_context::key} to context key of {_context}
+	set {_context::value} to value of {_context}
+	assert {_context::key} is "gamemode" with "Failed to set context of a suffix with key 'gamemode'"
+	assert {_context::value} is "survival" with "Failed to set context of a suffix with value 'survival'"
+
+	# Ensure that even after being added to a user and retrieved, the suffix info is the same
+
+	set {_user} to test-luckperms user
+	edit luckperms user {_user}:
+		add {_suffix} to luckperms suffixes of event-user
+
+	set {_user} to luckperms user from test-offline player
+
+	loop luckperms suffixes of {_user}:
+		if value of loop-value is "suffix":
+			set {_user::suffix} to loop-value
+			stop loop
+
+	assert unsafely {_user::suffix} is set with "Failed to add a suffix to a user"
+
+	assert unsafely value of {_user::suffix} is "suffix" with "Failed to get value of a suffix from a user"
+	assert unsafely priority of {_user::suffix} is 72 with "Failed to get priority of a suffix from a user"
+	assert unsafely expiry of {_user::suffix} is 6 hours with "Failed to get expiry of a suffix from a user"
+	set {_context} to context of {_user::suffix}
+	set {_context::key} to context key of {_context}
+	set {_context::value} to value of {_context}
+	assert unsafely {_context::key} is "gamemode" with "Failed to get context of a suffix from a user with key 'gamemode'"
+	assert unsafely {_context::value} is "survival" with "Failed to get context of a suffix from a user with value 'survival'"
+
+	set {_error} to "You can only change the context of a chat meta node inside a 'chat meta' section."
+	catch runtime errors:
+		set context of {_wrapper} to {_context}
+
+	assert unsafely last caught errors is {_error} with "Set context outside of node section should error but did not"
+
+	set {_error} to "You can only change the expiry of a chat meta node inside a 'chat meta' section."
+	catch runtime errors:
+		set expiry of {_wrapper} to 18 hours
+
+	assert unsafely last caught errors is {_error} with "Set expiry outside of a node section should error but did not"
+
+	set {_error} to "You can only change the priority of a chat meta node inside a 'chat meta' section."
+	catch runtime errors:
+		set priority of {_wrapper} to 61
+
+	assert unsafely last caught errors is {_error} with "Set priority outside of a chat meta node section should error but did not"
+
+	set {_error} to "You can only change the context of a chat meta node inside a 'chat meta' section."
+	catch runtime errors:
+		set context of {_wrapper} to {_context}
+
+	assert unsafely last caught errors is {_error} with "Set context outside of a node section should error but did not"
+
+	edit luckperms user {_user}:
+		reset luckperms suffixes of event-user

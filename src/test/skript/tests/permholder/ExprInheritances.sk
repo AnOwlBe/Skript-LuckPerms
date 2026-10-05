@@ -1,0 +1,67 @@
+test "inheritances":
+
+	set {_user} to test-luckperms user
+
+	set {_group} to test-luckperms group
+
+	create new luckperms group named "inheritancegroup"
+	set {_inheritance} to a new luckperms inheritance from group (luckperms group "inheritancegroup"):
+		set expiry of event-inheritance to 1 hour
+
+	# Modifying inheritances (user)
+
+	edit luckperms user {_user}:
+		add {_inheritance} to luckperms inheritances of event-user
+
+	set {_user} to luckperms user from test-offline player
+
+	assert unsafely luckperms inheritances of {_user} contains {_inheritance} with "Failed to add an inheritance to a user"
+
+	edit luckperms user {_user}:
+		reset luckperms inheritances of event-user
+
+	assert unsafely luckperms inheritances of {_user} is not set with "Failed to reset luckperms inheritances of a user"
+
+	set {_user} to luckperms user from test-offline player
+
+	edit luckperms user {_user}:
+		set luckperms inheritances of event-user to {_inheritance}
+
+	assert unsafely size of luckperms inheritances of {_user} >= 2 with "Setting the inheritances of a user should result in the user only having 1 inheritance"
+
+	set {_user} to luckperms user from test-offline player
+
+	# Getting inheritances (user)
+
+	set {_user::inheritances::*} to luckperms inheritances of {_user}
+
+	assert unsafely {_user::inheritances::*} is set with "Failed to get luckperms inheritances of a user"
+
+	# Modifying inheritances (group)
+
+	edit luckperms group {_group}:
+		add {_inheritance} to luckperms inheritances of event-group
+
+	set {_group} to luckperms group from "test"
+
+	assert unsafely luckperms inheritances of {_group} contains {_inheritance} with "Failed to add an inheritance to a group"
+
+	edit luckperms group {_group}:
+		reset luckperms inheritances of event-group
+
+	assert unsafely luckperms inheritances of {_group} is not set with "Failed to reset luckperms inheritances of a group"
+
+	set {_group} to luckperms group from "test"
+
+	edit luckperms group {_group}:
+		set luckperms inheritances of event-group to {_inheritance}
+
+	assert unsafely size of luckperms inheritances of {_group} >= 2 with "Setting the inheritances of a group should result in the group only having 1 inheritance"
+
+	set {_group} to luckperms group "test"
+
+	# Getting inheritances (group)
+
+	set {_group::inheritances::*} to luckperms inheritances of {_group}
+
+	assert unsafely {_group::inheritances::*} is set with "Failed to get luckperms inheritances of a group"

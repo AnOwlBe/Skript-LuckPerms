@@ -1,0 +1,55 @@
+using error catching
+
+test "inheritance":
+
+	set {_context} to a new luckperms context with key "server" and value "testing"
+
+	set {_inheritance} to a new luckperms inheritance from group (test-luckperms group):
+		set expiry of event-inheritance to 5 years
+		set context of event-inheritance node to {_context}
+
+	assert value of {_inheritance} is "test" with "Failed to create an inheritance node with group 'test'"
+	assert expiry of {_inheritance} is 5 years with "Failed to set expiry of an inheritance"
+	set {_context::key} to context key of {_context}
+	set {_context::value} to value of {_context}
+	assert {_context::key} is "server" with "Failed to set context of an inheritance with key 'server'"
+	assert {_context::value} is "testing" with "Failed to set context of an inheritance with value 'testing'"
+
+	# Ensure that even after being added to a user and retrieved, the inheritance info is the same
+
+	set {_user} to test-luckperms user
+	edit luckperms user {_user}:
+		add {_inheritance} to luckperms inheritances of event-user
+
+	set {_user} to luckperms user from test-offline player
+
+	broadcast "luckperms inheritances of %{_user}%: '%luckperms inheritances of {_user}%'"
+	loop luckperms inheritances of {_user}:
+		if value of loop-value is "test":
+			set {_user::inheritance} to loop-value
+			stop loop
+
+	assert unsafely {_user::inheritance} is set with "Failed to add an inheritance to a user"
+
+	assert unsafely value of {_user::inheritance} is "test" with "Failed to get value of an inheritance from a user"
+	assert unsafely expiry of {_user::inheritance} is 5 years with "Failed to get expiry of an inheritance from a user"
+	set {_context} to context of {_user::inheritance}
+	set {_context::key} to context key of {_context}
+	set {_context::value} to value of {_context}
+	assert unsafely {_context::key} is "server" with "Failed to get context of an inheritance from a user with key 'server'"
+	assert unsafely {_context::value} is "testing" with "Failed to get context of an inheritance from a user with value 'testing'"
+
+	set {_error} to "You can only change the context of an inheritance node inside a 'inheritance' section."
+	catch runtime errors:
+		set context of {_inheritance} to {_context}
+
+	assert unsafely last caught errors is {_error} with "Set context outside of a inheritance section should error but did not"
+
+	set {_error} to "You can only change the expiry of an inheritance node inside a 'inheritance' section."
+	catch runtime errors:
+		set expiry of {_inheritance} to 18 hours
+
+	assert unsafely last caught errors is {_error} with "Set expiry outside of a inheritance section should error but did not"
+
+	edit luckperms user {_user}:
+		reset luckperms inheritances of event-user

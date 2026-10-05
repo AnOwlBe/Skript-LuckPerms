@@ -2,22 +2,23 @@ package owlbe.skriptLuckPerms.skript.properties;
 
 import ch.njol.skript.doc.*;
 import ch.njol.skript.expressions.base.PropertyExpression;
+import org.jetbrains.annotations.NotNull;
 import org.skriptlang.skript.lang.properties.Property;
 import org.skriptlang.skript.lang.properties.PropertyBaseExpression;
 import org.skriptlang.skript.lang.properties.handlers.base.ExpressionPropertyHandler;
 import org.skriptlang.skript.registration.SyntaxRegistry;
+import owlbe.skriptLuckPerms.utils.PropertyUtils;
 
-import static owlbe.skriptLuckPerms.skript.properties.Properties.PRIORITY;
 import static owlbe.skriptLuckPerms.skript.properties.Properties.SOURCE;
 
-@SuppressWarnings("UnstableApiUsage")
 @Name("Source")
 @Description("""
-		Represents the source of something.
-		""")
-@Example("set {_m} to the source of {_chatmeta}")
-@Since("1.0.3")
+	Represents the source of something.
+	""")
+@Example("set {_source} to the source of {_chatmeta}")
+@Since("1.0.3-BETA")
 @RelatedProperty("source")
+@SuppressWarnings("UnstableApiUsage")
 public class PropExprSource extends PropertyBaseExpression<ExpressionPropertyHandler<?, ?>> {
 
 	public static void register(SyntaxRegistry registry) {
@@ -28,8 +29,9 @@ public class PropExprSource extends PropertyBaseExpression<ExpressionPropertyHan
 	}
 
 	@Override
-	public Property<ExpressionPropertyHandler<?, ?>> getProperty() {
-		return Properties.getProperty(SOURCE);
+	@SuppressWarnings({"DataFlowIssue"}) // won't be null
+	public @NotNull Property<ExpressionPropertyHandler<?, ?>> getProperty() {
+		return PropertyUtils.getProperty(SOURCE, ExpressionPropertyHandler.class);
 	}
 
 }

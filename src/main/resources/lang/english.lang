@@ -1,7 +1,17 @@
 version: 1.0.3
 
 types:
-    luckpermsuser: luckperms user¦s
-    luckpermstrack: luckperms track¦s
-    luckpermsgroup: luckperms group¦s
-    luckpermschatmeta: luckperms chatmeta
+	luckpermsuser: luckperms user¦s
+	luckpermstrack: luckperms track¦s
+	luckpermspermissionholder: luckperms permission holder¦s
+	luckpermsgroup: luckperms group¦s
+
+	luckpermschatmeta: luckperms chatmeta
+	luckpermsmeta: luckperms meta
+	luckpermsinheritance: luckperms inheritance¦s
+	luckpermspermission: luckperms permission¦s
+
+	luckpermschatmetawrapper: luckperms chatmeta wrapper¦s
+	luckpermsmetawrapper: luckperms meta wrapper¦s
+	luckpermsinheritancewrapper: luckperms inheritance wrapper¦s
+	luckpermspermissionwrapper: luckperms permission wrapper¦s
