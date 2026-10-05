@@ -8,6 +8,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import net.luckperms.api.LuckPermsProvider;
@@ -19,6 +20,7 @@ import net.luckperms.api.track.Track;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.registration.SyntaxRegistry;
+import owlbe.skriptLuckPerms.modules.track.elements.sections.SecEditTrack.TrackSectionEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +51,7 @@ public class ExprGroups extends PropertyExpression<Object, Group> {
 						ExprGroups.class,
 						Group.class,
 						"luckperm[s] groups",
-						"luckpermsuser/luckpermsgroup/luckpermstrack",
+						"luckpermsusers/luckpermsgroups/luckpermstracks",
 						false
 				)
 						.supplier(ExprGroups::new)
@@ -57,8 +59,13 @@ public class ExprGroups extends PropertyExpression<Object, Group> {
 		);
 	}
 
+	private boolean shouldError;
+
 	@Override
 	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+		if (!(ParserInstance.get().isCurrentEvent(TrackSectionEvent.class)))
+			shouldError = true;
+
 		setExpr(expressions[0]);
 		return true;
 	}
@@ -99,6 +106,11 @@ public class ExprGroups extends PropertyExpression<Object, Group> {
 
 		if (!(target instanceof Track track)) {
 			error("You can only change the groups of a track. Please see the inheritances expression for changing the groups of a user/group.");
+			return;
+		}
+
+		if (shouldError) {
+			error("You can only change the groups of a track inside a 'edit luckperms track' section");
 			return;
 		}
 

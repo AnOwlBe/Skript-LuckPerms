@@ -16,9 +16,12 @@ import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.registration.SyntaxInfo;
 import org.skriptlang.skript.registration.SyntaxRegistry;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Name("Player From User")
 @Description("""
-		Returns an offline player from a LuckPerms user.
+		Returns offline player(s) from the provided LuckPerms user(s).
 		""")
 @Example("""
 		function example(user: luckpermsuser):
@@ -31,28 +34,32 @@ public class ExprPlayerFromUser extends SimpleExpression<OfflinePlayer> {
 		syntaxRegistry.register(
 				SyntaxRegistry.EXPRESSION,
 				SyntaxInfo.Expression.builder(ExprPlayerFromUser.class, OfflinePlayer.class)
-						.addPattern("[offline[ ]]player from luckperm[s] user %luckpermsuser%")
+						.addPattern("[offline[ ]]player[s] from luckperm[s] user %luckpermsusers%")
 						.build()
 		);
 	}
 
-	private Expression<User> user;
+	private Expression<User> users;
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-		user = (Expression<User>) expressions[0];
+		users = (Expression<User>) expressions[0];
 		return true;
 	}
 
 	@Override
 	protected OfflinePlayer[] get(Event event) {
-	   User user = this.user.getSingle(event);
-	   if (user == null)
+	   User[] users = this.users.getArray(event);
+	   if (users == null)
 		   return new OfflinePlayer[0];
 
-	   OfflinePlayer player = Bukkit.getOfflinePlayer(user.getUniqueId());
-	   return new OfflinePlayer[]{player};
+		List<OfflinePlayer> players = new ArrayList<>();
+
+		for (User user : users)
+			players.add(Bukkit.getOfflinePlayer(user.getUniqueId()));
+
+	   return players.toArray(OfflinePlayer[]::new);
 
 	}
 
@@ -68,7 +75,7 @@ public class ExprPlayerFromUser extends SimpleExpression<OfflinePlayer> {
 
 	@Override
 	public String toString(@Nullable Event event, boolean debug) {
-		return "player from user" + user.toString(event, debug);
+		return "player from users " + users.toString(event, debug);
 	}
 
 }

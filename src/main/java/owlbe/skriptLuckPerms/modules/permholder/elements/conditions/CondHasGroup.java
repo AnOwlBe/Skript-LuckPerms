@@ -39,9 +39,9 @@ public class CondHasGroup extends Condition {
 	public static void register(SyntaxRegistry syntaxRegistry) {
 		syntaxRegistry.register(
 				SyntaxRegistry.CONDITION,
-				PropertyCondition.infoBuilder(
-								CondHasGroup.class, PropertyCondition.PropertyType.HAVE,
-								"luckperm[s] group[s] %luckpermsgroups%", "luckpermspermissionholders")
+				PropertyCondition.infoBuilder(CondHasGroup.class, PropertyCondition.PropertyType.HAVE,
+								"luckperm[s] group[s] %luckpermsgroups%", "luckpermspermissionholders"
+						)
 						.supplier(CondHasGroup::new)
 						.build());
 	}

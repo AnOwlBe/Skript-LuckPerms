@@ -2,10 +2,9 @@ package owlbe.skriptLuckPerms.utils;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.ApiStatus;
+import owlbe.skriptLuckPerms.SkriptLuckPerms;
 
-import static owlbe.skriptLuckPerms.SkriptLuckPerms.instance;
-
-// TODO: This could probably be more advanced in future so it  doesn't need to be hard coded?
+// TODO: This could probably be more advanced in future so it doesn't need to be hard coded?
 public final class ConfigUpdater {
 
 	private ConfigUpdater() {
@@ -17,6 +16,8 @@ public final class ConfigUpdater {
 	 */
 	@ApiStatus.Internal
 	public static void update() {
+		SkriptLuckPerms instance = SkriptLuckPerms.getPluginInstance();
+
 		Logger.fine("Outdated configuration file detected. Refactoring..");
 		FileConfiguration config = instance.getConfig();
 

@@ -1,0 +1,57 @@
+using error catching
+
+test "meta":
+
+	set {_context} to a new luckperms context with key "gamemode" and value "creative"
+
+	set {_meta} to a new luckperms meta with key "test-key" and value "test-value":
+		set expiry of event-meta node to 94 hours
+		set context of event-meta to {_context}
+
+	assert meta key of {_meta} is "test-key" with "Failed to create a meta node with key 'test-key'"
+	assert value of {_meta} is "test-value" with "Failed to create a meta node with value 'test-value'"
+	assert expiry of {_meta} is around timespan 94 hours with "Failed to set expiry of a meta"
+	set {_context} to context of {_meta}
+	set {_context::key} to (context key of {_context})
+	set {_context::value} to value of {_context}
+	assert {_context::key} is "gamemode" with "Failed to set context of a meta with key 'gamemode'"
+	assert {_context::value} is "creative" with "Failed to set context of a meta with value 'creative'"
+
+	# Ensure that even after being added to a user and retrieved, the meta info is the same
+
+	set {_user} to test-luckperms user
+	edit luckperms user {_user}:
+		add {_meta} to luckperms meta of event-user
+
+	set {_user} to luckperms user from test-offline player
+
+	loop luckperms meta of {_user}:
+		if value of loop-value is "test-key":
+			set {_user::meta} to loop-value
+			stop loop
+
+	assert unsafely {_user::meta} is set with "Failed to add a meta to a user"
+
+	assert unsafely meta key of {_user::meta} is "test-key" with "Failed to get meta key of a meta from a user"
+	assert unsafely value of {_user::meta} is "test-value" with "Failed to get value of a meta from a user"
+	assert unsafely expiry of {_user::meta} is around timespan 94 hours with "Failed to get expiry of a meta from a user"
+	set {_context} to context of {_user::meta}
+	set {_context::key} to context key of {_context}
+	set {_context::value} to value of {_context}
+	assert unsafely {_context::key} is "gamemode" with "Failed to get context of a meta from a user with key 'gamemode'"
+	assert unsafely {_context::value} is "creative" with "Failed to get context of a meta from a user with value 'creative'"
+
+	set {_error} to "You can only change the context of a meta node inside a 'meta' section."
+	catch runtime errors:
+		set context of {_meta} to {_context}
+
+	assert unsafely last caught errors is {_error} with "Set context outside of a meta section should error but did not"
+
+	set {_error} to "You can only change the expiry of a meta node inside a 'meta' section."
+	catch runtime errors:
+		set expiry of {_meta} to 18 hours
+
+	assert unsafely last caught errors is {_error} with "Set expiry outside of a meta section should error but did not"
+
+	edit luckperms user {_user}:
+		reset luckperms meta of event-user

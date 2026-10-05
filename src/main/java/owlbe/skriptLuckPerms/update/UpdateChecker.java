@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import org.bukkit.Bukkit;
+import owlbe.skriptLuckPerms.SkriptLuckPerms;
 import owlbe.skriptLuckPerms.utils.Logger;
 
 import java.io.BufferedReader;
@@ -16,8 +17,6 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
-
-import static owlbe.skriptLuckPerms.SkriptLuckPerms.instance;
 
 // Credit to
 // https://github.com/ShaneBeee/SkBee/tree/master/src/main/java/com/shanebeestudios/skbee/api/util/update for the original versions
@@ -30,11 +29,11 @@ public class UpdateChecker {
 	private static ModrinthVersion CURRENT_UPDATE_VERSION;
 
 	public static void enable() {
-		PLUGIN_VERSION = new Version(instance.getPluginMeta().getVersion());
+		PLUGIN_VERSION = new Version(SkriptLuckPerms.getPluginInstance().getPluginMeta().getVersion());
 
-		if (instance.getConfig().getBoolean("update-checker.enabled")) {
-			Bukkit.getPluginManager().registerEvents(new JoinListener(), instance);
-			String type = instance.getConfig().getString("update-checker.type");
+		if (SkriptLuckPerms.getPluginInstance().getConfig().getBoolean("update-checker.enabled")) {
+			Bukkit.getPluginManager().registerEvents(new JoinListener(), SkriptLuckPerms.getPluginInstance());
+			String type = SkriptLuckPerms.getPluginInstance().getConfig().getString("update-checker.type");
 			boolean executeAsync = Objects.equals(type, "ASYNC");
 			checkUpdate(executeAsync);
 		}
@@ -71,7 +70,7 @@ public class UpdateChecker {
 		} else {
 			CompletableFuture<ModrinthVersion> latestReleaseFuture = new CompletableFuture<>();
 			if (async) {
-				Bukkit.getScheduler().runTaskAsynchronously(instance, () -> {
+				Bukkit.getScheduler().runTaskAsynchronously(SkriptLuckPerms.getPluginInstance(), () -> {
 					ModrinthVersion latest = getLatestVersionFromModrinth();
 					if (latest == null) {
 						latestReleaseFuture.cancel(true);

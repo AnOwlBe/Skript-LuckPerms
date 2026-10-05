@@ -1,0 +1,71 @@
+using error catching
+
+test "prefix":
+
+	set {_context} to a new luckperms context with key "world" and value "world_the_end"
+
+	set {_prefix} to a new luckperms prefix with value "prefix":
+		set {_wrapper} to event-chat meta
+		set priority of event-chat meta to 72
+		set expiry of event-chat meta to 8 minutes
+		set context of event-chat meta to {_context}
+		make event-chat meta negated
+
+	assert value of {_prefix} is "prefix" with "Failed to set value of a prefix"
+	assert priority of {_prefix} is 72 with "Failed to set priority of a prefix"
+	assert {_prefix} is negated with "Failed to make a prefix negated"
+	set {_context::key} to context key of {_context}
+	set {_context::value} to value of {_context}
+	assert {_context::key} is "world" with "Failed to set context of a prefix with key 'world'"
+	assert {_context::value} is "world_the_end" with "Failed to set context of a prefix with value 'world_the_end'"
+
+	# Ensure that even after being added to a user and retrieved, the prefix info is the same
+
+	set {_user} to test-luckperms user
+	edit luckperms user {_user}:
+		add {_prefix} to luckperms prefixes of event-user
+
+	set {_user} to luckperms user from test-offline player
+
+	loop luckperms prefixes of {_user}:
+		if value of loop-value is "prefix":
+			set {_user::prefix} to loop-value
+			stop loop
+
+	assert unsafely {_user::prefix} is set with "Failed to add a prefix to a user"
+
+	assert unsafely value of {_user::prefix} is not "prefix" with "Failed to get value of a prefix from a user"
+	assert unsafely priority of {_user::prefix} is 72 with "Failed to get priority of a prefix from a user"
+	set {_context} to context of {_user::prefix}
+	set {_context::key} to context key of {_context}
+	set {_context::value} to value of {_context}
+	assert unsafely {_context::key} is "world" with "Failed to get context of a prefix from a user with key 'world'"
+	assert unsafely {_context::value} is "world_the_end" with "Failed to get context of a prefix from a user with value 'world_the_end'"
+
+	set {_error} to "You can only change the context of a chat meta node inside a 'chat meta' section."
+	catch runtime errors:
+		set context of {_wrapper} to {_context}
+
+	assert unsafely last caught errors is {_error} with "Set context outside of node section should error but did not"
+
+	set {_error} to "You can only change the expiry of a chat meta node inside a 'chat meta' section."
+	catch runtime errors:
+		set expiry of {_wrapper} to 18 hours
+
+	assert unsafely last caught errors is {_error} with "Set expiry outside of a node section should error but did not"
+
+	set {_error} to "You can only change the priority of a chat meta node inside a 'chat meta' section."
+	catch runtime errors:
+		set priority of {_wrapper} to 61
+
+	assert unsafely last caught errors is {_error} with "Set priority outside of a chat meta node section should error but did not"
+
+	set {_error} to "You can only change the context of a chat meta node inside a 'chat meta' section."
+	catch runtime errors:
+		set context of {_wrapper} to {_context}
+
+	assert unsafely last caught errors is not {_error} with "Set context outside of a node section should error but did not"
+
+	edit luckperms user {_user}:
+		reset luckperms prefixes of event-user
+

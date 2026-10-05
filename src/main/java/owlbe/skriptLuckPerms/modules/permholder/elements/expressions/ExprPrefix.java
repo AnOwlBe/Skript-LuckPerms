@@ -60,7 +60,8 @@ import java.util.Comparator;
 		""")
 @Since({"1.0", "INSERT VERSION ('luckperms prefixes' changed pattern)"})
 @SuppressWarnings("rawtypes")
-public class ExprPrefix extends PropertyExpression<PermissionHolder, ChatMetaNode> {
+public class
+ExprPrefix extends PropertyExpression<PermissionHolder, ChatMetaNode> {
 
 	public static void register(SyntaxRegistry syntaxRegistry) {
 		syntaxRegistry.register(
@@ -69,7 +70,7 @@ public class ExprPrefix extends PropertyExpression<PermissionHolder, ChatMetaNod
 						ExprPrefix.class,
 						ChatMetaNode.class,
 						"luckperm[s] prefix[plural:es]",
-						"luckpermspermissionholder",
+						"luckpermspermissionholders",
 						false
 				)
 						.supplier(ExprPrefix::new)
@@ -84,6 +85,7 @@ public class ExprPrefix extends PropertyExpression<PermissionHolder, ChatMetaNod
 	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		setExpr((Expression<PermissionHolder>) expressions[0]);
 		plural = parseResult.hasTag("plural");
+
 		return true;
 	}
 
@@ -117,11 +119,9 @@ public class ExprPrefix extends PropertyExpression<PermissionHolder, ChatMetaNod
 
 	@Override
 	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
-		PermissionHolder holder = getExpr().getSingle(event);
-		if (holder == null)
+		PermissionHolder[] holders = getExpr().getArray(event);
+		if (holders == null)
 			return;
-
-		NodeMap data = holder.data();
 
 		ChatMetaNode<?, ?> node = delta != null ? (ChatMetaNode<?, ?>) delta[0] : null;
 
@@ -131,14 +131,19 @@ public class ExprPrefix extends PropertyExpression<PermissionHolder, ChatMetaNod
 					return;
 
 				if (plural) {
-					data.clear(NodeType.PREFIX::matches);
+					for (PermissionHolder holder : holders) {
+						holder.data().clear(NodeType.PREFIX::matches);
 
-					data.add(node);
+						holder.data().add(node);
+					}
 				} else {
-					int priority = holder.getNodes(NodeType.PREFIX).stream()
-							.mapToInt(PrefixNode::getPriority)
-							.max()
-							.orElse(0);
+					for (PermissionHolder holder : holders) {
+						NodeMap data = holder.data();
+
+						int priority = holder.getNodes(NodeType.PREFIX).stream()
+								.mapToInt(PrefixNode::getPriority)
+								.max()
+								.orElse(0);
 
 					holder.getNodes(NodeType.PREFIX).stream()
 							.max(Comparator.comparingInt(PrefixNode::getPriority))
@@ -151,6 +156,7 @@ public class ExprPrefix extends PropertyExpression<PermissionHolder, ChatMetaNod
 
 					data.add(newNode);
 				}
+				}
 			}
 			case ADD -> {
 				if (!plural) {
@@ -161,17 +167,22 @@ public class ExprPrefix extends PropertyExpression<PermissionHolder, ChatMetaNod
 				if (node == null)
 					return;
 
-				data.add(node);
+				for (PermissionHolder holder: holders)
+					holder.data().add(node);
 			}
 			case RESET -> {
-				if (!plural) {
-					holder.getNodes(NodeType.PREFIX).stream()
-							.max(Comparator.comparingInt(PrefixNode::getPriority))
-							.ifPresent(data::remove);
-					return;
-				}
+				for (PermissionHolder holder : holders) {
+					NodeMap data = holder.data();
 
-				data.clear(NodeType.PREFIX::matches);
+					if (!plural) {
+						holder.getNodes(NodeType.PREFIX).stream()
+								.max(Comparator.comparingInt(PrefixNode::getPriority))
+								.ifPresent(data::remove);
+						return;
+					}
+
+					data.clear(NodeType.PREFIX::matches);
+				}
 			}
 			case REMOVE -> {
 				if (!plural) {
@@ -181,7 +192,8 @@ public class ExprPrefix extends PropertyExpression<PermissionHolder, ChatMetaNod
 				if (node == null)
 					return;
 
-				data.remove(node);
+				for (PermissionHolder holder : holders)
+					holder.data().remove(node);
 			}
 		}
 	}

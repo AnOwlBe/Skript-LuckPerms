@@ -18,7 +18,9 @@ import org.skriptlang.skript.registration.SyntaxRegistry;
 @Name("Group From Name")
 @Description("Gets a LuckPerms group by the provided name if it exists.")
 @Example("""
-		set prefix of group (group "example") to {_chatmeta}
+		set {_group} to luckperms group "example"
+		edit luckperms group {_group}:
+		    set luckperms prefix of (luckperms group "example") to {_chatmeta}
 		""")
 @Since("INSERT VERSION")
 public class ExprGroupFromName extends SimpleExpression<Group> {
@@ -28,6 +30,7 @@ public class ExprGroupFromName extends SimpleExpression<Group> {
 				SyntaxRegistry.EXPRESSION,
 				SyntaxInfo.Expression.builder(ExprGroupFromName.class, Group.class)
 						.addPatterns("[the] luckperm[s] group [from] %string%")
+						.supplier(ExprGroupFromName::new)
 						.build()
 		);
 	}

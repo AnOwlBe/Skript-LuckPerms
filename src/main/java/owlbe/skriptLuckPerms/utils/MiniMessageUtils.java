@@ -4,6 +4,9 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.CommandSender;
 
+/**
+ * MiniMessage utilities
+ */
 public final class MiniMessageUtils {
 
 	public static final String PREFIX = "<reset><dark_gray>[<shadow:#63FFA4:0.3><gradient:#63FFA4:#9CFFC5:#63FFA4><b>SKRIPT-LUCKPERMS<reset><dark_gray>]<reset>";

@@ -31,6 +31,7 @@ public class EffCreateGroup extends AsyncEffect {
 				SyntaxRegistry.EFFECT,
 				SyntaxInfo.builder(EffCreateGroup.class)
 						.addPattern("create [new] luckperm[s] group (with name|named) %string%")
+						.supplier(EffCreateGroup::new)
 						.build()
 		);
 	}
@@ -50,6 +51,11 @@ public class EffCreateGroup extends AsyncEffect {
 		String name = this.name.getSingle(event);
 		if (name == null)
 			return;
+
+		if (name.isEmpty() || name.length() > 36 || name.contains(" ")) {
+			error("A group's name cannot be empty, contain spaces or be above 36 characters!");
+			return;
+		}
 
 		LuckPermsProvider.get().getGroupManager().createAndLoadGroup(name);
 	}

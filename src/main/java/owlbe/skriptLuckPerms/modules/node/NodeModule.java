@@ -5,6 +5,8 @@ import org.skriptlang.skript.addon.AddonModule;
 import org.skriptlang.skript.addon.HierarchicalAddonModule;
 import org.skriptlang.skript.addon.SkriptAddon;
 import owlbe.skriptLuckPerms.modules.node.chatmeta.ChatMetaModule;
+import owlbe.skriptLuckPerms.modules.node.elements.conditions.CondIsNegated;
+import owlbe.skriptLuckPerms.modules.node.elements.effects.EffNegated;
 import owlbe.skriptLuckPerms.modules.node.inheritance.InheritanceModule;
 import owlbe.skriptLuckPerms.modules.node.meta.MetaModule;
 import owlbe.skriptLuckPerms.modules.node.permission.PermissionModule;
@@ -28,11 +30,17 @@ public class NodeModule extends HierarchicalAddonModule {
 
 	@Override
 	public void initSelf(SkriptAddon addon) {
+
 		Classes.registerClass(new NodeClassInfo());
+		Classes.registerClass(new NodeWrapperClassInfo());
 	}
 
 	@Override
 	public void loadSelf(SkriptAddon addon) {
+		register(addon,
+				CondIsNegated::register,
+				EffNegated::register
+				);
 	}
 
 	@Override

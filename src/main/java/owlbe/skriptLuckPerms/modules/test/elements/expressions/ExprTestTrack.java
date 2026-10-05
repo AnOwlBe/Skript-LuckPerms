@@ -29,7 +29,7 @@ public class ExprTestTrack extends SimpleExpression<Track> {
 
 	@Override
 	protected Track[] get(Event event) {
-		return new Track[]{TestModule.getTestTrack()};
+		return new Track[] {TestModule.getTestTrack()};
 	}
 
 	@Override

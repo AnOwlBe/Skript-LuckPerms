@@ -17,7 +17,6 @@ import org.skriptlang.skript.bukkit.lang.eventvalue.EventValue;
 import org.skriptlang.skript.bukkit.lang.eventvalue.EventValueRegistry;
 import org.skriptlang.skript.bukkit.registration.BukkitSyntaxInfos;
 import org.skriptlang.skript.registration.SyntaxRegistry;
-import owlbe.skriptLuckPerms.luckperms.bukkitevents.MetaAddEvent;
 import owlbe.skriptLuckPerms.luckperms.bukkitevents.MetaRemoveEvent;
 import owlbe.skriptLuckPerms.utils.events.Type;
 
@@ -50,7 +49,7 @@ public class EvtMetaRemove extends SkriptEvent {
 				.addSince("1.0, INSERT VERSION (pattern rewrite)")
 				.build());
 
-		eventValueRegistry.register(EventValue.builder(MetaAddEvent.class, MetaNode.class)
+		eventValueRegistry.register(EventValue.builder(MetaRemoveEvent.class, MetaNode.class)
 				.getter(event -> {
 					if (!(event.getNode() instanceof MetaNode metaNode))
 						return null;
@@ -59,7 +58,7 @@ public class EvtMetaRemove extends SkriptEvent {
 				.patterns("meta [node]")
 				.build());
 
-		eventValueRegistry.register(EventValue.builder(MetaAddEvent.class, ChatMetaNode.class)
+		eventValueRegistry.register(EventValue.builder(MetaRemoveEvent.class, ChatMetaNode.class)
 				.getter(event -> {
 					if (!(event.getNode() instanceof ChatMetaNode<?, ?> chatMetaNode))
 						return null;

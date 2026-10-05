@@ -17,14 +17,14 @@ import ch.njol.util.Kleenean;
 import net.luckperms.api.model.group.Group;
 import net.luckperms.api.node.types.InheritanceNode;
 import org.bukkit.event.Event;
-import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.bukkit.lang.eventvalue.EventValue;
 import org.skriptlang.skript.bukkit.lang.eventvalue.EventValueRegistry;
 import org.skriptlang.skript.registration.SyntaxInfo;
 import org.skriptlang.skript.registration.SyntaxRegistry;
-import owlbe.skriptLuckPerms.utils.wrapper.InheritanceNodeWrapper;
+import owlbe.skriptLuckPerms.luckperms.wrapper.InheritanceNodeWrapper;
+import owlbe.skriptLuckPerms.utils.events.SectionEvent;
 
 import java.util.List;
 
@@ -82,6 +82,7 @@ public class ExprSecCreateInheritance extends SectionExpression<InheritanceNode>
 		InheritanceNodeWrapper wrapper = new InheritanceNodeWrapper(group);
 
 		InheritanceSectionEvent sectionEvent = new InheritanceSectionEvent(wrapper);
+
 		if (trigger != null)
 			Variables.withLocalVariables(event, sectionEvent, () -> TriggerItem.walk(trigger, sectionEvent));
 
@@ -106,25 +107,22 @@ public class ExprSecCreateInheritance extends SectionExpression<InheritanceNode>
 				.toString();
 	}
 
-	public static class InheritanceSectionEvent extends Event {
+	public static class InheritanceSectionEvent extends SectionEvent {
 
 		public InheritanceNodeWrapper node;
 
-		public InheritanceNodeWrapper getNode() {
+		public @NotNull InheritanceNodeWrapper getNode() {
 			return this.node;
-		}
-
-		public InheritanceNode build() {
-			return node.build();
 		}
 
 		public InheritanceSectionEvent(InheritanceNodeWrapper node) {
 			this.node = node;
 		}
 
-		@Override
-		public @NotNull HandlerList getHandlers() {
-			throw new IllegalStateException();
+		public InheritanceNode build() {
+			InheritanceNode node = this.node.build();
+			this.node = null;
+			return node;
 		}
 	}
 

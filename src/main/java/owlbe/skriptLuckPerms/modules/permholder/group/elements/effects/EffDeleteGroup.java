@@ -32,6 +32,7 @@ public class EffDeleteGroup extends AsyncEffect {
 				SyntaxRegistry.EFFECT,
 				SyntaxInfo.builder(EffDeleteGroup.class)
 						.addPattern("delete luckperm[s] group %luckpermsgroup%")
+						.supplier(EffDeleteGroup::new)
 						.build()
 		);
 	}
@@ -51,6 +52,7 @@ public class EffDeleteGroup extends AsyncEffect {
 		Group group = this.group.getSingle(event);
 		if (group == null)
 			return;
+
 		LuckPermsProvider.get().getGroupManager().deleteGroup(group);
 	}
 

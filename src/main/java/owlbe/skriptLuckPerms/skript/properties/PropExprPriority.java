@@ -2,11 +2,12 @@ package owlbe.skriptLuckPerms.skript.properties;
 
 import ch.njol.skript.doc.*;
 import ch.njol.skript.expressions.base.PropertyExpression;
-import org.jspecify.annotations.NonNull;
+import org.jetbrains.annotations.NotNull;
 import org.skriptlang.skript.lang.properties.Property;
 import org.skriptlang.skript.lang.properties.PropertyBaseExpression;
 import org.skriptlang.skript.lang.properties.handlers.base.ExpressionPropertyHandler;
 import org.skriptlang.skript.registration.SyntaxRegistry;
+import owlbe.skriptLuckPerms.utils.PropertyUtils;
 
 import static owlbe.skriptLuckPerms.skript.properties.Properties.PRIORITY;
 
@@ -15,7 +16,7 @@ import static owlbe.skriptLuckPerms.skript.properties.Properties.PRIORITY;
 	Represents the priority of something.
 	""")
 @Example("set {_priority} to the priority of {_chatmeta}")
-@Since("1.0.3")
+@Since("1.0.3-BETA")
 @RelatedProperty("priority")
 @SuppressWarnings("UnstableApiUsage")
 public class PropExprPriority extends PropertyBaseExpression<ExpressionPropertyHandler<?, ?>> {
@@ -28,8 +29,9 @@ public class PropExprPriority extends PropertyBaseExpression<ExpressionPropertyH
 	}
 
 	@Override
-	public @NonNull Property<ExpressionPropertyHandler<?, ?>> getProperty() {
-		return Properties.getProperty(PRIORITY);
+	@SuppressWarnings({"DataFlowIssue"}) // won't be null
+	public @NotNull Property<ExpressionPropertyHandler<?, ?>> getProperty() {
+		return PropertyUtils.getProperty(PRIORITY, ExpressionPropertyHandler.class);
 	}
 
 }

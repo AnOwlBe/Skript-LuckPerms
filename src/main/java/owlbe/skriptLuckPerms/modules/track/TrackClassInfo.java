@@ -11,10 +11,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.properties.handlers.ContainsHandler;
 import org.skriptlang.skript.lang.properties.handlers.base.ExpressionPropertyHandler;
+import owlbe.skriptLuckPerms.SkriptLuckPerms;
 
 import static org.skriptlang.skript.lang.properties.Property.CONTAINS;
 import static org.skriptlang.skript.lang.properties.Property.NAME;
-import static owlbe.skriptLuckPerms.SkriptLuckPerms.addon;
 
 @SuppressWarnings({"UnstableApiUsage", "unchecked"})
 public class TrackClassInfo extends ClassInfo<Track> {
@@ -29,11 +29,11 @@ public class TrackClassInfo extends ClassInfo<Track> {
 				.defaultExpression(new EventValueExpression<>(Track.class))
 				.property(NAME,
 						"The name of this track.",
-						addon,
+						SkriptLuckPerms.getAddonInstance(),
 						new TrackNameHandler())
 				.property(CONTAINS,
 						"Checks whether this track contains the given group.",
-						addon,
+						SkriptLuckPerms.getAddonInstance(),
 						new TrackContainsHandler());
 	}
 
@@ -87,7 +87,6 @@ public class TrackClassInfo extends ClassInfo<Track> {
 		public Class<? extends Group>[] elementTypes() {
 			return new Class[]{Group.class};
 		}
-
 		//</editor-fold>
 	}
 

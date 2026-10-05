@@ -52,11 +52,9 @@ public class EffCreateTrack extends AsyncEffect {
 		if (name == null)
 			return;
 
-		if (name.contains(" ") || name.length() >= 36) {
-			error("A track's name cannot have spaces or be above 36 characters!");
+		if (name.isEmpty() || name.length() > 36 || name.contains(" ")) {
+			error("A track's name cannot be empty, contain spaces or be above 36 characters!");
 			return;
-			// TODO: Test this and ensure it functions
-			// also unsure if the limit really is 36 characters but we'll see
 		}
 
 		LuckPermsProvider.get().getTrackManager().createAndLoadTrack(name);

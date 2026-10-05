@@ -29,7 +29,7 @@ public class ExprTestUser extends SimpleExpression<User> {
 
 	@Override
 	protected User[] get(Event event) {
-		return new User[]{TestModule.getTestUser()};
+		return new User[] {TestModule.getTestUser()};
 	}
 
 	@Override

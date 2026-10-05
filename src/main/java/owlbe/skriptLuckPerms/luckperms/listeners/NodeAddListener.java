@@ -7,19 +7,18 @@ import net.luckperms.api.node.NodeType;
 import net.luckperms.api.node.types.InheritanceNode;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.scheduler.BukkitScheduler;
+import owlbe.skriptLuckPerms.SkriptLuckPerms;
 import owlbe.skriptLuckPerms.luckperms.bukkitevents.GroupAddEvent;
 import owlbe.skriptLuckPerms.luckperms.bukkitevents.MetaAddEvent;
 import owlbe.skriptLuckPerms.luckperms.bukkitevents.PermissionAddEvent;
 
-import static owlbe.skriptLuckPerms.SkriptLuckPerms.instance;
-
 public class NodeAddListener {
 
 	public static void register(EventBus eventBus, BukkitScheduler bukkitScheduler, PluginManager pluginManager) {
-		eventBus.subscribe(instance, NodeAddEvent.class, event -> {
+		eventBus.subscribe(SkriptLuckPerms.getPluginInstance(), NodeAddEvent.class, event -> {
 			NodeType<?> type = event.getNode().getType();
 			Node node = event.getNode();
-			bukkitScheduler.runTask(instance, () -> {
+			bukkitScheduler.runTask(SkriptLuckPerms.getPluginInstance(), () -> {
 				if (type == NodeType.PERMISSION)
 					pluginManager.callEvent(new PermissionAddEvent(event));
 

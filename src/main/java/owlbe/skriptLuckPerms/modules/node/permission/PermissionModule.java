@@ -18,6 +18,7 @@ public class PermissionModule extends HierarchicalAddonModule {
 	@Override
 	public void initSelf(SkriptAddon addon) {
 		Classes.registerClass(new PermissionClassInfo());
+		Classes.registerClass(new PermissionWrapperClassInfo());
 	}
 
 	@Override

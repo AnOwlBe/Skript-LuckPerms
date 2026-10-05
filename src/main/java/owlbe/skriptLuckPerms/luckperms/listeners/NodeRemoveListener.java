@@ -7,22 +7,21 @@ import net.luckperms.api.node.NodeType;
 import net.luckperms.api.node.types.InheritanceNode;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.scheduler.BukkitScheduler;
+import owlbe.skriptLuckPerms.SkriptLuckPerms;
 import owlbe.skriptLuckPerms.luckperms.bukkitevents.GroupRemoveEvent;
 import owlbe.skriptLuckPerms.luckperms.bukkitevents.MetaRemoveEvent;
 import owlbe.skriptLuckPerms.luckperms.bukkitevents.PermissionRemoveEvent;
 
-import static owlbe.skriptLuckPerms.SkriptLuckPerms.instance;
-
 public class NodeRemoveListener {
 
 	public static void register(EventBus eventBus, BukkitScheduler bukkitScheduler, PluginManager pluginManager) {
-		eventBus.subscribe(instance, NodeRemoveEvent.class, event -> {
+		eventBus.subscribe(SkriptLuckPerms.getPluginInstance(), NodeRemoveEvent.class, event -> {
 			NodeType<?> type = event.getNode().getType();
 			Node node = event.getNode();
 			boolean isUser = event.isUser();
 			boolean isGroup = event.isGroup();
 
-			bukkitScheduler.runTask(instance, () -> {
+			bukkitScheduler.runTask(SkriptLuckPerms.getPluginInstance(), () -> {
 				if (type == NodeType.PERMISSION)
 					pluginManager.callEvent(new PermissionRemoveEvent(event, node));
 

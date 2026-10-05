@@ -1,12 +1,10 @@
 package owlbe.skriptLuckPerms.modules.node.chatmeta;
 
 import ch.njol.skript.registrations.Classes;
-import net.luckperms.api.node.types.ChatMetaNode;
 import org.skriptlang.skript.addon.AddonModule;
 import org.skriptlang.skript.addon.HierarchicalAddonModule;
 import org.skriptlang.skript.addon.SkriptAddon;
 import org.skriptlang.skript.bukkit.lang.eventvalue.EventValueRegistry;
-import org.skriptlang.skript.lang.converter.Converters;
 import owlbe.skriptLuckPerms.modules.node.chatmeta.elements.expressions.ExprSecCreateChatMeta;
 
 public class ChatMetaModule extends HierarchicalAddonModule {
@@ -28,8 +26,6 @@ public class ChatMetaModule extends HierarchicalAddonModule {
 		register(addon,
 				syntaxRegistry -> ExprSecCreateChatMeta.register(syntaxRegistry, eventValueRegistry)
 		);
-
-		Converters.registerConverter(ChatMetaNode.class, String.class, ChatMetaNode::getMetaValue);
 	}
 
 	@Override

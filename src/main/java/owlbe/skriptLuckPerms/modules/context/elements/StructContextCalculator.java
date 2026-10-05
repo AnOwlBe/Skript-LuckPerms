@@ -111,6 +111,7 @@ public class StructContextCalculator extends Structure implements ReturnHandler<
 				}
 			};
 
+
 			LuckPermsProvider.get().getContextManager().registerCalculator(calculator);
 		}
 

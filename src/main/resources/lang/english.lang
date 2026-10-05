@@ -5,6 +5,13 @@ types:
 	luckpermstrack: luckperms track¦s
 	luckpermspermissionholder: luckperms permission holder¦s
 	luckpermsgroup: luckperms group¦s
+
 	luckpermschatmeta: luckperms chatmeta
-    luckpermsinheritance: luckperms inheritance¦s
+	luckpermsmeta: luckperms meta
+	luckpermsinheritance: luckperms inheritance¦s
 	luckpermspermission: luckperms permission¦s
+
+	luckpermschatmetawrapper: luckperms chatmeta wrapper¦s
+	luckpermsmetawrapper: luckperms meta wrapper¦s
+	luckpermsinheritancewrapper: luckperms inheritance wrapper¦s
+	luckpermspermissionwrapper: luckperms permission wrapper¦s

@@ -13,7 +13,6 @@ import org.skriptlang.skript.bukkit.lang.eventvalue.EventValue;
 import org.skriptlang.skript.bukkit.lang.eventvalue.EventValueRegistry;
 import org.skriptlang.skript.bukkit.registration.BukkitSyntaxInfos;
 import org.skriptlang.skript.registration.SyntaxRegistry;
-import owlbe.skriptLuckPerms.luckperms.bukkitevents.GroupAddEvent;
 import owlbe.skriptLuckPerms.luckperms.bukkitevents.GroupRemoveEvent;
 import owlbe.skriptLuckPerms.utils.events.Type;
 
@@ -26,7 +25,7 @@ public class EvtGroupRemove extends SkriptEvent {
 		syntaxRegistry.register(BukkitSyntaxInfos.Event.KEY, BukkitSyntaxInfos.Event.builder(EvtGroupRemove.class, "Group Removed")
 				.supplier(EvtGroupRemove::new)
 				.addEvent(GroupRemoveEvent.class)
-				.addPattern("[luckperm[s]] group removed [from [luckperm[s]] (:group|:user)]")
+				.addPattern("[luckperm[s]] (group|inheritance [node]) removed [from [luckperm[s]] (:group|:user)]")
 				.addDescription("""
 				Called when a group is removed from a permission holder (a user or group).
 				
@@ -44,8 +43,8 @@ public class EvtGroupRemove extends SkriptEvent {
 				.addSince("INSERT VERSION (pattern rewrite)")
 				.build());
 
-		eventValueRegistry.register(EventValue.builder(GroupAddEvent.class, InheritanceNode.class)
-				.getter(GroupAddEvent::getNode)
+		eventValueRegistry.register(EventValue.builder(GroupRemoveEvent.class, InheritanceNode.class)
+				.getter(GroupRemoveEvent::getNode)
 				.patterns("inheritance [node]")
 				.build());
 	}

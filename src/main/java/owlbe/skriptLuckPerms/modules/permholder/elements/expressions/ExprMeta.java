@@ -40,7 +40,7 @@ public class ExprMeta extends PropertyExpression<PermissionHolder, MetaNode> {
 						ExprMeta.class,
 						MetaNode.class,
 						"[custom] luckperm[s] meta",
-						"luckpermspermissionholder",
+						"luckpermspermissionholders",
 						false
 				)
 						.supplier(ExprMeta::new)
@@ -77,8 +77,8 @@ public class ExprMeta extends PropertyExpression<PermissionHolder, MetaNode> {
 
 	@Override
 	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
-		PermissionHolder holder = getExpr().getSingle(event);
-		if (holder == null)
+		PermissionHolder[] holders = getExpr().getArray(event);
+		if (holders == null)
 			return;
 
 		MetaNode meta = delta != null ? (MetaNode) delta[0] : null;
@@ -88,13 +88,29 @@ public class ExprMeta extends PropertyExpression<PermissionHolder, MetaNode> {
 
 		switch (mode) {
 			case SET -> {
-				holder.data().clear(NodeType.META::matches);
-				holder.data().add(meta);
+				for (PermissionHolder holder : holders) {
+					holder.data().clear(NodeType.META::matches);
+					holder.data().add(meta);
+				}
 			}
-			case ADD -> holder.data().add(meta);
-			case RESET -> holder.data().clear(NodeType.META::matches);
-			case REMOVE -> holder.data().remove(meta);
+			case ADD -> {
+				for (PermissionHolder holder : holders)
+					holder.data().add(meta);
+			}
+			case RESET -> {
+				for (PermissionHolder holder : holders)
+					holder.data().clear(NodeType.META::matches);
+			}
+			case REMOVE -> {
+				for (PermissionHolder holder : holders)
+					holder.data().remove(meta);
+			}
 		}
+	}
+
+	@Override
+	public boolean isSingle() {
+		return false;
 	}
 
 	@Override
@@ -104,7 +120,7 @@ public class ExprMeta extends PropertyExpression<PermissionHolder, MetaNode> {
 
 	@Override
 	public String toString(@Nullable Event event, boolean debug) {
-		return "custom luckperms meta of" + getExpr().toString(event, debug);
+		return "custom luckperms meta of " + getExpr().toString(event, debug);
 	}
 
 }

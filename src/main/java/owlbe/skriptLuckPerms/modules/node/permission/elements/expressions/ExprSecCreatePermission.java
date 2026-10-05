@@ -15,14 +15,15 @@ import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
 import net.luckperms.api.node.types.PermissionNode;
 import org.bukkit.event.Event;
-import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.bukkit.lang.eventvalue.EventValue;
 import org.skriptlang.skript.bukkit.lang.eventvalue.EventValueRegistry;
 import org.skriptlang.skript.registration.SyntaxInfo;
 import org.skriptlang.skript.registration.SyntaxRegistry;
-import owlbe.skriptLuckPerms.utils.wrapper.PermissionNodeWrapper;
+import owlbe.skriptLuckPerms.luckperms.wrapper.InheritanceNodeWrapper;
+import owlbe.skriptLuckPerms.luckperms.wrapper.PermissionNodeWrapper;
+import owlbe.skriptLuckPerms.utils.events.SectionEvent;
 
 import java.util.List;
 
@@ -69,7 +70,7 @@ public class ExprSecCreatePermission extends SectionExpression<PermissionNode> {
 		);
 
 		eventValueRegistry.register(EventValue.builder(PermissionSectionEvent.class, PermissionNodeWrapper.class)
-				.getter(event -> event.node)
+				.getter(PermissionSectionEvent::getNode)
 				.patterns("perm[ission] [node]")
 				.build());
 	}
@@ -85,7 +86,7 @@ public class ExprSecCreatePermission extends SectionExpression<PermissionNode> {
 
 		if (sectionNode != null) {
 			trigger = SectionUtils.loadLinkedCode("permission node section", (beforeLoading, afterLoading)
-					-> loadCode(sectionNode, "permission node section", beforeLoading, afterLoading, owlbe.skriptLuckPerms.modules.node.chatmeta.elements.expressions.ExprSecCreateChatMeta.ChatMetaSectionEvent.class));
+					-> loadCode(sectionNode, "permission node section", beforeLoading, afterLoading, PermissionSectionEvent.class));
 			return trigger != null;
 		}
 		return true;
@@ -100,6 +101,7 @@ public class ExprSecCreatePermission extends SectionExpression<PermissionNode> {
 		PermissionNodeWrapper wrapper = new PermissionNodeWrapper(key);
 
 		PermissionSectionEvent sectionEvent = new PermissionSectionEvent(wrapper);
+
 		if (trigger != null)
 			Variables.withLocalVariables(event, sectionEvent, () -> TriggerItem.walk(trigger, sectionEvent));
 
@@ -121,24 +123,25 @@ public class ExprSecCreatePermission extends SectionExpression<PermissionNode> {
 		if (key == null)
 			return "a new luckperms permission";
 
-		return "a new luckperms permission from key" + key.toString(event, debug);
+		return "a new luckperms permission from key " + key.toString(event, debug);
 	}
 
-	public static class PermissionSectionEvent extends Event {
+	public static class PermissionSectionEvent extends SectionEvent {
 
 		public PermissionNodeWrapper node;
 
-		public PermissionNode build() {
-			return node.build();
+		public @NotNull PermissionNodeWrapper getNode() {
+			return this.node;
 		}
 
 		public PermissionSectionEvent(PermissionNodeWrapper node) {
 			this.node = node;
 		}
 
-		@Override
-		public @NotNull HandlerList getHandlers() {
-			throw new IllegalStateException();
+		public PermissionNode build() {
+			PermissionNode node = this.node.build();
+			this.node = null;
+			return node;
 		}
 	}
 

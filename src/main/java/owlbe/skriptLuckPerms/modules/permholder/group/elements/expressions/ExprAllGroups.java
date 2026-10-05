@@ -15,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.registration.SyntaxInfo;
 import org.skriptlang.skript.registration.SyntaxRegistry;
 
-@Name("All Groups")
+@Name("All LuckPerms Groups")
 @Description("Returns a list of all LuckPerms groups.")
 @Example("""
 		command /getallgroups:

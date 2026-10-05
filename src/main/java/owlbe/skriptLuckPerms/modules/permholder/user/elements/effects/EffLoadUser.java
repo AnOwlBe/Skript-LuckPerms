@@ -20,11 +20,12 @@ import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.registration.SyntaxInfo;
 import org.skriptlang.skript.registration.SyntaxRegistry;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Name("Load User")
 @Description("""
 		Gets and loads a LuckPerms user from the given player.
-		
-		This is required for almost everything relating to users.
 		""")
 @Example("""
 		function example(p: offlineplayer):
@@ -38,13 +39,13 @@ public class EffLoadUser extends AsyncEffect {
 		syntaxRegistry.register(
 				SyntaxRegistry.EFFECT,
 				SyntaxInfo.builder(EffLoadUser.class)
-						.addPattern("set %-~objects% to luckperm[s] user [from] [player] %offlineplayer%")
+						.addPattern("set %-~objects% to luckperm[s] user [from] [player] %offlineplayers%")
 						.supplier(EffLoadUser::new)
 						.build()
 		);
 	}
 
-	private Expression<OfflinePlayer> player;
+	private Expression<OfflinePlayer> players;
 	private Expression<?> variable;
 
 	@Override
@@ -52,7 +53,7 @@ public class EffLoadUser extends AsyncEffect {
 	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		getParser().setHasDelayBefore(Kleenean.TRUE);
 
-		player = (Expression<OfflinePlayer>) expressions[1];
+		players = (Expression<OfflinePlayer>) expressions[1];
 		variable = expressions[0];
 
 		if (!ChangerUtils.acceptsChange(variable, ChangeMode.SET, User.class)) {
@@ -65,22 +66,26 @@ public class EffLoadUser extends AsyncEffect {
 
 	@Override
 	protected void execute(Event event) {
-		OfflinePlayer player = this.player.getSingle(event);
-		if (player == null)
+		OfflinePlayer[] players = this.players.getArray(event);
+		if (players == null)
 			return;
 
-		User user = LuckPermsProvider.get().getUserManager()
-				.loadUser(player.getUniqueId())
-				.join();
+		List<User> users = new ArrayList<>();
 
-		variable.change(event, new Object[]{user}, ChangeMode.SET);
+		for (OfflinePlayer player : players) {
+			users.add(LuckPermsProvider.get().getUserManager()
+					.loadUser(player.getUniqueId())
+					.join());
+		}
+
+		variable.change(event, users.toArray(new User[0]), ChangeMode.SET);
 	}
 
 	@Override
 	public String toString(@Nullable Event event, boolean debug) {
 		return new SyntaxStringBuilder(event, debug)
 				.append("set", variable)
-				.append("to luckperms user from", player)
+				.append("to luckperms user from", players)
 				.toString();
 	}
 

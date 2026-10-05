@@ -1,20 +1,21 @@
 package owlbe.skriptLuckPerms.modules.test;
 
+import ch.njol.skript.test.runner.SkriptJUnitTest;
 import ch.njol.skript.test.runner.TestMode;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.group.Group;
 import net.luckperms.api.model.user.User;
 import net.luckperms.api.track.Track;
+import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 import org.skriptlang.skript.addon.AddonModule;
 import org.skriptlang.skript.addon.HierarchicalAddonModule;
 import org.skriptlang.skript.addon.SkriptAddon;
+import owlbe.skriptLuckPerms.SkriptLuckPerms;
+import owlbe.skriptLuckPerms.modules.test.elements.conditions.CondAroundTimespan;
 import owlbe.skriptLuckPerms.modules.test.elements.expressions.ExprTestGroup;
 import owlbe.skriptLuckPerms.modules.test.elements.expressions.ExprTestTrack;
 import owlbe.skriptLuckPerms.modules.test.elements.expressions.ExprTestUser;
-
-import java.util.UUID;
-
 
 public class TestModule extends HierarchicalAddonModule {
 
@@ -33,6 +34,12 @@ public class TestModule extends HierarchicalAddonModule {
 
 	@Override
 	public void loadSelf(SkriptAddon addon) {
+		SkriptJUnitTest.setShutdownDelay(100);
+
+		user = LuckPermsProvider.get().getUserManager()
+				.loadUser((Bukkit.getOfflinePlayer("SkriptLang").getUniqueId()))
+				.join();
+
 		group = LuckPermsProvider.get().getGroupManager()
 				.createAndLoadGroup("test")
 				.join();
@@ -41,11 +48,8 @@ public class TestModule extends HierarchicalAddonModule {
 				.createAndLoadTrack("test")
 				.join();
 
-		user = LuckPermsProvider.get().getUserManager()
-				.loadUser(UUID.fromString("069a79f4-44e9-4726-a5be-fca90e38aaf5"))
-				.join();
-
 		register(addon,
+				CondAroundTimespan::register,
 				ExprTestGroup::register,
 				ExprTestTrack::register,
 				ExprTestUser::register

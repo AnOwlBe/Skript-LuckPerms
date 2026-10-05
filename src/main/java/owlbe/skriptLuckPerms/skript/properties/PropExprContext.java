@@ -2,11 +2,12 @@ package owlbe.skriptLuckPerms.skript.properties;
 
 import ch.njol.skript.doc.*;
 import ch.njol.skript.expressions.base.PropertyExpression;
-import org.jspecify.annotations.NonNull;
+import org.jetbrains.annotations.NotNull;
 import org.skriptlang.skript.lang.properties.Property;
 import org.skriptlang.skript.lang.properties.PropertyBaseExpression;
 import org.skriptlang.skript.lang.properties.handlers.base.ExpressionPropertyHandler;
 import org.skriptlang.skript.registration.SyntaxRegistry;
+import owlbe.skriptLuckPerms.utils.PropertyUtils;
 
 import static owlbe.skriptLuckPerms.skript.properties.Properties.CONTEXT;
 
@@ -28,9 +29,9 @@ public class PropExprContext extends PropertyBaseExpression<ExpressionPropertyHa
 	}
 
 	@Override
-	@SuppressWarnings("DataFlowIssue") // won't be null
-	public @NonNull Property<ExpressionPropertyHandler<?, ?>> getProperty() {
-		return Properties.getProperty(CONTEXT);
+	@SuppressWarnings({"DataFlowIssue"}) // won't be null
+	public @NotNull Property<ExpressionPropertyHandler<?, ?>> getProperty() {
+		return PropertyUtils.getProperty(CONTEXT, ExpressionPropertyHandler.class);
 	}
 
 }

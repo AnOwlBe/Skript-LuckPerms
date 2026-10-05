@@ -53,7 +53,7 @@ public class ExprSuffix extends PropertyExpression<PermissionHolder, ChatMetaNod
 						ExprSuffix.class,
 						ChatMetaNode.class,
 						"luckperm[s] suffix[plural:es]",
-						"luckpermspermissionholder",
+						"luckpermspermissionholders",
 						false
 				)
 						.supplier(ExprSuffix::new)
@@ -100,11 +100,9 @@ public class ExprSuffix extends PropertyExpression<PermissionHolder, ChatMetaNod
 
 	@Override
 	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
-		PermissionHolder holder = getExpr().getSingle(event);
-		if (holder == null)
+		PermissionHolder[] holders = getExpr().getArray(event);
+		if (holders == null)
 			return;
-
-		NodeMap data = holder.data();
 
 		ChatMetaNode<?, ?> node = delta != null ? (ChatMetaNode<?, ?>) delta[0] : null;
 
@@ -114,25 +112,30 @@ public class ExprSuffix extends PropertyExpression<PermissionHolder, ChatMetaNod
 					return;
 
 				if (plural) {
-					data.clear(NodeType.SUFFIX::matches);
-
-					data.add(node);
+					for (PermissionHolder holder : holders) {
+						holder.data().clear(NodeType.SUFFIX::matches);
+						holder.data().add(node);
+					}
 				} else {
-					int priority = holder.getNodes(NodeType.SUFFIX).stream()
-							.mapToInt(SuffixNode::getPriority)
-							.max()
-							.orElse(0);
+					for (PermissionHolder holder : holders) {
+						NodeMap data = holder.data();
 
-					holder.getNodes(NodeType.SUFFIX).stream()
-							.max(Comparator.comparingInt(SuffixNode::getPriority))
-							.ifPresent(data::remove);
+						int priority = holder.getNodes(NodeType.SUFFIX).stream()
+								.mapToInt(SuffixNode::getPriority)
+								.max()
+								.orElse(0);
 
-					SuffixNode newNode = SuffixNode.builder(node.getMetaValue(), priority)
-							.context(node.getContexts())
-							.expiry(node.getExpiry())
-							.build();
+						holder.getNodes(NodeType.SUFFIX).stream()
+								.max(Comparator.comparingInt(SuffixNode::getPriority))
+								.ifPresent(data::remove);
 
-					data.add(newNode);
+						SuffixNode newNode = SuffixNode.builder(node.getMetaValue(), priority)
+								.context(node.getContexts())
+								.expiry(node.getExpiry())
+								.build();
+
+						data.add(newNode);
+					}
 				}
 			}
 			case ADD -> {
@@ -144,17 +147,22 @@ public class ExprSuffix extends PropertyExpression<PermissionHolder, ChatMetaNod
 				if (node == null)
 					return;
 
-				data.add(node);
+				for (PermissionHolder holder : holders)
+					holder.data().add(node);
 			}
 			case RESET -> {
-				if (!plural) {
-					holder.getNodes(NodeType.SUFFIX).stream()
-							.max(Comparator.comparingInt(SuffixNode::getPriority))
-							.ifPresent(data::remove);
-					return;
-				}
+				for (PermissionHolder holder : holders) {
+					NodeMap data = holder.data();
 
-				data.clear(NodeType.SUFFIX::matches);
+					if (!plural) {
+						holder.getNodes(NodeType.SUFFIX).stream()
+								.max(Comparator.comparingInt(SuffixNode::getPriority))
+								.ifPresent(data::remove);
+						continue;
+					}
+
+					data.clear(NodeType.SUFFIX::matches);
+				}
 			}
 			case REMOVE -> {
 				if (!plural) {
@@ -165,7 +173,8 @@ public class ExprSuffix extends PropertyExpression<PermissionHolder, ChatMetaNod
 				if (node == null)
 					return;
 
-				data.remove(node);
+				for (PermissionHolder holder : holders)
+					holder.data().remove(node);
 			}
 		}
 	}

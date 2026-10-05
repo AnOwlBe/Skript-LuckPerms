@@ -59,6 +59,7 @@ public class EffPermissionMembers extends AsyncEffect {
 			Skript.error(variable.toString(null, Skript.debug()) + " cannot be set to UUIDS.");
 			return false;
 		}
+
 		return true;
 	}
 
@@ -71,6 +72,7 @@ public class EffPermissionMembers extends AsyncEffect {
 		var results = LuckPermsProvider.get().getUserManager()
 				.searchAll(NodeMatcher.key(Node.builder(permission.getKey()).build()))
 				.join();
+
 		variable.change(event, results.keySet().toArray(), ChangeMode.SET);
 
 	}

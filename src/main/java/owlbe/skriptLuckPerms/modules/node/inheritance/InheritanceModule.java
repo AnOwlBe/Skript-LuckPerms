@@ -1,5 +1,6 @@
 package owlbe.skriptLuckPerms.modules.node.inheritance;
 
+import ch.njol.skript.registrations.Classes;
 import org.skriptlang.skript.addon.AddonModule;
 import org.skriptlang.skript.addon.HierarchicalAddonModule;
 import org.skriptlang.skript.addon.SkriptAddon;
@@ -14,6 +15,8 @@ public class InheritanceModule extends HierarchicalAddonModule {
 
 	@Override
 	public void initSelf(SkriptAddon addon) {
+		Classes.registerClass(new InheritanceClassInfo());
+		Classes.registerClass(new InheritanceWrapperClassInfo());
 	}
 
 	@Override

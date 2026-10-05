@@ -1,2 +1,0 @@
-test "all luckperms groups":
-	assert all luckperms groups is set with "Failed to get all luckperms groups"

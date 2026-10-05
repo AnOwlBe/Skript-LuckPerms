@@ -19,12 +19,10 @@ import org.skriptlang.skript.registration.SyntaxInfo;
 import org.skriptlang.skript.registration.SyntaxRegistry;
 import owlbe.skriptLuckPerms.modules.permholder.elements.sections.SecEditHolder.HolderSectionEvent;
 
-import static owlbe.skriptLuckPerms.modules.permholder.user.UserUtils.getUser;
-
 @Name("Demote User")
 @Description("""
-	 Demotes a user along a track.
-	 If the user is not on the track nothing will happen.
+	 Demotes the provided user(s) along the provided track(s).
+	 If provided user(s) aren't not on the provided track(s) nothing will happen.
 	 """)
 @Example("""
 function example(p: offlineplayer,track: string):
@@ -34,20 +32,20 @@ function example(p: offlineplayer,track: string):
 	if {_p} is online:
 		send "You were demoted on track %{_track}%!" to {_p}
 		""")
-@Since({"1.0", "INSERT VERSION (demote luckperms user)"})
+@Since("INSERT VERSION")
 public class EffDemoteUser extends Effect {
 
 	public static void register(SyntaxRegistry syntaxRegistry) {
 		syntaxRegistry.register(
 				SyntaxRegistry.EFFECT,
 				SyntaxInfo.builder(EffDemoteUser.class)
-						.addPattern("demote luckperm[s] user [%-luckpermsuser%] (along|on) [luckperm[s]] track %luckpermstrack%")
+						.addPattern("demote luckperm[s] user[s] %luckpermsusers% (along|on) [luckperm[s]] track[s] %luckpermstracks%")
 						.build()
 		);
 	}
 
-	private Expression<Track> track;
-	private Expression<User> user;
+	private Expression<Track> tracks;
+	private Expression<User> users;
 
 	@Override
 	@SuppressWarnings("unchecked")
@@ -57,26 +55,28 @@ public class EffDemoteUser extends Effect {
 			return false;
 		}
 
-		if (expressions[0] != null)
-			user = (Expression<User>) expressions[0];
-		track = (Expression<Track>) expressions[1];
+		users = (Expression<User>) expressions[0];
+		tracks = (Expression<Track>) expressions[1];
 		return true;
 	}
 
 	@Override
 	protected void execute(Event event) {
-		Track track = this.track.getSingle(event);
-		User user = getUser(event, this.user);
-		if (track == null || user == null)
+		Track[] tracks = this.tracks.getArray(event);
+		User[] users = this.users.getArray(event);
+		if (tracks == null || users == null)
 			return;
 
-		track.demote(user, ImmutableContextSet.empty());
+		for (User user : users) {
+			for (Track track : tracks)
+				track.demote(user, ImmutableContextSet.empty());
+		}
 	}
 
 	@Override
 	public String toString(@Nullable Event event, boolean debug) {
 		return new SyntaxStringBuilder(event, debug)
-				.append("demote luckperms ", user, "on luckperms track", track)
+				.append("demote luckperms users ", users, "on luckperms tracks", tracks)
 				.toString();
 	}
 

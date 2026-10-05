@@ -25,7 +25,7 @@ public class EvtGroupAdd extends SkriptEvent {
 		syntaxRegistry.register(BukkitSyntaxInfos.Event.KEY, BukkitSyntaxInfos.Event.builder(EvtGroupAdd.class, "Group Add")
 				.supplier(EvtGroupAdd::new)
 				.addEvent(GroupAddEvent.class)
-				.addPattern("[luckperm[s]] group added [to [luckperm[s]] (:group|:user)]")
+				.addPattern("[luckperm[s]] (group|inheritance [node]) added [to [luckperm[s]] (:group|:user)]")
 				.addDescription("""
 				Called when a group is added to a permission holder (a user or group).
 				

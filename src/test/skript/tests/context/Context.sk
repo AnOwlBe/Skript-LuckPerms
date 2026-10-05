@@ -1,0 +1,8 @@
+# tests for ExprContext and ExprContextKey
+test "context":
+
+	set {_context} to a new luckperms context with key "world" and value "test"
+
+	assert {_context} is set with "Failed to create luckperms context from key 'world' with value 'the_nether'"
+
+	assert context key of {_context} is "world" with "Failed to get context key from context"

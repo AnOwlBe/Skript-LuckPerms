@@ -19,8 +19,6 @@ import org.skriptlang.skript.registration.SyntaxInfo;
 import org.skriptlang.skript.registration.SyntaxRegistry;
 import owlbe.skriptLuckPerms.modules.permholder.elements.sections.SecEditHolder;
 
-import static owlbe.skriptLuckPerms.modules.permholder.user.UserUtils.getUser;
-
 @Name("Promote User")
 @Description("""
 	 Promotes a user along a track.
@@ -41,43 +39,46 @@ public class EffPromoteUser extends Effect {
 		syntaxRegistry.register(
 				SyntaxRegistry.EFFECT,
 				SyntaxInfo.builder(EffPromoteUser.class)
-						.addPattern("promote luckperm[s] user [%-luckpermsuser%] (along|on) [luckperm[s]] track %luckpermstrack%")
+						.addPattern("promote luckperm[s] user[s] %luckpermsusers% (along|on) [luckperm[s]] track[s] %luckpermstracks%")
 						.build()
 		);
 	}
 
-	private Expression<Track> track;
-	private Expression<User> user;
+	private Expression<Track> tracks;
+	private Expression<User> users;
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		if (!getParser().isCurrentEvent(SecEditHolder.HolderSectionEvent.class)) {
-			Skript.error("This can only be used inside an 'edit user' section");
+			Skript.error("You can only promote a user inside a 'edit permission holder' section");
 			return false;
 		}
 
-		if (expressions[0] != null)
-			user = (Expression<User>) expressions[0];
-		track = (Expression<Track>) expressions[1];
+
+		users = (Expression<User>) expressions[0];
+		tracks  = (Expression<Track>) expressions[1];
 		return true;
 	}
 
 	@Override
 	protected void execute(Event event) {
-		Track track = this.track.getSingle(event);
-		User user = getUser(event, this.user);
-		if (track == null || user == null)
+		Track[] tracks = this.tracks.getArray(event);
+		User[] users = this.users.getArray(event);
+		if (tracks == null || users == null)
 			return;
 
-		track.promote(user, ImmutableContextSet.empty());
+		for (User user : users) {
+			for (Track track : tracks)
+				track.promote(user, ImmutableContextSet.empty());
+		}
 	}
 
 	@Override
 	public String toString(@Nullable Event event, boolean debug) {
 		return new SyntaxStringBuilder(event, debug)
-				.append("promote luckperms user", user)
-				.append("on track", track)
+				.append("promote luckperms users", users)
+				.append("on tracks", tracks)
 				.toString();
 	}
 

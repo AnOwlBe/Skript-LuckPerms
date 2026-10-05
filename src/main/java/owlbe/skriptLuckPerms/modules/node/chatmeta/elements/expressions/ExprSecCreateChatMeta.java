@@ -17,14 +17,13 @@ import ch.njol.util.Kleenean;
 import net.luckperms.api.node.ChatMetaType;
 import net.luckperms.api.node.types.ChatMetaNode;
 import org.bukkit.event.Event;
-import org.bukkit.event.HandlerList;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.bukkit.lang.eventvalue.EventValue;
 import org.skriptlang.skript.bukkit.lang.eventvalue.EventValueRegistry;
 import org.skriptlang.skript.registration.SyntaxInfo;
 import org.skriptlang.skript.registration.SyntaxRegistry;
-import owlbe.skriptLuckPerms.utils.wrapper.ChatMetaNodeWrapper;
+import owlbe.skriptLuckPerms.luckperms.wrapper.ChatMetaNodeWrapper;
+import owlbe.skriptLuckPerms.utils.events.SectionEvent;
 
 import java.util.List;
 
@@ -98,13 +97,12 @@ public class ExprSecCreateChatMeta extends SectionExpression<ChatMetaNode> {
 
 	@Override
 	protected ChatMetaNode @Nullable [] get(Event event) {
-		ChatMetaNodeWrapper wrapper = new ChatMetaNodeWrapper(type);
 		String value = this.value.getSingle(event);
-		if (value != null)
-			wrapper.setValue(value);
 
+		ChatMetaNodeWrapper wrapper = new ChatMetaNodeWrapper(type, value);
 
 		ChatMetaSectionEvent sectionEvent = new ChatMetaSectionEvent(wrapper);
+
 		if (trigger != null)
 			Variables.withLocalVariables(event, sectionEvent, () -> TriggerItem.walk(trigger, sectionEvent));
 
@@ -129,7 +127,7 @@ public class ExprSecCreateChatMeta extends SectionExpression<ChatMetaNode> {
 				.toString();
 	}
 
-	public static class ChatMetaSectionEvent extends Event {
+	public static class ChatMetaSectionEvent extends SectionEvent {
 
 		public ChatMetaNodeWrapper node;
 
@@ -137,17 +135,14 @@ public class ExprSecCreateChatMeta extends SectionExpression<ChatMetaNode> {
 			return this.node;
 		}
 
-		public ChatMetaNode build() {
-			return node.build();
-		}
-
 		public ChatMetaSectionEvent(ChatMetaNodeWrapper node) {
 			this.node = node;
 		}
 
-		@Override
-		public @NotNull HandlerList getHandlers() {
-			throw new IllegalStateException();
+		public ChatMetaNode build() {
+			ChatMetaNode node = this.node.build();
+			this.node = null;
+			return node;
 		}
 	}
 

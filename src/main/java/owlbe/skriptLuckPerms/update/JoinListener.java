@@ -5,8 +5,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import owlbe.skriptLuckPerms.SkriptLuckPerms;
 
-import static owlbe.skriptLuckPerms.SkriptLuckPerms.instance;
 import static owlbe.skriptLuckPerms.utils.MiniMessageUtils.minimessage;
 
 // Credit to
@@ -21,7 +21,7 @@ public class JoinListener implements Listener {
 		if (!player.hasPermission("skriptluckperms.updates.view"))
 			return;
 
-		Bukkit.getScheduler().runTaskLater(instance, () ->
+		Bukkit.getScheduler().runTaskLater(SkriptLuckPerms.getPluginInstance(), () ->
 				UpdateChecker.getUpdateVersion(true).thenAccept(version -> {
 					player.sendMessage(minimessage("<dark_gray>[<shadow:#63FFA4:0.3><gradient:#63FFA4:#9CFFC5:#63FFA4><b>SKRIPT-LUCKPERMS<reset><dark_gray>] <reset><white>There is a newer version of Skript-LuckPerms:"));
 					player.sendMessage(minimessage("<shadow:#63FFA4:0.3><#63FFA4>⚑ <reset><white>Version: <shadow:#63FFA4:0.3><#63FFA4>" + version.getUpdateVersion()));

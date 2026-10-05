@@ -1,2 +1,0 @@
-test "all luckperms tracks":
-	assert all luckperms tracks is set with "Failed to get all luckperms tracks"

@@ -27,6 +27,7 @@ import java.util.UUID;
 @Name("Group Members")
 @Description(""" 
 		 Returns a list of UUIDS of users who have the specified group.
+		 
 		 Should be relatively fast depending on how many users have said group.
 		 """)
 @Example("""
@@ -61,6 +62,7 @@ public class EffGroupMembers extends AsyncEffect {
 			Skript.error(variable.toString(null, Skript.debug()) + " cannot be set to multiple UUIDS.");
 			return false;
 		}
+
 		return true;
 	}
 

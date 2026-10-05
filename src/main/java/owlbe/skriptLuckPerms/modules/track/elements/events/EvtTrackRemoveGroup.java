@@ -58,7 +58,7 @@ public class EvtTrackRemoveGroup extends SkriptEvent {
 			this.group = (Expression<Group>) args[0];
 
 		if (args[1] != null)
-			track = (Expression<Track>) args[0];
+			track = (Expression<Track>) args[1];
 
 		return true;
 	}

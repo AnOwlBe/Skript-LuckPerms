@@ -17,15 +17,15 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.properties.handlers.base.ExpressionPropertyHandler;
 import org.skriptlang.skript.log.runtime.RuntimeErrorProducer;
+import owlbe.skriptLuckPerms.SkriptLuckPerms;
 import owlbe.skriptLuckPerms.modules.permholder.elements.sections.SecEditHolder.HolderSectionEvent;
 
 import static org.skriptlang.skript.lang.properties.Property.DISPLAY_NAME;
 import static org.skriptlang.skript.lang.properties.Property.NAME;
-import static owlbe.skriptLuckPerms.SkriptLuckPerms.addon;
 import static owlbe.skriptLuckPerms.skript.properties.Properties.WEIGHT;
-import static owlbe.skriptLuckPerms.skript.properties.Properties.getProperty;
+import static owlbe.skriptLuckPerms.utils.PropertyUtils.getProperty;
 
-@SuppressWarnings({"UnstableApiUsage", "unchecked"})
+@SuppressWarnings({"UnstableApiUsage"})
 public class GroupClassInfo extends ClassInfo<Group> {
 
 	public GroupClassInfo() {
@@ -36,17 +36,17 @@ public class GroupClassInfo extends ClassInfo<Group> {
 				.since("1.0")
 				.parser(new GroupParser())
 				.defaultExpression(new EventValueExpression<>(Group.class))
-				.property(getProperty(WEIGHT),
+				.property(getProperty(WEIGHT, ExpressionPropertyHandler.class),
 						"The weight of this group. Can be changed.",
-						addon,
+						SkriptLuckPerms.getAddonInstance(),
 						new GroupWeightHandler())
 				.property(NAME,
 						"The name of this group.",
-						addon,
+						SkriptLuckPerms.getAddonInstance(),
 						new GroupNameHandler())
 				.property(DISPLAY_NAME,
 						"The display name of this group, if it has one that differs from it's actual name. Can be set or reset.",
-						addon,
+						SkriptLuckPerms.getAddonInstance(),
 						new GroupDisplayNameHandler());
 
 	}

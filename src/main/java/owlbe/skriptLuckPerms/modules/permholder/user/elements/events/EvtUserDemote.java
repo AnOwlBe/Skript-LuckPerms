@@ -73,9 +73,8 @@ public class EvtUserDemote extends SkriptEvent {
 
 		boolean trackMatched = true;
 
-		if (this.track != null) {
+		if (this.track != null)
 			trackMatched = this.track.check(event, track -> track.equals(userEvent.getTrack()));
-		}
 
 		return trackMatched;
 	}
@@ -84,7 +83,7 @@ public class EvtUserDemote extends SkriptEvent {
 	public String toString(@Nullable Event event, boolean debug) {
 		return new SyntaxStringBuilder(event, debug)
 				.append("user demoted")
-				.appendIf(track != null, "on track ", track)
+				.appendIf(track != null, "on track", track)
 				.toString();
 	}
 

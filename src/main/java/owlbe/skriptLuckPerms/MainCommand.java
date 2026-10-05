@@ -11,10 +11,15 @@ import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
+import org.skriptlang.skript.addon.SkriptAddon;
+import org.skriptlang.skript.bukkit.lang.eventvalue.EventValueRegistry;
+import org.skriptlang.skript.registration.SyntaxInfo;
+import org.skriptlang.skript.registration.SyntaxRegistry;
+import owlbe.skriptLuckPerms.modules.node.permission.elements.expressions.ExprSecCreatePermission;
+import owlbe.skriptLuckPerms.utils.SyntaxUtils;
 
 import java.util.List;
 
-import static owlbe.skriptLuckPerms.SkriptLuckPerms.instance;
 import static owlbe.skriptLuckPerms.utils.MiniMessageUtils.PREFIX;
 import static owlbe.skriptLuckPerms.utils.MiniMessageUtils.sendMessage;
 
@@ -56,10 +61,24 @@ public final class MainCommand {
 		if (updater != null)
 			flavor = updater.getCurrentRelease().flavor;
 
+		SkriptAddon addon = SkriptLuckPerms.getAddonInstance();
+
 		sendMessage(sender, "<shadow:#63FFA4:0.3><#63FFA4><b>| <reset><white>Skript Version: " + Skript.getVersion() + " " + flavor);
 
-		String version = instance.getPluginMeta().getVersion();
+		String version = SkriptLuckPerms.getPluginInstance().getPluginMeta().getVersion();
 		sendMessage(sender, "<shadow:#63FFA4:0.3><#63FFA4><b>| <reset><white>Plugin Version: " + version);
+
+		sendMessage(sender, "<shadow:#63FFA4:0.3><#63FFA4><b>| <reset>There are " + SyntaxUtils.getTotalAmount(addon) + " total loaded elements:");
+
+		long propertyCount = SyntaxUtils.getPropertyAmount(addon);
+
+		sendMessage(sender, "<shadow:#63FFA4:0.3><#63FFA4><b>| <reset>- 14 Types"); // Until skript implements a registry for ClassInfo
+		for (SyntaxRegistry.Key<? extends SyntaxInfo<?>> syntaxKey : SyntaxUtils.SYNTAX_KEYS) {
+			long amount = SyntaxUtils.getAmount(addon, syntaxKey);
+			sendMessage(sender, "<shadow:#63FFA4:0.3><#63FFA4><b>| <reset>- " + amount + " " + SyntaxUtils.formatKeyName(syntaxKey, amount));
+		}
+
+		sendMessage(sender, "<shadow:#63FFA4:0.3><#63FFA4><b>| <reset>- " + propertyCount + " " + (propertyCount == 1 ? "Property" : "Properties"));
 
 	}
 }

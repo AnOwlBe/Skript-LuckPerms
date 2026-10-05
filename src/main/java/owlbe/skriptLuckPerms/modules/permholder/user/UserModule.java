@@ -4,18 +4,25 @@ import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Parser;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
+import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 import org.skriptlang.skript.addon.AddonModule;
 import org.skriptlang.skript.addon.HierarchicalAddonModule;
 import org.skriptlang.skript.addon.SkriptAddon;
 import org.skriptlang.skript.bukkit.lang.eventvalue.EventValueRegistry;
+import org.skriptlang.skript.lang.converter.Converter;
+import org.skriptlang.skript.lang.converter.Converters;
 import owlbe.skriptLuckPerms.modules.permholder.user.elements.conditions.CondIsLoaded;
 import owlbe.skriptLuckPerms.modules.permholder.user.elements.effects.*;
 import owlbe.skriptLuckPerms.modules.permholder.user.elements.events.EvtUserDemote;
 import owlbe.skriptLuckPerms.modules.permholder.user.elements.events.EvtUserPromote;
 import owlbe.skriptLuckPerms.modules.permholder.user.elements.expressions.ExprAllUsers;
+import owlbe.skriptLuckPerms.modules.permholder.user.elements.expressions.ExprHighestGroup;
+import owlbe.skriptLuckPerms.modules.permholder.user.elements.expressions.ExprLoadedUser;
 import owlbe.skriptLuckPerms.modules.permholder.user.elements.expressions.ExprPlayerFromUser;
-import owlbe.skriptLuckPerms.modules.permholder.user.elements.expressions.ExprQuickUser;
 
 import javax.annotation.Nullable;
 
@@ -62,8 +69,9 @@ public class UserModule extends HierarchicalAddonModule {
 		register(addon,
 				CondIsLoaded::register,
 				ExprAllUsers::register,
+				ExprHighestGroup::register,
 				ExprPlayerFromUser::register,
-				ExprQuickUser::register,
+				ExprLoadedUser::register,
 				EffDemoteUser::register,
 				EffGroupMembers::register,
 				EffLoadUser::register,
@@ -72,6 +80,9 @@ public class UserModule extends HierarchicalAddonModule {
 				syntaxRegistry -> EvtUserPromote.register(syntaxRegistry, eventValueRegistry),
 				syntaxRegistry -> EvtUserDemote.register(syntaxRegistry, eventValueRegistry)
 				);
+
+		Converters.registerConverter(Player.class, User.class, player -> LuckPermsProvider.get().getUserManager().getUser(player.getUniqueId()), Converter.NO_RIGHT_CHAINING);
+		Converters.registerConverter(User.class, OfflinePlayer.class, user -> Bukkit.getOfflinePlayer(user.getUniqueId()), Converter.NO_RIGHT_CHAINING);
 	}
 
 	@Override

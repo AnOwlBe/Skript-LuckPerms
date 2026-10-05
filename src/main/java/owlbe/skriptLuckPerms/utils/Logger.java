@@ -4,6 +4,9 @@ import org.bukkit.Bukkit;
 
 import static owlbe.skriptLuckPerms.utils.MiniMessageUtils.minimessage;
 
+/**
+ * Logging utilities
+ */
 public final class Logger {
 
 	private Logger() {

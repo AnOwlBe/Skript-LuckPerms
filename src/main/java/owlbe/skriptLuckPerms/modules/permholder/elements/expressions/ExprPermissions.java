@@ -42,7 +42,7 @@ public class ExprPermissions extends PropertyExpression<PermissionHolder, Permis
 						ExprPermissions.class,
 						PermissionNode.class,
 						"luckperm[s] perm[ission]s",
-						"luckpermspermissionholder",
+						"luckpermspermissionholders",
 						false
 				)
 						.supplier(ExprPermissions::new)
@@ -67,7 +67,7 @@ public class ExprPermissions extends PropertyExpression<PermissionHolder, Permis
 	@Override
 	public Class<?> @Nullable [] acceptChange(ChangeMode mode) {
 		if (!getParser().isCurrentEvent(HolderSectionEvent.class)) {
-			Skript.error("You can only change the permissions of a holder inside an 'edit permission holder' section");
+			Skript.error("You can only change the permissions of a holder inside a 'edit permission holder' section");
 			return null;
 		}
 
@@ -79,8 +79,8 @@ public class ExprPermissions extends PropertyExpression<PermissionHolder, Permis
 
 	@Override
 	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
-		PermissionHolder holder = getExpr().getSingle(event);
-		if (holder == null)
+		PermissionHolder[] holders = getExpr().getArray(event);
+		if (holders == null)
 			return;
 
 		PermissionNode permission = delta != null ? (PermissionNode) delta[0] : null;
@@ -90,15 +90,30 @@ public class ExprPermissions extends PropertyExpression<PermissionHolder, Permis
 
 		switch (mode) {
 			case SET -> {
-				holder.data().clear(NodeType.PERMISSION::matches);
-				holder.data().add(permission);
+				for (PermissionHolder holder : holders) {
+					holder.data().clear(NodeType.PERMISSION::matches);
+					holder.data().add(permission);
+				}
 			}
-			case ADD -> holder.data().add(permission);
-			case RESET -> holder.data().clear(NodeType.PERMISSION::matches);
-			case REMOVE -> holder.data().remove(permission);
+			case ADD -> {
+				for (PermissionHolder holder : holders)
+					holder.data().add(permission);
+			}
+			case RESET -> {
+				for (PermissionHolder holder : holders)
+					holder.data().clear(NodeType.PERMISSION::matches);
+			}
+			case REMOVE -> {
+				for (PermissionHolder holder : holders)
+					holder.data().remove(permission);
+			}
 		}
 	}
 
+	@Override
+	public boolean isSingle() {
+		return false;
+	}
 
 	@Override
 	public Class<? extends PermissionNode> getReturnType() {
@@ -107,7 +122,7 @@ public class ExprPermissions extends PropertyExpression<PermissionHolder, Permis
 
 	@Override
 	public String toString(@Nullable Event event, boolean debug) {
-		return "luckperms permissions of" + getExpr().toString(event, debug);
+		return "luckperms permissions of " + getExpr().toString(event, debug);
 	}
 
 }

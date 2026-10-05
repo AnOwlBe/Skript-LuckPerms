@@ -1,21 +1,31 @@
 package owlbe.skriptLuckPerms.modules.node.meta;
 
+import ch.njol.skript.Skript;
+import ch.njol.skript.classes.Changer;
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Parser;
+import ch.njol.skript.classes.Serializer;
 import ch.njol.skript.lang.ParseContext;
+import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.skript.util.Timespan;
+import ch.njol.yggdrasil.Fields;
 import net.luckperms.api.node.types.MetaNode;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.properties.handlers.TypedValueHandler;
+import org.skriptlang.skript.lang.properties.handlers.base.ExpressionPropertyHandler;
+import owlbe.skriptLuckPerms.SkriptLuckPerms;
+import owlbe.skriptLuckPerms.modules.node.NodeUtils;
+import owlbe.skriptLuckPerms.modules.node.meta.elements.expressions.ExprSecCreateMeta.MetaSectionEvent;
+import owlbe.skriptLuckPerms.utils.TimeUtils;
 
-import javax.annotation.Nullable;
-import java.time.Duration;
+import java.io.StreamCorruptedException;
 
 import static org.skriptlang.skript.lang.properties.Property.TYPED_VALUE;
-import static owlbe.skriptLuckPerms.SkriptLuckPerms.addon;
-import static owlbe.skriptLuckPerms.skript.properties.Properties.getProperty;
+import static owlbe.skriptLuckPerms.skript.properties.Properties.EXPIRY;
+import static owlbe.skriptLuckPerms.utils.PropertyUtils.getProperty;
 
-@SuppressWarnings({"UnstableApiUsage", "unchecked"})
+@SuppressWarnings({"UnstableApiUsage"})
 public class MetaNodeClassInfo extends ClassInfo<MetaNode> {
 
 	public MetaNodeClassInfo() {
@@ -25,18 +35,21 @@ public class MetaNodeClassInfo extends ClassInfo<MetaNode> {
 				.description("Represents a LuckPerms meta node.")
 				.since("INSERT VERSION")
 				.parser(new MetaNodeParser())
-				.property(getProperty(TYPED_VALUE),
+				.serializer(new MetaSerializer())
+				.property(getProperty(TYPED_VALUE, ExpressionPropertyHandler.class),
 						"The value of this meta node.",
-						addon,
-						new MetaNodeValueHandler()
-				);
+						SkriptLuckPerms.getAddonInstance(),
+						new MetaNodeValueHandler())
+				.property(getProperty(EXPIRY, ExpressionPropertyHandler.class),
+						"The expiry of this meta node.",
+						SkriptLuckPerms.getAddonInstance(),
+						new MetaNodeExpiryHandler());
 	}
 
 	private static class MetaNodeParser extends Parser<MetaNode> {
 		//<editor-fold desc="meta node parser" defaultstate="collapsed">
 		@Override
-		@Nullable
-		public MetaNode parse(String string, ParseContext context) {
+		public @Nullable MetaNode parse(String string, ParseContext context) {
 			return null;
 		}
 
@@ -47,13 +60,13 @@ public class MetaNodeClassInfo extends ClassInfo<MetaNode> {
 
 		@Override
 		public String toString(MetaNode node, int flags) {
-			Duration duration = node.getExpiryDuration();
 			String key = node.getKey();
-			if (duration == null || duration.toMillis() == 0)
-				return "meta node with key '" + key + "' and value" + node.getMetaValue();
+			String metaValue = node.getMetaValue();
 
-			Timespan timespan = new Timespan(duration.toMillis());
-			return "meta node with key '" + key + "' and value" + node.getMetaValue() + "and duration" + timespan;
+			if (node.getExpiry() != null)
+				return "meta node with key '" + key + "' and value '" + metaValue + "' and expiry " + TimeUtils.fromInstant(node.getExpiry());
+
+			return "meta node with key '" + key + "' and value ' " + node.getMetaValue() + "'";
 		}
 
 		@Override
@@ -61,6 +74,35 @@ public class MetaNodeClassInfo extends ClassInfo<MetaNode> {
 			return node.getKey();
 		}
 
+		//</editor-fold>
+	}
+
+	private static class MetaSerializer extends Serializer<MetaNode> {
+		//<editor-fold desc="meta node serializer" defaultstate="collapsed">
+		@Override
+		public Fields serialize(MetaNode node) {
+			return NodeUtils.serialize(node);
+		}
+
+		@Override
+		public void deserialize(MetaNode node, Fields fields) {
+			assert false;
+		}
+
+		@Override
+		protected MetaNode deserialize(Fields fields) throws StreamCorruptedException {
+			return NodeUtils.deserialize(fields) instanceof MetaNode node ? node : null;
+		}
+
+		@Override
+		public boolean mustSyncDeserialization() {
+			return true;
+		}
+
+		@Override
+		public boolean canBeInstantiated() {
+			return false;
+		}
 		//</editor-fold>
 	}
 
@@ -75,6 +117,24 @@ public class MetaNodeClassInfo extends ClassInfo<MetaNode> {
 		@Override
 		public @NotNull Class<String> returnType() {
 			return String.class;
+		}
+		//</editor-fold>
+	}
+
+	private static class MetaNodeExpiryHandler implements ExpressionPropertyHandler<MetaNode, Timespan> {
+		//<editor-fold desc="meta node expiry handler" defaultstate="collapsed">
+
+		@Override
+		public @Nullable Timespan convert(MetaNode node) {
+			if (node.getExpiry() != null)
+				return TimeUtils.fromInstant(node.getExpiry());
+
+			return null;
+		}
+
+		@Override
+		public @NotNull Class<Timespan> returnType() {
+			return Timespan.class;
 		}
 		//</editor-fold>
 	}

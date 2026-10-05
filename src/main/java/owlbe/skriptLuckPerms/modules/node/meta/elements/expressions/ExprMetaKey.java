@@ -1,7 +1,5 @@
 package owlbe.skriptLuckPerms.modules.node.meta.elements.expressions;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Example;
 import ch.njol.skript.doc.Name;
@@ -10,13 +8,11 @@ import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
-import ch.njol.util.coll.CollectionUtils;
 import net.luckperms.api.node.types.MetaNode;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.registration.SyntaxRegistry;
-import owlbe.skriptLuckPerms.modules.permholder.elements.sections.SecEditHolder.HolderSectionEvent;
-import owlbe.skriptLuckPerms.utils.wrapper.MetaNodeWrapper;
+import owlbe.skriptLuckPerms.luckperms.wrapper.MetaNodeWrapper;
 
 import java.util.Arrays;
 
@@ -37,7 +33,7 @@ public class ExprMetaKey extends PropertyExpression<Object, String> {
 				infoBuilder(
 						ExprMetaKey.class,
 						String.class,
-						"[luckperm[s]] meta key",
+						"[luckperm[s]] meta key[s]",
 						"luckpermsmeta/luckpermsmetawrapper",
 						false
 				)
@@ -57,34 +53,10 @@ public class ExprMetaKey extends PropertyExpression<Object, String> {
 		return Arrays.stream(nodes)
 				.map(node -> switch (node) {
 					case MetaNode metaNode -> metaNode.getMetaKey();
-					case MetaNodeWrapper metaNodeWrapper -> metaNodeWrapper.getKey();
+					case MetaNodeWrapper metaNodeWrapper -> metaNodeWrapper.metaKey();
 					default -> throw new IllegalArgumentException("Unexpected node type: " + node.getClass());
 				})
 				.toArray(String[]::new);
-	}
-
-	@Override
-	public Class<?> @Nullable [] acceptChange(ChangeMode mode) {
-		if (!getParser().isCurrentEvent(HolderSectionEvent.class)) {
-			Skript.error("You can only change the permissions of a holder inside an 'edit permission holder' section");
-			return null;
-		}
-
-		return switch (mode) {
-			case SET, RESET -> CollectionUtils.array(String.class);
-			default -> null;
-		};
-	}
-
-	@Override
-	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
-		Object node = getExpr().getSingle(event);
-		if (!(node instanceof MetaNodeWrapper metaNode)) // can only change the key of the wrapper version
-			return;
-
-		if (delta != null)
-			metaNode.setKey((String) delta[0]);
-
 	}
 
 	@Override

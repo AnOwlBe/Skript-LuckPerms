@@ -39,7 +39,7 @@ public class ExprHighestGroup extends PropertyExpression<User, Group> {
 						ExprHighestGroup.class,
 						Group.class,
 						"highest luckperm[s] group",
-						"luckpermsuser",
+						"luckpermsusers",
 						false
 				)
 						.supplier(ExprHighestGroup::new)

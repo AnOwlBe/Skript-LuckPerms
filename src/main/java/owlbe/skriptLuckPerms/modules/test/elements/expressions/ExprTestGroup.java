@@ -29,7 +29,7 @@ public class ExprTestGroup extends SimpleExpression<Group> {
 
 	@Override
 	protected Group[] get(Event event) {
-		return new Group[]{TestModule.getTestGroup()};
+		return new Group[] {TestModule.getTestGroup()};
 	}
 
 	@Override

@@ -17,14 +17,13 @@ import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
 import net.luckperms.api.node.types.MetaNode;
 import org.bukkit.event.Event;
-import org.bukkit.event.HandlerList;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.bukkit.lang.eventvalue.EventValue;
 import org.skriptlang.skript.bukkit.lang.eventvalue.EventValueRegistry;
 import org.skriptlang.skript.registration.SyntaxInfo;
 import org.skriptlang.skript.registration.SyntaxRegistry;
-import owlbe.skriptLuckPerms.utils.wrapper.MetaNodeWrapper;
+import owlbe.skriptLuckPerms.luckperms.wrapper.MetaNodeWrapper;
+import owlbe.skriptLuckPerms.utils.events.SectionEvent;
 
 import java.util.List;
 
@@ -71,6 +70,7 @@ public class ExprSecCreateMeta extends SectionExpression<MetaNode> {
 					-> loadCode(sectionNode, "meta node section", beforeLoading, afterLoading, MetaSectionEvent.class));
 			return trigger != null;
 		}
+
 		return true;
 	}
 
@@ -82,6 +82,7 @@ public class ExprSecCreateMeta extends SectionExpression<MetaNode> {
 		MetaNodeWrapper wrapper = new MetaNodeWrapper(key, value);
 
 		MetaSectionEvent sectionEvent = new MetaSectionEvent(wrapper);
+
 		if (trigger != null)
 			Variables.withLocalVariables(event, sectionEvent, () -> TriggerItem.walk(trigger, sectionEvent));
 
@@ -106,7 +107,7 @@ public class ExprSecCreateMeta extends SectionExpression<MetaNode> {
 				.toString();
 	}
 
-	public static class MetaSectionEvent extends Event {
+	public static class MetaSectionEvent extends SectionEvent {
 
 		public MetaNodeWrapper node;
 
@@ -114,17 +115,14 @@ public class ExprSecCreateMeta extends SectionExpression<MetaNode> {
 			return this.node;
 		}
 
-		public MetaNode build() {
-			return node.build();
-		}
-
 		public MetaSectionEvent(MetaNodeWrapper node) {
 			this.node = node;
 		}
 
-		@Override
-		public @NotNull HandlerList getHandlers() {
-			throw new IllegalStateException();
+		public MetaNode build() {
+			MetaNode node = this.node.build();
+			this.node = null;
+			return node;
 		}
 	}
 

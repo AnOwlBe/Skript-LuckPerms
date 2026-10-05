@@ -73,9 +73,8 @@ public class EvtUserPromote extends SkriptEvent {
 
 		boolean trackMatched = true;
 
-		if (this.track != null) {
+		if (this.track != null)
 			trackMatched = this.track.check(event, track -> track.equals(userEvent.getTrack()));
-		}
 
 		return trackMatched;
 	}

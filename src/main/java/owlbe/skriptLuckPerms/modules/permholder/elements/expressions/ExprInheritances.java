@@ -44,7 +44,7 @@ public class ExprInheritances extends PropertyExpression<PermissionHolder, Inher
 						ExprInheritances.class,
 						InheritanceNode.class,
 						"luckperm[s] inheritances",
-						"luckpermspermissionholder",
+						"luckpermspermissionholders",
 						false
 				)
 						.supplier(ExprInheritances::new)
@@ -81,8 +81,8 @@ public class ExprInheritances extends PropertyExpression<PermissionHolder, Inher
 
 	@Override
 	public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
-		PermissionHolder holder = getExpr().getSingle(event);
-		if (holder == null)
+		PermissionHolder[] holders = getExpr().getArray(event);
+		if (holders == null)
 			return;
 
 		InheritanceNode inheritance = delta != null ? (InheritanceNode) delta[0] : null;
@@ -92,13 +92,29 @@ public class ExprInheritances extends PropertyExpression<PermissionHolder, Inher
 
 		switch (mode) {
 			case SET -> {
-				holder.data().clear(NodeType.INHERITANCE::matches);
-				holder.data().add(inheritance);
+				for (PermissionHolder holder : holders) {
+					holder.data().clear(NodeType.INHERITANCE::matches);
+					holder.data().add(inheritance);
+				}
 			}
-			case ADD -> holder.data().add(inheritance);
-			case RESET -> holder.data().clear(NodeType.INHERITANCE::matches);
-			case REMOVE -> holder.data().remove(inheritance);
+			case ADD -> {
+				for (PermissionHolder holder : holders)
+					holder.data().add(inheritance);
+			}
+			case RESET -> {
+				for (PermissionHolder holder : holders)
+					holder.data().clear(NodeType.INHERITANCE::matches);
+			}
+			case REMOVE -> {
+				for (PermissionHolder holder : holders)
+					holder.data().remove(inheritance);
+			}
 		}
+	}
+
+	@Override
+	public boolean isSingle() {
+		return false;
 	}
 
 	@Override
@@ -108,7 +124,7 @@ public class ExprInheritances extends PropertyExpression<PermissionHolder, Inher
 
 	@Override
 	public String toString(@Nullable Event event, boolean debug) {
-		return "luckperms inheritances of" + getExpr().toString(event, debug);
+		return "luckperms inheritances of " + getExpr().toString(event, debug);
 	}
 
 }
